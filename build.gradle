@@ -1,0 +1,274 @@
+
+
+//     apply plugin: "org.springframework.boot"
+//     apply plugin: 'io.spring.dependency-management'
+
+buildscript {
+
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        flatDir {
+            dirs 'libs'
+        }
+        mavenCentral()
+    }
+//apply(plugin = "org.jetbrains.intellij")
+
+    dependencies {
+//        classpath("org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.16.0")
+// https://mvnrepository.com/artifact/com.github.johnrengelman.shadow/com.github.johnrengelman.shadow.gradle.plugin
+     //   implementation( 'com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:7.1.2')
+
+    }
+
+}
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'java-library'
+//    id 'io.spring.dependency-management' version "1.1.3"
+    id 'org.springframework.boot' version '3.0.5'
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+//    id 'org.jetbrains.intellij'
+apply plugin: 'java-library'
+
+apply plugin: 'application'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: "org.springframework.boot"
+
+
+
+apply plugin: 'com.github.johnrengelman.shadow'
+//apply plugin: 'maven-publish'
+//apply plugin: 'intellij'`
+//apply plugin: 'application'
+
+//mainClassName = 'com.example.WebApplication'
+
+group 'com.majorana'
+version '1.0-SNAPSHOT'
+//sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+repositories {
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+    maven {
+        url 'https://plugins.gradle.org/m2/'
+    }
+    maven {
+        url "https://repo1.maven.org/maven2/"
+    }
+    flatDir {
+        dirs 'libs'
+    }
+    mavenCentral()
+}
+
+dependencies {
+//    implementation("org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.16.0")
+// https://mvnrepository.com/artifact/commons-dbutils
+// /commons-dbutils
+    implementation 'commons-dbutils:commons-dbutils:1.8.1'
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+    implementation 'org.springframework:spring-jdbc:6.1.1'
+
+    implementation 'org.springframework:spring-tx:6.1.1'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.2.0'
+
+
+//    implementation 'org.springframework:spring-starter-actuator:3.2.6'
+    // https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+
+// https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+    implementation 'org.springframework:spring-jdbc:6.1.1'
+
+    // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+    implementation group: 'com.datastax.oss', name: 'java-driver-core', version: '4.17.0'
+    implementation group: 'com.datastax.oss', name: 'java-driver-query-builder', version: '4.17.0'
+    implementation group: 'com.datastax.oss', name: 'java-driver-mapper-processor', version: '4.17.0'
+    implementation group: 'com.datastax.oss', name: 'java-driver-mapper-runtime', version: '4.17.0'
+
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j
+    testImplementation 'org.slf4j:slf4j-reload4j:2.0.9'
+
+
+    // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
+    implementation 'com.zaxxer:HikariCP:5.0.0'
+
+
+    // https://mvnrepository.com/artifact/commons-dbutils/commons-dbutils
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+
+    // https://mvnrepository.com/artifact/com.sleepycat/je
+    implementation 'com.sleepycat:je:4.0.92'
+
+//    implementation('org.springframework.boot:spring-boot-starter-web')
+//    implementation('org.springframework.boot:spring-boot-starter-tomcat')
+
+// https://mvnrepository.com/artifact/redis.clients/jedis
+    implementation group: 'redis.clients', name: 'jedis', version: '4.4.6'
+
+    api 'org.apache.httpcomponents:httpclient:4.5.7'
+    implementation 'org.apache.commons:commons-lang3:3.5'
+
+//    implementation('nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.3.0')
+    implementation 'org.openjfx:javafx-base:18'
+//    implementation('org.springframework.boot:spring-boot-starter-validation')
+//    implementation('net.sourceforge.nekohtml:nekohtml')
+ //   implementation(group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0')
+
+//    implementation('org.thymeleaf.extras:thymeleaf-extras-springsecurity6')
+ //   imp\lementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.1.0'
+//         implementation group: 'com.datastax.oss', name: 'cassandra-driver-core', version: '4.17.0'
+//         implementation group: 'com.datastax.oss', name: 'cassandra-driver-query-builder', version: '4.17.0'
+//         implementation group: 'com.datastax.oss', name: 'cassandra-driver-mapper-runtime', version: '4.17.0'
+//    implementation("org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.16.0")
+    implementation('org.apache.tomcat.embed:tomcat-embed-core:9.0.65')
+    implementation('commons-fileupload:commons-fileupload:1.4')
+    // https://mvnrepository.com/artifact/org.springframework.session/spring-session-core
+    //        implementation group: 'org.springframework.session', name: 'spring-session-core', version: '3.1.3'
+    // https://mvnrepository.com/artifact/redis.clients/jedis
+//    implementation group: 'redis.clients', name: 'jedis', version: 'gh4.4.6'
+//         implementation('redis.clients:jedis:3.6.3')
+//    implementation('org.thymeleaf.extras:thymeleaf-extras-springsecurity6')
+    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '9.4.1.jre11'
+    implementation('com.google.guava:guava:31.1-jre')
+    implementation('org.springframework.data:spring-data-cassandra:4.1.3')
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2'
+    implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2')
+    testImplementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2')
+    implementation('net.sf.supercsv:super-csv:2.4.0')
+    implementation('com.googlecode.json-simple:json-simple:1.1.1')
+    implementation('org.apache.commons:commons-text:1.10.0')
+    implementation('com.sun.mail:javax.mail:1.5.5')
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.268'
+    implementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.11.2'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.3'
+    implementation group: 'com.datastax.oss', name: 'java-driver-core', version: '4.17.0'
+    implementation group: 'com.datastax.oss', name: 'java-driver-query-builder', version: '4.17.0'
+    implementation group: 'com.datastax.oss', name: 'java-driver-mapper-processor', version: '4.17.0'
+    implementation group: 'com.datastax.oss', name: 'java-driver-mapper-runtime', version: '4.17.0'
+// http
+//    implementation group: 'org.springframework.data', name: 'spring-data-cassas://mvnrepository.com/artifact/com.github.johnrengelman.shadow/com.github.johnrengelman.shadow.gradle.plugin
+    implementation 'com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:7.1.2'
+
+
+    implementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+
+    implementation 'org.javers:javers-core:5.6.3'
+
+    implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.9.0'
+    implementation group: 'org.threeten', name: 'threeten-extra', version: '1.7.1'
+
+//    implementation(group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.18.1')
+    // removing this since seemed to get duplication error when deploying jar
+    //runtimeOnly (group: 'net.sf.jasperreports', name: 'jasperreports-fonts', version: '6.16.0')
+//    implementation group: 'ar.com.fdvs', name: 'DynamicJasper', version: '5.3.3'
+//    implementation group: 'org.apache.poi', name: 'poi', version: '4.1.1'
+//    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '1.8.16'
+//    implementation files('libs/itext-2.1.7.js9.jar')
+//    implementation files('libs/jasperreports-fonts-6.16.0.jar')
+//    compile(group: 'com.intellij', name: 'forms_rt', version: '7.0.3+')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+//    implementation group: 'org.flywaydb', name: 'flyway-core'
+    // https://mvnrepository.com/artifact/com.github.johnrengelman.shadow/com.github.johnrengelman.shadow.gradle.plugin
+    implementation 'com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:7.1.2'
+
+    implementation files('libs/sitebridge.jar')
+
+}
+
+build.dependsOn(shadowJar);
+
+jar.dependsOn processResources
+
+test {
+    useJUnitPlatform()
+}
+
+//sourceSets.main.java.srcDirs = ['src']
+
+
+        mainClassName = "Main"
+mainClassName = 'com.majorana.orm.Maim'
+
+buildDir = new File(rootProject.projectDir, "build").getAbsolutePath()
+
+sourceSets {
+    main {
+        java {
+            srcDir new File(rootProject.projectDir, "src").getAbsolutePath()
+            output.getClassesDirs().plus(files (new File(rootProject.projectDir, "build/classes").getAbsolutePath()))
+            output.resourcesDir = new File(rootProject.projectDir, "src").getAbsolutePath()
+        }
+        resources {
+            srcDir new File(rootProject.projectDir, "bin").getAbsolutePath()
+        }
+    }
+}
+
+//task processResources {
+
+//}
+
+task bakSrc(type: Copy) {
+    from( new File(rootProject.projectDir, "src"))
+    into(new File(rootProject.projectDir, "src_bak"))
+}
+
+Task compTask = project.tasks.named("compileJava").get()
+compTask.dependsOn(bakSrc)
+
+jar {
+    dependsOn processResources
+    dependsOn compileJava
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+//
+    archivesBaseName = 'maj_orm'
+    getDestinationDirectory().set(new File(projectDir, "./build/libs"))
+}
+
+def  procTask = project.tasks.named("processResources")
+Task jarTask = project.tasks.named("jar").get()
+jarTask.dependsOn processResources
+
+
+shadowJar {
+//    shadowJar {
+    dependsOn compileJava
+    dependsOn processResources
+
+    manifest {
+            attributes 'Main-Class': 'Main'
+        }
+//
+    getDestinationDirectory().set(new File(projectDir, "./build/libs"))
+//    destinationDir = file("/c/Users/Barry/src/com.majorana.orm.MajORM/out")
+}
+
+assemble.dependsOn shadowJar
