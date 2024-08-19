@@ -1,5 +1,8 @@
 package com.majorana.enum_const;
 
+/** Accesss level represents a level of access control and pages a user my use
+
+
 public enum ACCESS_LEVEL
 {
 

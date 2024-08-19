@@ -26,6 +26,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ *  THis is the keys ORM class in the Maj System, it reads an CLass type by reflect, and its
+ *  jakarta and Majorana ORM annotations to persist to the database and back
+ *
+ * @param <T>
+ */
+
+
+
 public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
 
     private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(MajoranaAnnotationRepository.class);
@@ -54,6 +63,16 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
 
     protected Method postLoad;
 
+    /**
+     * Creates a Repository class for a type of class clazz, using DB name dbName
+     * and using the dbFactory which the Majorana ORM sets up with the environment data for
+     * its credentials
+     *
+     * @param dbFactory - A majorana db Factory
+     * @param dbName String
+     * @param clazz Class
+     */
+
 
     public MajoranaAnnotationRepository(MajoranaDBConnectionFactory dbFactory,  SmokDatasourceName dbName ,Class<T> clazz){
         this.dbFactory = dbFactory;
@@ -63,9 +82,28 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
         findMethods(clazz);
     }
 
+    /**
+     * produces a list of fields to persist from the data on the class c
+     *
+     * @param c
+     * @return
+     */
+
     public static List<MajoranaRepositoryField> getRepositoryFields(Class c){
        return setFieldsByReflection(c);
     }
+
+    /**
+     *  String getReadString(...)
+     *
+     *  Given a table and parameter names and values, produces a SQL string to find the data in
+     *  the given database table
+     *
+     * @param table
+     * @param paramNames
+     * @param params
+     * @return
+     */
 
     public String getReadString(String table, String[] paramNames , Object[] params){
         StringBuffer buffy =  new StringBuffer();
@@ -86,6 +124,18 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
         buffy.append(";");
         return buffy.toString();
     }
+
+    /**
+     *  String delete String
+     *
+     *  Given a table and params to match, form a delete SQL string to perform
+     *  a database deletion.
+     *
+     * @param table
+     * @param paramNames
+     * @param params
+     * @return sql string
+     */
 
     public String getDeleteString(String table, String[] paramNames , Object[] params){
         StringBuffer buffy =  new StringBuffer();
@@ -108,6 +158,13 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
         return buffy.toString();
     }
 
+    /**
+     * Create a INsert string to store an entity  of class T in the database, uses named paramters
+     *
+     * @param sUser
+     * @return sql String
+     */
+
     public String getCreateStringNP(T sUser){
         StringBuffer buffy =  new StringBuffer();
         SqlParameterSource params = getSqlParameterSource(sUser);
@@ -118,6 +175,14 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
         return buffy.toString();
     }
 
+    /**
+     * Creates an update string o update a value in the database from its entity type using
+     * named parameters
+     *
+     * @param sUser
+     * @return
+     */
+
     public String getUpdateStringNP(T sUser){
         StringBuffer buffy =  new StringBuffer();
         buffy.append(" SET "+ repoFields.stream().filter(x->!x.isTransient()).filter(x->x.isUpdateable())
@@ -125,6 +190,12 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
                 .collect(Collectors.joining(",") )+ " WHERE id=:id");
         return buffy.toString();
     }
+
+    /**
+     * CReates an SQL select clause listing the all the db columns to retrieve from the database
+     *
+     * @return SQL fields for the select clause
+     */
 
     public String getSqlFieldString(){
         StringBuffer buffy =  new StringBuffer();
@@ -166,9 +237,24 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
         }
     }
 
+    /**
+     * Tests if a target string is in a list
+     *
+     *
+     * @param potentialTargets
+     * @param test
+     * @return
+     */
+
     public static boolean isInStringArray( String potentialTargets[], String test){
         return Arrays.stream(potentialTargets).anyMatch( pt -> pt.equals(test));
     }
+
+    /**
+     * Creates a random key UUID
+     *
+     * @return String of the UUID
+     */
 
     public String getKeyUuid(){
         return repoFields.stream().filter(
@@ -177,6 +263,12 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
 
                 .findFirst().orElse("");
     }
+
+    /**
+     *  Creates a random key ID
+     *
+     * @return random key stream
+     */
 
     public String getKeyId(){
         return repoFields.stream().filter(
@@ -336,11 +428,29 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
         return new MapSqlParameterSource(getParameterMap(entity));
     }
 
+    /**
+     * FOr a named datasource sDn and an Entity, create an SqlParameyer source to
+     * store in the database, using the annotations on the entity class
+     *
+     * @param sDn
+     * @param entity
+     * @return sqlParameter sourcde
+     */
+
     public SqlParameterSource getSqlParameterSourceWithDeletedAt(SmokDatasourceName sDn,T entity){
         Map<String, Object> sourceMap =getParameterMap(entity);
         sourceMap.put("deleted_at", (Boolean) sourceMap.getOrDefault("deleted",false)?  dbFactory.getDBTime(sDn) : SQLHelper.BLANK_TIMESTAMP);
         return new MapSqlParameterSource(sourceMap);
     }
+
+    /**
+     * FOr a named database source snd am entity, creates an map comtaining the parameters
+     * and names to store in the database
+     *
+     * @param sDn
+     * @param entity
+     * @return
+     */
 
     public Map<String, Object> getParameterMapWithDeletedAt(SmokDatasourceName sDn,T entity){
         Map<String, Object> sourceMap =getParameterMap(entity);
@@ -389,6 +499,15 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
         long day1 = ChronoUnit.DAYS.between(date1, date2);
         return (int) day1;
     }
+
+    /**
+     * GIven an list of Repository fields an a empty entity, and a random number generator
+     * populate the object with a random value
+     *
+     * @param lmf
+     * @param ob
+     * @param r
+     */
 
     public static void setRandom(List<MajoranaRepositoryField> lmf, Object ob, Random r){
         int cnt=0;
@@ -585,10 +704,22 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
         LOGGER.warn("Values: "+s);
     }
 
+    /**
+     *  Gets a Jdbctemplate mapper to convert a database result to a entity T
+     *
+     * @return
+     */
 
     public RowMapper<T> getMapper(){
         return new RepositoryFieldMapper();
     }
+
+    /**
+     *  Maps a single integer from an database result with one result .e.g. select count(*)
+     *
+     * @return
+     */
+
 
     public RowMapper<Integer> getIntegerMapper(){
         return new RowMapper<Integer>() {
@@ -731,16 +862,47 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
         return false;
     }
 
+    /**
+     *  Given an Objectm, set is variable value using the java.lang.reflect setter method
+     *
+     *
+     * @param obj
+     * @param variableValue
+     * @param setter
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     */
+
     public static void invokeSetter(Object obj,Object variableValue,Method setter) throws IllegalAccessException, IllegalArgumentException , InvocationTargetException
     {
             setter.invoke(obj,variableValue);
     }
+
+    /**
+     * Given an object, read a variable using a java.lang.reflet getter method
+     *
+     *
+     * @param obj
+     * @param getter
+     * @return
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     */
 
     public static Object invokeGetter(Object obj,Method getter) throws IllegalAccessException, IllegalArgumentException , InvocationTargetException
     {
             Object f = getter.invoke(obj);
             return f;
     }
+
+    /**
+     * Given a method (java.lang.reflect), on a object, invoke a method on it
+     *
+     * @param obj
+     * @param method
+     */
 
         public void invokeMethod(Object obj,Method method)
         {

@@ -20,11 +20,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Mocks a cassandra result set
+ */
 
 public class CassMockResultSet {
 
      /*
-     * Mocks a SQL ResultSet.
+     * Mocks a CQL ResultSet.
      */
 
         private Map<String, Integer> columnIndices;

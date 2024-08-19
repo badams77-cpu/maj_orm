@@ -4,6 +4,11 @@ import jakarta.persistence.Column;
 
 import java.time.LocalDateTime;
 
+/**
+ * A simple based entity that has the basic info about when a database entry was
+ * created or modified and by who
+ */
+
 public class BaseEntity {
 
     @AutoPopTimestamp(created = true, updated=false)

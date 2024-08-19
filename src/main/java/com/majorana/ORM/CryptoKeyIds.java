@@ -3,6 +3,12 @@ package Distiller.ORM;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ *  For automatically rotating crypto keys in the databaze, these are env variables
+ *  that may rotated the crypto keys for any encryted data in the DB
+ */
+
+
 @Service
 public class CryptoKeyIds
 {

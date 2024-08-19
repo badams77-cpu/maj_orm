@@ -1,6 +1,9 @@
 package Distiller.ORM;
 
-
+/**
+ *  Helper Abstract CLass for Rotatable Crypto keys for keeping sensitive data in the database
+ *  with the crypto key being regularly rotated
+ */
 
 import java.util.*;
 

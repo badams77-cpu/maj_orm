@@ -9,9 +9,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Blob;
 
+/**
+ * THe is a help class for storing blob data in the database
+ */
+
 public class DBBlobUtils {
 
     private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(DBBlobUtils.class);
+
+
+    /**
+     *
+     * @param object - converts a java object to Blob in read for the  database
+     * @return blob,
+     */
+
     public static Blob writeJavaObject( Object object) {
         Blob empty = null;
         try {
@@ -29,6 +41,12 @@ public class DBBlobUtils {
             return empty;
         }
     }
+
+    /**
+     *
+     * @param blob - converts a blob from the dayabase to a java object
+     * @return
+     */
 
     public static Object readJavaObject( Blob blob) {
         try {
