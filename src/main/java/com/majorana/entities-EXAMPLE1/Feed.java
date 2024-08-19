@@ -4,6 +4,12 @@ import Distiller.ORM.Updateable;
 import jakarta.persistence.Column;
 import main.Distiller.enum_const.ACCESS_LEVEL;
 
+
+/**
+ * Feed it uses the jakarta persistance @Column annotation to name the database table
+ * for each non transient and non static field
+ */
+
 public class Feed extends BaseDistillerEntity {
 
   private static final String TABLE_NAME = TableNames.FEEDS;

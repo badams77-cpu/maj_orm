@@ -18,6 +18,10 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ *  Used with Spring DB Health Indicators, to show weather the database connections are active
+ */
+
 public class MajoranaDataSourceHealthIndicator extends AbstractHealthIndicator {
 
 

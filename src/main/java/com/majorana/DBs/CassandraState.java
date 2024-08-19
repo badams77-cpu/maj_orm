@@ -1,5 +1,9 @@
 package Distiller.DBs;
 
+/**
+ * CassandraState sets weather a cassandra connection with be tried by the ORM
+ */
+
 public class CassandraState {
 
     private boolean enabled;

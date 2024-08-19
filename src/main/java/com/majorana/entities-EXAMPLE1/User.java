@@ -5,6 +5,10 @@ import Distiller.ORM.Updateable;
 import jakarta.persistence.Column;
 import main.Distiller.enum_const.ACCESS_LEVEL;
 
+/**
+ * An example user class for persistance
+ */
+
 public class User extends BaseDistillerEntity {
 
   private static final String TABLE_NAME = TableNames.USERS;

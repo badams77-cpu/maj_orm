@@ -7,7 +7,11 @@ import com.zaxxer.hikari.util.IsolationLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-;
+/**
+ * Maj Datasource - Generic Datasourcer for any surported database type
+ */
+
+
 
 public class SmokDataSource {
     private static final Logger LOGGER = LoggerFactory.getLogger(SmokDataSource.class);

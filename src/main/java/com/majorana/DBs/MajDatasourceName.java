@@ -2,6 +2,10 @@ package Distiller.DBs;
 
 import java.util.Objects;
 
+/**
+ * Unique name of a datasource to use
+ */
+
 public class SmokDatasourceName {
 
     private final String DataSourceName;

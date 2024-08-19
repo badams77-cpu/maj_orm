@@ -3,6 +3,11 @@ package com.majorana.entities;
 import Distiller.ORM.Updateable;
 import jakarta.persistence.Column;
 
+/**
+ * An example user persistance entity
+ *
+ */
+
 public class UserEx extends BaseDistillerEntity {
 
 	private static final String TABLE_NAME = TableNames.NO_TABLE;

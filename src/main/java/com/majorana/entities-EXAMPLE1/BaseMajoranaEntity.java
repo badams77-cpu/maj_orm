@@ -7,7 +7,15 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public abstract class BaseDistillerEntity {
+/**
+ *  The base entity any Maj DB entity is a super class of
+ *  include integer id for sql dbs and a UUID for cassandra
+ *  and a created, modified and deleted dates to provide
+ *  a audit trail of usage of the data
+ *
+ */
+
+public abstract class BaseMajoranaEntity {
 
 
 //    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0, name = "id")

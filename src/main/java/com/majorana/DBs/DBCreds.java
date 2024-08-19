@@ -6,6 +6,11 @@ import Distiller.Utils.MethodPrefixingLoggerFactory;
 
 import org.slf4j.Logger;
 
+/**
+ * DBCreds specifies a connection to a database to try, multiple DNCreds may specify
+ * multiple connectinns.
+ */
+
 public class DBCreds {
 
 

@@ -17,6 +17,11 @@ import org.springframework.core.env.PropertySource;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * DBEnvSetup reads database credentials from the OS environment variables, and creates the
+ * necessary database connections
+ */
+
 public class DBEnvSetup {
 
     private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(DBEnvSetup.class);

@@ -6,6 +6,12 @@ import Distiller.entities.TableNames;
 import jakarta.persistence.Column;
 import main.Distiller.enum_const.ACCESS_LEVEL;
 
+/**
+ * An example persisted entity for a database
+ *
+ *
+ */
+
 public class PrivateFeed extends BaseDistillerEntity {
 
   private static final String TABLE_NAME = TableNamesExtra.PRIVATE_FEEDS;

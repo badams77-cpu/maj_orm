@@ -21,6 +21,11 @@ import java.util.LinkedList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Spring configuration, mocks up a empty cassandra connection if
+ * the spring profile "mock-cass" is active
+ */
+
 @Configuration
 @Profile(value="mock-cass")
 public class CassandraMock {

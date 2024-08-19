@@ -2,6 +2,13 @@ package com.majorana.entities;
 
 import jakarta.persistence.Column;
 
+/**
+ * Article - An example Entity to persist to a DB,
+ * it uses the jakarta persistance @Column annotation to name the database table
+ * for each non transient and non static field
+ */
+
+
 public class Article extends BaseDistillerEntity {
 
 	private static final String TABLE_NAME = TableNames.ARTICLES;

@@ -4,6 +4,12 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+/**
+ *  Enum DatabaseVariant
+ *
+ *  For any set of DBCreds specify the database type
+ */
+
 public enum DatabaseVariant {
 
     NONE(0, ""),
