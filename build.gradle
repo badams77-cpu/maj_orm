@@ -1,0 +1,736 @@
+buildscript {
+  repositories {
+    maven {
+      url = uri("https://plugins.gradle.org/m2/")
+    }
+  }
+  dependencies {
+    classpath("io.spring.gradle:dependency-management-plugin:1.1.4")
+  }
+}
+
+plugins {
+  id 'java-library'
+  id 'java'
+//  id 'io.spring.dependency-management'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'org.springframework.boot' version '2.7.18'
+
+}
+apply plugin: "io.spring.dependency-management"
+
+apply plugin: 'java'
+apply plugin: 'idea'
+//    id 'org.jetbrains.
+apply plugin: 'java-library'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: "org.springframework.boot"
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+mainClassName = 'MajDB.Main'
+
+//mainClass = 'MajDbORM.Main'
+
+application {
+    mainClassName = 'MajDB.Main'
+}
+
+  dependencyManagement {
+    dependencies {
+//      build project(':MajDbORM')
+//      build project(':MajDbORMTweeter')
+    }
+    imports {
+      mavenBom("org.springframework.boot:spring-boot-dependencies:2.1.7.RELEASE")
+    }
+  }
+
+
+
+configurations {
+//    integrationTestCompile.extendsFrom testCompile
+//    integrationTestCompileJava.extendsFrom JavaCompile
+    integrationTestImplementation.extendsFrom implementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+sourceSets {
+
+    main {
+        //   java {
+        //       srcDirs new File(rootProject.projectDir, "MajDbORM/src/main").getAbsolutePath()
+        //       output.resourcesDir = new File(rootProject.projectDir, "Di         //output.getClassesDirs().plus(files(new File(rootProject.projectDir, "bin").getAbsolutePath()))
+        //
+        //            srcDirs new File(project.projectDir, "src/main").getAbsolutePath()stiller/bin").getAbsolutePath()
+        //       output.getClassesDirs().plus(files (new File(rootProject.projectDir, "MajDbORM/build/classes").getAbsolutePath()))
+        //       output.getClassesDirs().plus(files (new File(rootProject.projectDir, "bin").getAbsolutePath()))
+        //   }
+
+        java {
+            //srcDirs new File(rootProject.projectDir, "src/main").getAbsolutePath()
+            // output.resourcesDir = new File(rootProject.projectDir, "bin").getAbsolutePath()
+            //output.getClassesDirs().plus(files(new File(rootProject.projectDir, "build/classes").getAbsolutePath()))
+
+            // output.resourcesDir = new File(rootProject.projectDir, "bin").getAbsolutePath()
+            //output.getClassesDirs().plus(files(new File(rootProject.projectDir, "build/classes").getAbsolutePath()))
+
+            srcDirs new File(project.projectDir, "src/main").getAbsolutePath()
+            output.getClassesDirs().plus(files(new File(project.projectDir, "build/classes").getAbsolutePath()))
+            // output.resourcesDir = new File(rootProject.projectDir, "bin").getAbsolutePath()
+
+        }
+
+        resources {
+            srcDirs new File(project.projectDir, "bin").getAbsolutePath()
+        }
+    }
+
+    //def bjmcn = project.getTasksByName("bootJarMainClassName");
+
+    integrationTest {
+
+        compileClasspath += main.output + test.output + fileTree(dir: new File(rootProject.projectDir, "MajDbORM/libs").getAbsolutePath());
+        runtimeClasspath += main.output + test.output + fileTree(dir: new File(rootProject.projectDir, "MajDbORM/libs").getAbsolutePath());
+
+        java {
+            srcDirs new File(rootProject.projectDir, "src/test")
+            output.getClassesDirs().plus(files(new File(project.projectDir, "build/intTest").getAbsolutePath()))
+        }
+    }
+
+
+
+}
+
+
+def RegularFileProperty dfMa = project.getObjects().fileProperty().
+
+        fileValue(new File( buildDir, "build/classes/MajDbORM/Main.class") ) ;
+
+//project.file("build/classes/MajDbORM/Main.class");
+
+
+class BootMaClass extends  org.springframework.boot.gradle.plugin.ResolveMainClassName implements Task {
+
+    private File file = null;
+
+    public BootMaClass() {
+
+    }
+
+//    @Inject
+//7    public BootMaClass(File f){
+//        file =  project.getObjects().fileProperty().fileValue( f) ;
+//    }
+
+/*    public BootMaClass(groovy.lang.Closure<org.gradle.api.provider.Provider<File>> f){
+        file =  project.getObjects().fileProperty().fileValue( f) ;
+    }*/
+
+  //  @Inject
+  //  public BootMaClass(org.gradle.api.provider.Provider<File> f){
+  //      file =  project.getObjects().fileProperty().fileValue( f.get()) ;
+  //
+  //  }
+
+    public void setMainClass(Provider file){
+        this.file = file.get();
+    }
+
+
+    public void setMainClass(File f){
+        this.file = project.getObjects().fileProperty().fileValue(f);
+    }
+
+    @Override
+        public Property<String> getConfiguredMainClassName() {
+        if (file==null){
+            System.err.println("Warning BootMa file is null");
+            return  createProperty("/");
+        }
+        System.err.println("BootMa file is "+file.absolutePath);
+        return createProperty(file.absolutePath);
+    }
+
+    @Override
+    public RegularFileProperty getOutputFile(){
+        if (file==null){
+            System.err.println("getOutputFile: Warning BootMa file is null");
+            return  createRFProperty(file);
+        }
+        System.err.println("getOutputFile: file is "+file.absolutePath);
+        return createRFProperty(file);
+    }
+
+    protected Property<String> createProperty(String s){
+        Property<String> ret =  project.getObjects().property(String.class);
+        if (s==null){
+            System.err.println("createProperty file is null");
+            s.set(new File(project.buildDir, "src/main/MajDbORM/Main.class").absolutePath);
+            return ret;
+        }
+        ret.set(s);
+        System.err.println("createProperty file is "+s);
+        return ret;
+    }
+
+    protected RegularFileProperty createRFProperty(File s){
+        RegularFileProperty ret =  project.getObjects().fileProperty();
+        if (s==null){
+            System.err.println("createRFProperty file is null");
+            ret.set(new File(project.buildDir, "src/main/MajDbORM/Main.class"));
+            return ret;
+        }
+        ret.set(s);
+        System.err.println("createRFProperty file is "+s.absolutePath);
+        return ret;
+    }
+
+}
+
+def Property<String> createStringProperty(String s){
+    Property<String> ret =  project.getObjects().property(String.class);
+    ret.set(s);
+    return ret;
+}
+
+def Property<File> createFileProperty(File s){
+    Property<File> ret =  project.getObjects().property(File.class);
+    ret.set(s);
+    return ret;
+}
+
+org.gradle.api.provider.Provider<File> fileProviderMainClass = createFileProperty(
+            new File( buildDir, "build/classes/MajDbORM/Main.class")
+
+        );
+
+org.gradle.api.provider.Provider<String> stringMainClass = createStringProperty(
+        new File( buildDir, "build/classes/MajDbORM/Main.class").absolutePath
+
+);
+
+
+class BootMaClosure<T> extends groovy.lang.Closure<T> {
+
+    private T data;
+
+    BootMaClosure() {
+        super()
+    }
+
+    BootMaClosure(Object owner, Object thisObject) {
+        super(owner, thisObject)
+    }
+
+    static void init(){
+
+    }
+/*
+    public BootMaClosure<T> init(Object a) {
+
+        Type superClass = getClass().getGenericSuperclass();
+
+        T ret = superClass.newInstance();
+
+        if (a==null){
+            System.err.println("Null input to BootMaClosure");
+        }
+
+        if (a.getClass().isAssignableFrom(ret.getClass())) {
+            return new BootMaClosure<T>(a);
+        }
+            System.err.println("Wrong data type for closure excepted: " + ret.class.getCanonicalName() + " got " + a.class.getCanonicalName());
+
+        return ret;
+    }*/
+
+
+    public Object doCall(){
+        return data;
+    }
+}
+
+Closure bootMaClosure = { f-> f.setMainClass( fileProviderMainClass)
+};
+
+Closure bootJarClosure = { f-> {
+    f.setMainClass( stringMainClass);
+  }
+};
+
+//bmt1.setMainClass( new File(project.buildDir,"classes/MajDbORM/Main.class"));
+BootMaClass bmt2 = (BootMaClass) tasks.replace( "bootRunMainClassName", BootMaClass.class ).configure(
+    bootMaClosure //fileProviderMainClass  //, fileProviderMainClass)
+//            new BootMaClosure<org.gradle.api.provider.Property<File>>(filePropMainClass))
+);
+bmt2.dependsOn(compileJava);
+
+BootMaClass bmt1 = (BootMaClass) tasks.replace( "bootJarMainClassName", BootMaClass.class ).configure (
+    bootMaClosure //fileProviderMainClass  //, fileProviderMainClass)
+//            new BootMaClosure<org.gradle.api.provider.Property<File>>(filePropMainClass))
+);
+bmt1.dependsOn(compileJava);
+
+Task bj = tasks.getByName("bootJar");
+if (bj!=null){
+    bj.configure(bootJarClosure);
+} else {
+    System.err.println("bootJar task is null")
+}
+
+tasks.getByName("bootJar") {
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  //  manifest {
+  //      attributes["Main-Class"] = "MainKt"
+  //  }
+
+
+}
+
+tasks.getByName("distTar") {
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    //  manifest {
+    //      attributes["Main-Class"] = "MainKt"
+    //  }
+}
+
+tasks.getByName("distZip") {
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    //  manifest {
+    //      attributes["Main-Class"] = "MainKt"
+    //  }
+}
+
+JavaCompile intClassTask = (JavaCompile) project.tasks.named("compileIntegrationTestJava").get();
+
+JavaCompile testCompileTask = (JavaCompile) project.tasks.named("compileTestJava").get();
+
+
+
+//def pMajDbORM = project.getRootProject().getSubprojects().stream()
+//        .map( p-> {
+//            System.err.println("ProjName: "+p.getName())
+//            return p;
+//        })
+//        .filter( p->p.getName().equalsIgnoreCase("MajDbOrm")).findFirst().get();
+
+def pMajDbORM = project;
+
+System.err.println("Tasks in project: "+pMajDbORM.getName());
+for(Task t : pMajDbORM.tasks){
+    System.err.println( t.getName());
+}
+System.err.println("---");
+def pDistShad3 =  null
+
+def rProject = project.getRootProject();
+
+System.err.println("Tasks in root project: "+rProject.getName());
+for(Task t : rProject.tasks){
+    System.err.println( t.getName());
+}
+System.err.println("---");
+
+
+
+Task intClassesTask = project.tasks.named("integrationTestClasses").get()
+
+JavaCompile intCompileTask = (JavaCompile) project.tasks.named("compileIntegrationTestJava").get();
+
+//intCompileTask.sources(rProject.source);
+//def outputDir = rProject.buildDirectory.dir("build")
+intClassTask.destinationDirectory.fileValue(new File(project.projectDir, "build/classes/integrationTest"));
+
+//task integrationTest(type: Test) {
+//    dependsOn intClassesTask;
+//    testClassesDirs = intCompileTask.destinationDirectory.dir(".").get().files("")
+//    classpath = sourceSets.integrationTest.runtimeClasspath
+task integrationTest(type: Test) {
+    dependsOn intClassesTask //, testClassesTask;
+    intClassTask.destinationDirectory.fileValue(new File(project.projectDir, "build/classes/integrationTest"));
+    testClassesDirs = fileTree(new File(project.projectDir, "build/classes/java/integrationTest"));
+    classpath = sourceSets.test.runtimeClasspath
+}
+
+jar {
+  dependsOn  compileJava, processResources, intCompileTask
+}
+
+
+repositories {
+  maven {
+    url "https://plugins.gradle.org/m2/"
+  }
+
+ // maven {
+//    url 'https://plugins.gradle.org/m2/'
+//  }
+  maven {
+    url "https://repo1.maven.org/maven2/"
+  }
+//    maven {
+//        url "https://repo.datastax.com/public-repos/"
+//        url "https://repo1.maven.org/maven2/"
+//    }
+  flatDir {
+    dirs 'libs'
+  }
+    maven {
+      url "https://mvnrepository.com/artifact/"
+  }
+  maven {
+     url "https://repo.spring.io/plugins-release/"
+  }
+  mavenCentral()
+}
+
+
+
+//group = 'com.feedMajDbORM.tweeter'
+group = 'MajDbORM'
+version = '1.1.1'
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+def getRootBuilt(){
+    Iterator<Task> st =  rootProject.getTasksByName('rootBuilt').iterator();
+    Task rb = st.hasNext() ? st.next() : null;
+    System.err.println(" MajDbORM:getRootBuilt: rb="+rb)
+    return rb
+}
+
+def  procTask = project.tasks.named("processResources")
+Task jarTask = project.tasks.named("jar").get()
+if (rootProject.hasProperty("rootbuilt")) {
+    Task rBuilt =getRootBuilt();
+    System.err.println(" with root built")
+    jarTask.dependsOn processResources, compileJava, rBuilt, intCompileJava
+
+} else {
+    System.err.println(" no root built")
+    jarTask.dependsOn processResources, compileJava
+}
+
+
+project.afterEvaluate {
+//    def bjmcn = project.getTasksByName("bootJarMainClassName");
+//    bjmcn.dependsOn -= getRootBuilt()
+}
+
+
+
+
+  if (project.name.startsWith("MajDbORM")) {
+//    task assemble(dependsOn: jar) {}
+  }
+
+
+
+
+def printLog(String s){
+    System.err.print(s)
+    return 1;
+}
+
+
+//tasks.withType(org.gradle.jvm.tasks.Jar.class){ duplicatesStrategy = DuplicatesStrategy.INHERIT }
+//tasks.named("bootJar"){ duplicatesStrategy = DuplicatesStrategy.INHERIT }
+//tasks.named("MajDbORM:bootJar"){ duplicatesStrategy = DuplicatesStrategy.INHERIT }
+
+dependencies {
+
+    implementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+ '/sitebridge.jar')
+    implementation 'org.reflections:reflections:0.10.2'
+
+    implementation  fileTree(dir: 'libs')
+    testImplementation  fileTree(dir: 'libs')
+    // https://mvnrepository.com/artifact/edu.umd.cs.findbugs/findbugs
+ //   implementation 'edu.umd.cs.findbugs:findbugs:1.3.9'
+
+    implementation 'com.google.code.findbugs:annotations:3.0.1'
+    implementation 'com.google.code.findbugs:jsr305:3.0.1'
+
+//    testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+'junit-jupiter-5.10.2.jar')
+//    testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+'junit-jupiter-api-5.10.2.jar')
+//    testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+'junit-jupiter-engine-5.10.2.jar')
+//    testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+'junit-jupiter-params-5.10.2.jar')
+//    testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+'junit-platform-common-1.10.2.jar')
+//    testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+'junit-platform-engine-1.10.2.jar')
+//    testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+'junit-platform-suite-1.10.2.jar')
+    testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+'opentest4j-1.3.0.jar')
+
+    testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+ 'junit-platform-launcher-1.9.2.jar')
+
+
+    implementation 'commons-dbutils:commons-dbutils:1.8.1'
+
+    implementation "com.twitter:twitter-api-java-sdk:2.0.3"
+    // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+    implementation 'org.springframework:spring-jdbc:5.3.37'
+
+    // https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+
+
+    // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+    implementation group: 'org.apache.cassandra', name: 'java-driver-core', version: '4.18.1'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-query-builder', version: '4.18.1'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-processor', version: '4.18.1'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-runtime', version: '4.18.1'
+
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j
+//    testImplementation 'org.slf4j:slf4j-reload4j:2.0.9'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+//    implementation 'org.slf4j:slf4j-simple:1.7.30'
+
+
+
+
+    // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
+    implementation 'com.zaxxer:HikariCP:5.0.0'
+
+
+    // https://mvnrepository.com/artifact/commons-dbutils/commons-dbutils
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+
+    // https://mvnrepository.com/artifact/com.sleepycat/je
+    implementation 'com.sleepycat:je:4.0.92'
+    implementation('org.springframework:spring-beans:5.3.37')
+    implementation('org.springframework:spring-core:5.3.37')
+            implementation('org.springframework:spring-tx:5.3.37')
+
+//    implementation('org.springframework.boot:spring-boot-starter-jdbc:2.7.18')
+    implementation('org.springframework.boot:spring-boot-starter-data-cassandra:2.7.18')
+
+// https://mvnrepository.com/artifact/redis.clients/jedis
+    implementation group: 'redis.clients', name: 'jedis', version: '4.4.6'
+// https://mvnrepository.com/artifact/com.github.rholder/guava-retrying
+    implementation 'com.github.rholder:guava-retrying:2.0.0'
+
+    implementation("javassist:javassist:3.12.1.GA")
+
+    implementation 'com.google.guava:guava:33.2.1-jre'
+
+
+    api 'org.apache.httpcomponents:httpclient:4.5.7'
+    implementation 'org.apache.commons:commons-lang3:3.5'
+
+//    implementation('nz6net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.3.0')
+    implementation 'org.openjfx:javafx-base:18'
+//    implementation('org.springframework.boot:spring-boot-starter-validation')
+//    implementation('net.sourceforge.nekohtml:nekohtml')
+    //   implementation(group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0')
+    implementation('com.google.code.gson:gson:2.9.1')
+//    implementation('org.thymeleaf.extras:thymeleaf-extras-springsecurity6')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa:2.7.18')
+    implementation group: 'org.springframework.data', name: 'spring-data-commons', version: '2.7.18'
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.1.0'
+         implementation group: 'org.apache.cassandra', name: 'java-driver-core', version: '4.18.1'
+         implementation group: 'org.apache.cassandra', name: 'java-driver-query-builder', version: '4.18.1'
+         implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-runtime', version: '4.18.1'
+//    implementation("org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.16.0")
+    implementation('org.apache.tomcat.embed:tomcat-embed-core:9.0.65')
+    implementation('commons-fileupload:commons-fileupload:1.4')
+   implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '9.4.1.jre11'
+    implementation('com.google.guava:guava:31.1-jre')
+//    implementation('org.springframework.data:spring-data-cassandra:4.3.1')
+//    implementation('org.springframework.data:spring-data-cassandra-parent:4.3.1')
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2'
+    implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2')
+    testImplementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2')
+    implementation('net.sf.supercsv:super-csv:2.4.0')
+    implementation('com.googlecode.json-simple:json-simple:1.1.1')
+    implementation('org.apache.commons:commons-text:1.10.0')
+    implementation('com.sun.mail:javax.mail:1.5.5')
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.268'
+    implementation group: 'org.mockito', name: 'mockito-core', version: '5.12.0'
+    // https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.11.2'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.7.18'
+
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.3'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-core', version: '4.18.1'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-query-builder', version:  '4.18.1'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-processor', version: '4.18.1'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-runtime', version: '4.18.1'
+// http
+//    implementation group: 'org.springframework.data', name: 'spring-data-cassas://mvnrepository.com/artifact/com.github.johnrengelman.shadow/com.github.johnrengelman.shadow.gradle.plugin
+    implementation 'com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:7.1.2'
+
+    implementation 'com.google.guava:guava:' +
+            '31.1-jre'
+//    implementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+
+    implementation 'org.javers:javers-core:5.6.3'
+
+    implementation group: 'org.threeten', name: 'threeten-extra', version: '1.7.1'
+
+    implementation 'net.bytebuddy:byte-buddy:1.12.23'
+
+    // https://mvnrepository.com/artifact/org.junit.platform/junit-pla
+    // tform-suite-engine
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-suite-engine', version: '1.10.2'
+    // https://mvnrepository.com/artifact/org.hamcrest/hamcrest-junit
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '1.0.0.1'
+// https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.12.0'
+    testImplementation "com.github.database-rider:rider-junit5:1.2.5"
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+//    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.2'
+
+    testImplementation 'org.junit.platform:junit-platform-commons:1.10.2'
+    testImplementation 'org.junit.platform:junit-platform-engine:1.10.2'
+    // https://mvnrepository.com/artifact/org.junit.platform/junit-platform-suite-api
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-suite-api', version: '1.10.2'
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-suite-commons', version: '1.10.2'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.10.2'
+  //  testImplementation 'org.junit.platform:junit-platform-engine:1.10.2'
+    implementation 'org.junit.platform:junit-platform-runner:1.10.2'
+    testImplementation 'org.opentest4j:opentest4j:1.3.0'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'org.hamcrest:hamcrest-core:2.2'
+
+}
+
+build.dependsOn(shadowJar);
+
+
+
+
+
+mainClassName = "MajDbORM.Main"
+
+sourceSets {
+    main {
+        java {
+            srcDirs new File(rootProject.projectDir, "MajDbORM/src").getAbsolutePath()
+            output.resourcesDir = new File(rootProject.projectDir, "MajDbORM/bin").getAbsolutePath()
+            output.getClassesDirs().plus(files (new File(rootProject.projectDir, "MajDbORM/build/classes").getAbsolutePath()))
+//            output.getClassesDirs().plus(files (new File(rootProject.projectDir, "bin").getAbsolutePath()))
+        }
+        resources {
+            srcDirs new File(rootProject.projectDir, "bin").getAbsolutePath()
+        }
+    }
+}
+
+
+test {
+    useJUnitPlatform()
+}
+
+
+
+buildDir = new File(rootProject.projectDir, "build").getAbsolutePath()
+
+//jar.dependsOn processResources
+
+
+
+//def  procTask = project.tasks.named("processResources")
+//Task jarTask = project.tasks.named("jar").get()
+//jarTask.dependsOn processResources
+
+task bakSrc(type: Copy) {
+    from( new File(rootProject.projectDir, "MajDbORM/src"))
+    into(new File(rootProject.projectDir, "MajDbORM/src_bak"))
+}
+
+
+
+Task compTask = project.tasks.named("compileJava").get()
+compTask.dependsOn(bakSrc)
+
+
+
+
+tasks.named('jar') {
+    from(sourceSets.main.output)
+    if (rootProject.hasProperty("rootbuilt")) {
+        Task rBuilt =getRootBuilt();
+        dependsOn processResources, compileJava, rBuilt, intCompileJava
+    } else {
+        dependsOn processResources, compileJava
+    }
+}
+
+
+
+try {
+    if (tasks.findByPath(':MajDbORM:bootJar')) {
+        tasks.named(':MajDbORM:bootJar') {
+            excludes fileTree(projectDir.absolutePath+"build/**")
+            dependsOn  ':compileJava', compileJava, compileTestJava, processResources
+        }
+    } else {
+        if (tasks.findByPath('bootJar')) {
+            tasks.named('bootJar') {
+                dependsOn ':compileJava', compileJava, compileTestJava, processResources
+            }
+        }
+
+    }
+} catch (Exception e){}
+
+
+
+shadowJar {
+//    shadowJar {
+    dependsOn compileJava, compileTestJava, processResources
+    from(sourceSets.main.output)
+
+
+    manifest {
+            attributes 'Main-Class': 'MajDbORM.Main'
+        }
+//
+    getDestinationDirectory().set(new File(projectDir, "./build/libs"))
+//    destinationDir = file("/c/Users/Barry/src/MajDbORM/out")
+}
+
+task moveShadow1(type: Copy) {
+    dependsOn(shadowJar)
+    from( new File(rootProject.projectDir, "MajDbORM/build/libs/MajDbORM-"+version+"-all.jar"))
+    into(new File(rootProject.projectDir, "MajDbORM/outlib"))
+}
+
+task moveShadow2(type: Copy) {
+    dependsOn( moveShadow1)
+    from( new File(rootProject.projectDir, "MajDbORM/build/libs/MajDbORM-"+version+"-all.jar"))
+    into(new File(rootProject.projectDir, "MajDbORMTwitter/libs"))
+    into(new File(rootProject.projectDir, "libs"))
+}
+
+task moveShadow3(type: Copy) {
+    dependsOn( moveShadow2)
+    from( new File(rootProject.projectDir, "MajDbORM/build/libs/MajDbORM-"+version+"-all.jar"))
+    into(new File(rootProject.projectDir, "libs"))
+}
+
+
+
+assemble.dependsOn shadowJar
+
+integrationTest.dependsOn(moveShadow3)
