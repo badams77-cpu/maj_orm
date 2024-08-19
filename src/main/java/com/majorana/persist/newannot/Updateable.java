@@ -1,4 +1,4 @@
-package com.majorana.Utils.newannot;
+package com.majorana.persist.newannot;
 
 /**
  * Indicate a field can be updated by an update call

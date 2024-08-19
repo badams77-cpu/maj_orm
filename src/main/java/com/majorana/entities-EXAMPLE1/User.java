@@ -1,7 +1,7 @@
 
 package com.majorana.entities;
 
-import com.majorana.Utils.newannot.Updateable;
+import com.majorana.persist.newannot.Updateable;
 import jakarta.persistence.Column;
 import main.Majorana.enum_const.ACCESS_LEVEL;
 

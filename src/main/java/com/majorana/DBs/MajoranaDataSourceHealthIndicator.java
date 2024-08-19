@@ -1,6 +1,6 @@
 package Majorana.DBs;
 
-import com.majorana.Utils.newannot.TimeResult;
+import com.majorana.persist.newannot.TimeResult;
 import Majorana.ORM.MajoranaDBConnectionFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;

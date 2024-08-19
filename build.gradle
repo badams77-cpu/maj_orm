@@ -46,7 +46,15 @@ application {
     }
   }
 
+configurations {
+    jaxDoclet
+}
 
+
+javadoc {
+    source = sourceSets.main.allJava
+    destinationDir = file("${buildDir}/docs/javadoc")
+}
 
 configurations {
 //    integrationTestCompile.extendsFrom testCompile

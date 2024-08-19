@@ -15,6 +15,14 @@ public class SubClassFinder<T> {
 
     }
 
+    /**
+     * creates subclasses for package and class
+     *
+     * @param packageName
+     * @param sup
+     * @return
+     */
+
     public Set<T> getSubclassInstances( String packageName, Class sup){
 
         Set<Class> packClasses = findSubclasses( packageName, sup);
@@ -26,6 +34,13 @@ public class SubClassFinder<T> {
 
     }
 
+    /**
+     * creates a instance of a class
+     *
+     * @param cl
+     * @return
+     */
+
     private T getInst(Class cl ){
         try {
             Constructor con = cl.getDeclaredConstructor();
@@ -36,6 +51,14 @@ public class SubClassFinder<T> {
         return null;
     }
 
+    /**
+     * find subclasses of a type in a package
+     *
+     * @param packageName
+     * @param sup
+     * @return
+     */
+
     public static Set<Class> findSubclasses( String packageName, Class sup){
         Set<Class> packClasses = findAllClassesUsingClassLoader(packageName);
         Set<Class> filtered = packClasses.stream()
@@ -43,6 +66,14 @@ public class SubClassFinder<T> {
                 .collect(Collectors.toSet());
         return filtered;
     }
+
+    /**
+     *
+     * Find all classes in a class loader
+     *
+     * @param packageName
+     * @return
+     */
 
     public static Set<Class> findAllClassesUsingClassLoader(String packageName) {
         InputStream stream = ClassLoader.getSystemClassLoader()
@@ -53,6 +84,14 @@ public class SubClassFinder<T> {
                 .map(line -> getClass(line, packageName))
                 .collect(Collectors.toSet());
     }
+
+    /**
+     * Get a class given name and package
+     *
+     * @param className
+     * @param packageName
+     * @return
+     */
 
     private static Class getClass(String className, String packageName) {
         try {

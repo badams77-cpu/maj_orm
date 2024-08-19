@@ -3,6 +3,11 @@ package com.majorana.Utils;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+/**
+ * Replaced with Guava
+ *
+ * @param <T>
+ */
 
 public abstract class TypeToken<T> {
     private Type type;

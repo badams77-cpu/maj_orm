@@ -1,6 +1,6 @@
 package Majorana.extraEntities;
 
-import com.majorana.Utils.newannot.Updateable;
+import com.majorana.persist.newannot.Updateable;
 import Majorana.entities.BaseMajoranaEntity;
 import Majorana.entities.TableNames;
 import jakarta.persistence.Column;

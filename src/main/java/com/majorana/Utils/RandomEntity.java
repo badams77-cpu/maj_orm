@@ -11,6 +11,14 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Constructs a random data amd place it in a an entity
+ *
+ *
+ * @param <T>
+ */
+
+
 public class RandomEntity<T extends BaseMajoranaEntity> extends TypeToken<T> {
 
     private static final MethodPrefixingLogger LOGGER = MethodPrefixingLoggerFactory.getLogger(SubClassFinder.class);
@@ -18,6 +26,10 @@ public class RandomEntity<T extends BaseMajoranaEntity> extends TypeToken<T> {
     List<MajoranaRepositoryField> mrf;
 
     private T value;
+
+    /**
+     * Constructor
+     */
 
     public RandomEntity() {
         super();
@@ -34,6 +46,11 @@ public class RandomEntity<T extends BaseMajoranaEntity> extends TypeToken<T> {
             LOGGER.warn(" Exception create new RandomENtity for type " + c.getCanonicalName());
         }
     }
+
+    /**
+     *  Constructor of type S
+     * @param S
+     */
 
     public RandomEntity(Class S){
         super();
@@ -64,6 +81,13 @@ public class RandomEntity<T extends BaseMajoranaEntity> extends TypeToken<T> {
         return Objects.equal(value, test);
     }
 
+    /**
+     * Is the field emptu
+     *
+     * @param test
+     * @return
+     */
+
     public boolean isEqualForCreateFields(T test){
         boolean eq = true;
         Class c = getTypeClass();
@@ -84,6 +108,13 @@ public class RandomEntity<T extends BaseMajoranaEntity> extends TypeToken<T> {
         return eq;
     }
 
+    /**
+     * Is the fields equals for updatable fields
+     *
+     * @param testUpdated
+     * @param testCreated
+     * @return
+     */
 
     public boolean isEqualForUpdateFields(T testUpdated , T testCreated){
         boolean eq = true;

@@ -4,6 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
+/**
+ *  An Slf4 based logger, that inlines the function where the error occured
+ *
+ */
+
 public class MethodPrefixingLogger implements Logger {
 
     private final Logger mainLogger;

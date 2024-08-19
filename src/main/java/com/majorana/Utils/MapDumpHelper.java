@@ -6,6 +6,14 @@ import java.util.stream.Collectors;
 
 public class MapDumpHelper {
 
+    /**
+     *  The dump a map as a string
+     *
+     * @param map
+     * @param COL_SEP
+     * @param ROW_SEP
+     * @return
+     */
 
     public static String dump(Map<String , String> map, String COL_SEP, String ROW_SEP){
         StringBuffer buf = new StringBuffer();

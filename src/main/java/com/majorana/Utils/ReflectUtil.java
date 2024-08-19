@@ -10,6 +10,13 @@ import java.util.Locale;
 
 public class ReflectUtil {
 
+	/**
+	 * Describe an object to a writer
+	 *
+	 * @param object
+	 * @param out
+	 * @param lineBreak
+	 */
 
 	public static void describeInstanceAndValues(Object object, Writer out, String lineBreak) {
 		PrintWriter pout = new PrintWriter(out);
