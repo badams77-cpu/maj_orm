@@ -1,6 +1,6 @@
 package com.majorana.entities;
 
-import Distiller.ORM.*;
+import Majorana.ORM.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 

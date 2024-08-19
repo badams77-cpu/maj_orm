@@ -1,6 +1,6 @@
-package Distiller.extraEntities;
+package Majorana.extraEntities;
 
-import Distiller.ORM_ACCESS.EntityPackage;
+import Majorana.ORM_ACCESS.EntityPackage;
 '
 
 /**

@@ -1,4 +1,4 @@
-package Distiller.DBs;
+package Majorana.DBs;
 
 /**
  * CassandraState sets weather a cassandra connection with be tried by the ORM

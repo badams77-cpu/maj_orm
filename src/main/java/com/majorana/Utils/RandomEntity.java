@@ -1,8 +1,8 @@
 package com.majorana.Utils;
 
-import Distiller.ORM.MajoranaAnnotationRepository;
-import Distiller.ORM.MajoranaRepositoryField;
-import Distiller.entities.BaseDistillerEntity;
+import Majorana.ORM.MajoranaAnnotationRepository;
+import Majorana.ORM.MajoranaRepositoryField;
+import Majorana.entities.BaseMajoranaEntity;
 import com.google.common.base.Objects;
 
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +11,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Random;
 
-public class RandomEntity<T extends BaseDistillerEntity> extends TypeToken<T> {
+public class RandomEntity<T extends BaseMajoranaEntity> extends TypeToken<T> {
 
     private static final MethodPrefixingLogger LOGGER = MethodPrefixingLoggerFactory.getLogger(SubClassFinder.class);
 

@@ -1,6 +1,6 @@
-package Distiller.entities;
+package Majorana.entities;
 
-import Distiller.ORM_ACCESS.EntityPackage;
+import Majorana.ORM_ACCESS.EntityPackage;
 
 /**
  * Specifies the version of all the entities in the same package and directory

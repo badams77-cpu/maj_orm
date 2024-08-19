@@ -1,4 +1,4 @@
-package Distiller.ORM;
+package Majorana.ORM;
 
 import jakarta.persistence.Column;
 

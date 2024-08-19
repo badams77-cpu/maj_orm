@@ -10,7 +10,7 @@ import jakarta.persistence.Column;
  * for each non transient and non static field
  */
 
-public class Category extends BaseDistillerEntity {
+public class Category extends BaseMajoranaEntity {
 
 	private static final String TABLE_NAME = TableNames.CATEGORIES;
 

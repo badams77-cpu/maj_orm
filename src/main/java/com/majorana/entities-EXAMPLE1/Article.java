@@ -9,7 +9,7 @@ import jakarta.persistence.Column;
  */
 
 
-public class Article extends BaseDistillerEntity {
+public class Article extends BaseMajoranaEntity {
 
 	private static final String TABLE_NAME = TableNames.ARTICLES;
 

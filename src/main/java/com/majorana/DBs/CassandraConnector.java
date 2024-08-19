@@ -1,8 +1,8 @@
-package Distiller.DBs;
+package Majorana.DBs;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
-import Distiller.Utils.MethodPrefixingLoggerFactory;
+import Majorana.Utils.MethodPrefixingLoggerFactory;
 import org.slf4j.Logger;
 
 import java.net.InetSocketAddress;

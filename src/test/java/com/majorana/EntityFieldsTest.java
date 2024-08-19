@@ -1,13 +1,13 @@
 
 
 
-package Distiller;
+package Majorana;
 
-import Distiller.Utils.*;
+import Majorana.Utils.*;
 
-import Distiller.ORM_ACCESS.*;
+import Majorana.ORM_ACCESS.*;
 
-import Distiller.entities.BaseDistillerEntity;
+import Majorana.entities.BaseMajoranaEntity;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -37,7 +37,7 @@ public class EntityFieldsTest {
 
     private static final MethodPrefixingLogger LOGGER = MethodPrefixingLoggerFactory.getLogger(EntityFieldsTest.class);
 
-    private final static String PREFIX = "Distiller";
+    private final static String PREFIX = "Majorana";
 
     private final static String DB_VERSION = "DBVersion";
 
@@ -49,7 +49,7 @@ public class EntityFieldsTest {
 
     private static DbBean dbBean  = null;
 
-    private static final String ENTITIES_DIR = "Distiller.entities";
+    private static final String ENTITIES_DIR = "Majorana.entities";
 
     public EntityFieldsTest(){
         dbBean = DbBean.getSingletonLazy();
@@ -69,9 +69,9 @@ public class EntityFieldsTest {
     @Test
     public void listField() {
 
-          SubClassFinder finder = new SubClassFinder<BaseDistillerEntity>();
-        Set<BaseDistillerEntity> entityTypes = finder.getSubclassInstances( BaseDistillerEntity.class);
-        for( BaseDistillerEntity bde : entityTypes){
+          SubClassFinder finder = new SubClassFinder<BaseMajoranaEntity>();
+        Set<BaseMajoranaEntity> entityTypes = finder.getSubclassInstances( BaseMajoranaEntity.class);
+        for( BaseMajoranaEntity bde : entityTypes){
           System.err.println( " ---- ALL ---");
           System.err.println( bde.getClass().getCanonicalName());
           System.err.println( bde.getFields());
@@ -83,9 +83,9 @@ public class EntityFieldsTest {
 
     @Test
     public void listField_1_0() {
-        SubClassFinder finder = new SubClassFinder<BaseDistillerEntity>(1,0);
-        Set<BaseDistillerEntity> entityTypes = finder.getSubclassInstances( BaseDistillerEntity.class);
-        for( BaseDistillerEntity bde : entityTypes){
+        SubClassFinder finder = new SubClassFinder<BaseMajoranaEntity>(1,0);
+        Set<BaseMajoranaEntity> entityTypes = finder.getSubclassInstances( BaseMajoranaEntity.class);
+        for( BaseMajoranaEntity bde : entityTypes){
             System.err.println( " ----  V1 ----");
             System.err.println( bde.getClass().getCanonicalName());
             System.err.println( bde.getFields());
@@ -97,9 +97,9 @@ public class EntityFieldsTest {
 
     @Test
     public void listField_2_0() {
-        SubClassFinder finder = new SubClassFinder<BaseDistillerEntity>(2,0);
-        Set<BaseDistillerEntity> entityTypes = finder.getSubclassInstances( BaseDistillerEntity.class);
-        for( BaseDistillerEntity bde : entityTypes){
+        SubClassFinder finder = new SubClassFinder<BaseMajoranaEntity>(2,0);
+        Set<BaseMajoranaEntity> entityTypes = finder.getSubclassInstances( BaseMajoranaEntity.class);
+        for( BaseMajoranaEntity bde : entityTypes){
             System.err.println( " ---- V2 -----");
             System.err.println( bde.getClass().getCanonicalName());
             System.err.println( bde.getFields());
@@ -111,16 +111,16 @@ public class EntityFieldsTest {
 
     @Test
     public void dbSaveAndLoadRandom(){
-        SubClassFinder finder = new SubClassFinder<BaseDistillerEntity>();
-        Set<Class> entityTypes = finder.findSubclasses(  BaseDistillerEntity.class);
+        SubClassFinder finder = new SubClassFinder<BaseMajoranaEntity>();
+        Set<Class> entityTypes = finder.findSubclasses(  BaseMajoranaEntity.class);
         int ok =0;
         List<String> good = new LinkedList<>();
         int failed = 0;
         List<String> bad = new LinkedList<>();
         for(Class et : entityTypes){
             try {
-                RandomEntity<BaseDistillerEntity> rbde = new RandomEntity<>(dbBean, et);
-                Distiller.ORM_ACCESS.MultiId id = dbBean.storeBean(rbde.getValue());
+                RandomEntity<BaseMajoranaEntity> rbde = new RandomEntity<>(dbBean, et);
+                Majorana.ORM_ACCESS.MultiId id = dbBean.storeBean(rbde.getValue());
                 assertTrue(id.hasAnyId(),
                         "Storing " + et + " failed "
                 );
@@ -128,7 +128,7 @@ public class EntityFieldsTest {
                 paramNames[0] = "id";
                 Object params[] = new Object[1];
                 params[0] = id.getId();
-                BaseDistillerEntity tbde = (BaseDistillerEntity) dbBean.getBeanNP(et, rbde.getValue().getTableName(), paramNames, params);
+                BaseMajoranaEntity tbde = (BaseMajoranaEntity) dbBean.getBeanNP(et, rbde.getValue().getTableName(), paramNames, params);
                 assertTrue(rbde.isEqualForCreateFields(tbde),
                         "Stored fields not equals ");
                 ok++;

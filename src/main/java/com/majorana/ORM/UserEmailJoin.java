@@ -1,6 +1,10 @@
-package Distiller.ORM;
+package com.majorana.ORM;
 
-import Distiller.entities.TableNames;
+import com.majorana.entities.TableNames;
+
+/**
+ * Helper SQL to join to user table to populate named of creating or modifying users
+ */
 
 public class UserEmailJoin {
 

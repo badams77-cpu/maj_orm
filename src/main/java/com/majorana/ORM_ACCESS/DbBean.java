@@ -1,12 +1,12 @@
 
 package com.majorana.ORM_ACCESS;
 
-import Distiller.DBs.*;
-import Distiller.ORM.CassMockResultSet;
-import Distiller.ORM.MajoranaAnnotationRepository;
-import Distiller.ORM.MajoranaDBConnectionFactory;
-import Distiller.Utils.MethodPrefixingLoggerFactory;
-import Distiller.entities.*;
+import Majorana.DBs.*;
+import Majorana.ORM.CassMockResultSet;
+import Majorana.ORM.MajoranaAnnotationRepository;
+import Majorana.ORM.MajoranaDBConnectionFactory;
+import Majorana.Utils.MethodPrefixingLoggerFactory;
+import Majorana.entities.*;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.zaxxer.hikari.HikariDataSource;
@@ -28,12 +28,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.mockito.Mockito.mock;
 
+/**
+ * Quick access to any of database methods
+ */
+
 public class DbBean {
 
-  String dbURL = "jdbc:mysql://localhost:3306/distiller";
-  String dbDriver = "com.mysql.jdbc.Driver";
-  String dbUser = "";
-  String dbPass = "";
+  private String dbURL = "jdbc:mysql://localhost:3306/Majorana";
+  private String dbDriver = "com.mysql.jdbc.Driver";
+  private String dbUser = "";
+  private String dbPass = "";
 
   private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(DbBean.class);
   private Connection dbCon;
@@ -64,9 +68,14 @@ public class DbBean {
 
   private static DbBean singletonLazy;
 
-  private  SmokDatasourceName mainDsn = null;
-  private  SmokDatasourceName cassDsn = null;
-  private  SmokDatasourceName jdbcDsn = null;
+  private  MajDatasourceName mainDsn = null;
+  private  MajDatasourceName cassDsn = null;
+  private  MajDatasourceName jdbcDsn = null;
+
+    /**
+     * Bare constructor, read vars from environment, orivate
+     */
+
 
   private DbBean(){
       cassandraState = new CassandraState(false);
@@ -80,12 +89,28 @@ public class DbBean {
       }
   }
 
+    /**
+     * Creates a new DbBean signleton if needed
+     * @return
+     */
+
   public static synchronized DbBean getSingletonLazy(){
       if (singletonLazy==null){
           singletonLazy = new DbBean();
       }
       return singletonLazy;
   }
+
+    /**
+     *
+     * Creates a new DbBean singleton if needed with given credentials
+     *
+     * @param url
+     * @param driver
+     * @param user
+     * @param pass
+     * @return
+     */
 
     public static synchronized DbBean getSingletonLazy(String url, String driver, String user, String pass){
         if (singletonLazy==null){
@@ -94,7 +119,10 @@ public class DbBean {
         return singletonLazy;
     }
 
+    /**
+     * Creates a new DbBean with credentials
 
+    */
     @Deprecated
   private DbBean(String url, String driver, String user, String pass){
       cassandraState = new CassandraState(cassandraDbIsPresent.isEnabbled());
@@ -122,14 +150,23 @@ public class DbBean {
  */
  }
 
+    /**
+     *  COnnected a DB bean if needed
+     *
+     *
+      * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+
 
   public boolean connect() throws ClassNotFoundException,SQLException{
           if (dbCon!=null){ return true; }
           try {
               Class.forName(dbDriver);
-              SmokDatasourceName smn = envSetup.getMainDBName();
-              SmokDatasourceName casn = envSetup.getMainCassDBName();
-              SmokDatasourceName jdsn = envSetup.getMainSqlDBName();
+              Majorana.DBs.MajDatasourceName smn = envSetup.getMainDBName();
+              Majorana.DBs.MajDatasourceName casn = envSetup.getMainCassDBName();
+              Majorana.DBs.MajDatasourceName jdsn = envSetup.getMainSqlDBName();
 
               cassDsn = casn;
               jdbcDsn = jdsn;
@@ -161,7 +198,10 @@ public class DbBean {
         }
 
 
-
+    /**
+     * close out the DNB
+     * @throws SQLException
+     */
 
 
   public void close() throws SQLException{
@@ -392,7 +432,7 @@ public class DbBean {
     }
 
 
-    public MultiId storeBean(    Distiller.entities.BaseDistillerEntity bde) throws SQLException {
+    public MultiId storeBean(    Majorana.entities.BaseMajoranaEntity bde) throws SQLException {
 
         Class beanClass = bde.getClass();
 
@@ -446,7 +486,7 @@ public class DbBean {
 
     }
 
-    public MultiId updateBean( MultiId mid,  Distiller.entities.BaseDistillerEntity bde) throws SQLException {
+    public MultiId updateBean( MultiId mid,  Majorana.entities.BaseMajoranaEntity bde) throws SQLException {
 
         Class beanClass = bde.getClass();
 
@@ -514,7 +554,7 @@ public class DbBean {
 
     }
 
-    public MultiId deleteBeanById( MultiId mid,  Distiller.entities.BaseDistillerEntity bde) throws SQLException {
+    public MultiId deleteBeanById( MultiId mid,  Majorana.entities.BaseMajoranaEntity bde) throws SQLException {
 
         Class beanClass = bde.getClass();
 
@@ -580,7 +620,7 @@ public class DbBean {
 
     }
 
-    public MultiId deleteBeanByParams( MultiId mid,  Distiller.entities.BaseDistillerEntity bde) throws SQLException {
+    public MultiId deleteBeanByParams( MultiId mid,  Majorana.entities.BaseMajoranaEntity bde) throws SQLException {
 
         Class beanClass = bde.getClass();
 

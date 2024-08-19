@@ -1,8 +1,8 @@
-package Distiller.DBs;
+package Majorana.DBs;
 
 import java.util.Map;
 
-import Distiller.Utils.MethodPrefixingLoggerFactory;
+import Majorana.Utils.MethodPrefixingLoggerFactory;
 
 import org.slf4j.Logger;
 
@@ -47,7 +47,7 @@ public class DBCreds {
     };
 
 
-    private final SmokDatasourceName name;
+    private final MajDatasourceName name;
     private final DatabaseVariant variant;
     private final String hostAddress;
     private final int port;
@@ -62,7 +62,7 @@ public class DBCreds {
     private final boolean allowPublicKeyRetrieval;
 
     public DBCreds(){
-        this.name = new SmokDatasourceName("");
+        this.name = new MajDatasourceName("");
         this.variant = DatabaseVariant.NONE;
         this.hostAddress = "127.0.0.1";
         this.port = 3303;
@@ -77,7 +77,7 @@ public class DBCreds {
         this.allowPublicKeyRetrieval = false;
     }
 
-    public DBCreds(SmokDatasourceName name, String
+    public DBCreds(MajDatasourceName name, String
             group, int  priorty, DatabaseVariant variant, String remoteDatabaseNameAtService,
                    String hostAddress, int port, String username, String passwd, boolean useSSL, boolean verifySSLCert,
             String isolationLevel, boolean allowPublicKeyRetrieval)
@@ -100,9 +100,9 @@ public class DBCreds {
     DBCreds(Map<String, String> cred)
     {
         LOGGER.warn("Creating DBCreds from prop map : ",
-                Distiller.Utils.MapDumpHelper.dump( cred, "\n",", ") );
+                Majorana.Utils.MapDumpHelper.dump( cred, "\n",", ") );
         this.isolationLevel = cred.getOrDefault(ENV_VAR_ISOLATION_LEVEL,"");
-        this.name = new SmokDatasourceName(cred.getOrDefault(ENV_VAR_NAME,""));
+        this.name = new MajDatasourceName(cred.getOrDefault(ENV_VAR_NAME,""));
         this.variant = DatabaseVariant.getFromDescription(cred.getOrDefault(ENV_VAR_DB_VARIANT,""));
         this.hostAddress = cred.getOrDefault(ENV_VAR_HOST_ADDRESS,"");
         this.port = Integer.parseInt(cred.getOrDefault(ENV_VAR_PORT, "0"));
@@ -156,7 +156,7 @@ public class DBCreds {
         return group;
     }
 
-    public SmokDatasourceName getName() {
+    public MajDatasourceName getName() {
         return name;
     }
 

@@ -1,7 +1,7 @@
-package Distiller.Util;
+package Majorana.Util;
 
-import Distiller.Utils.MapDumpHelper;
-import Distiller.Utils.MethodPrefixingLoggerFactory;
+import Majorana.Utils.MapDumpHelper;
+import Majorana.Utils.MethodPrefixingLoggerFactory;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;

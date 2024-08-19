@@ -1,7 +1,7 @@
-package Distiller.DBs;
+package Majorana.DBs;
 
-import Distiller.ORM.TimeResult;
-import Distiller.ORM.MajoranaDBConnectionFactory;
+import com.majorana.Utils.newannot.TimeResult;
+import Majorana.ORM.MajoranaDBConnectionFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +33,9 @@ public class MajoranaDataSourceHealthIndicator extends AbstractHealthIndicator {
     @Autowired
     private MajoranaDBConnectionFactory dbFactory;
 
-    private SmokDatasourceName datasourceName;
+    private MajDatasourceName datasourceName;
 
-    private MajoranaDataSourceHealthIndicator(SmokDatasourceName datasourceName) {
+    private MajoranaDataSourceHealthIndicator(MajDatasourceName datasourceName) {
         this.datasourceName = datasourceName;
     }
 
@@ -44,7 +44,7 @@ public class MajoranaDataSourceHealthIndicator extends AbstractHealthIndicator {
         String sql = "select 1 as status;";
         String down = "";
         DatabaseVariant variant = dbEnvSetup.getCreds(datasourceName).getVariant();
-        HikariDataSource src = dbEnvSetup.getSmokDatasource(datasourceName).getHikariDataSource();
+        HikariDataSource src = dbEnvSetup.getMajDatasource(datasourceName).getHikariDataSource();
 
         Optional<CassandraTemplate> cassTempOpt = dbFactory.getCassandraTemplate(datasourceName);
         Optional<JdbcTemplate> jdbcTemplate = dbFactory.getJdbcTemplate(datasourceName);

@@ -1,4 +1,4 @@
-package Distiller.DBs;
+package Majorana.DBs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

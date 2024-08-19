@@ -1,4 +1,4 @@
-package Distiller.ORM;
+package Majorana.ORM;
 
 /**
  * An Annotation for an Entity in Maj ORM that is additional to the jakarta persistance,

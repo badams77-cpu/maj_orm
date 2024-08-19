@@ -1,6 +1,6 @@
-package Distiller.ORM;
+package Majorana.ORM;
 
-import Distiller.Utils.MethodPrefixingLoggerFactory;
+import Majorana.Utils.MethodPrefixingLoggerFactory;
 import org.slf4j.Logger;
 
 import javax.sql.rowset.serial.SerialBlob;

@@ -1,10 +1,10 @@
-package Distiller.extraEntities;
+package Majorana.extraEntities;
 
-import Distiller.ORM.Updateable;
-import Distiller.entities.BaseDistillerEntity;
-import Distiller.entities.TableNames;
+import com.majorana.Utils.newannot.Updateable;
+import Majorana.entities.BaseMajoranaEntity;
+import Majorana.entities.TableNames;
 import jakarta.persistence.Column;
-import main.Distiller.enum_const.ACCESS_LEVEL;
+import main.Majorana.enum_const.ACCESS_LEVEL;
 
 /**
  * An example persisted entity for a database
@@ -12,7 +12,7 @@ import main.Distiller.enum_const.ACCESS_LEVEL;
  *
  */
 
-public class PrivateFeed extends BaseDistillerEntity {
+public class PrivateFeed extends BaseMajoranaEntity {
 
   private static final String TABLE_NAME = TableNamesExtra.PRIVATE_FEEDS;
 

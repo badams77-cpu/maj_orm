@@ -1,9 +1,13 @@
-package Distiller.ORM;
+package com.majorana.Utils.newannot;
 
 import jakarta.persistence.TemporalType;
 import org.springframework.data.cassandra.core.mapping.Column;
 
 import java.time.LocalDateTime;
+
+/**
+ * A timed result from either sql or cassanara
+ */
 
 public class TimeResult {
 

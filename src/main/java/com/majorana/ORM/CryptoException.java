@@ -1,4 +1,4 @@
-package Distiller.ORM;
+package Majorana.ORM;
 
 /**
  *  An exception indicating a encrypted database in the database was not able ot be encrypted or

@@ -1,6 +1,6 @@
 package com.majorana.entities;
 
-import Distiller.ORM.Updateable;
+import com.majorana.Utils.newannot.Updateable;
 import jakarta.persistence.Column;
 
 /**
@@ -8,7 +8,7 @@ import jakarta.persistence.Column;
  *
  */
 
-public class UserEx extends BaseDistillerEntity {
+public class UserEx extends BaseMajoranaEntity {
 
 	private static final String TABLE_NAME = TableNames.NO_TABLE;
 

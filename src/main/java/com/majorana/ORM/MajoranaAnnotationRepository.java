@@ -1,10 +1,10 @@
-package Distiller.ORM;
+package Majorana.ORM;
 
-import Distiller.Utils.MethodPrefixingLoggerFactory;
-import Distiller.entities.BaseDistillerEntity;
-import Distiller.DBs.SmokDatasourceName;
-//import Distiller.ORM.domain.entity.BaseSmokEntity;
-import Distiller.Utils.SQLHelper;
+import Majorana.Utils.MethodPrefixingLoggerFactory;
+import Majorana.entities.BaseMajoranaEntity;
+import Majorana.DBs.MajDatasourceName;
+//import Majorana.ORM.domain.entity.BaseMajEntity;
+import Majorana.Utils.SQLHelper;
 import jakarta.persistence.Column;
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -35,11 +35,11 @@ import java.util.stream.Collectors;
 
 
 
-public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
+public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
 
     private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(MajoranaAnnotationRepository.class);
 
-    private static final String PACKAGE_BASE = "Distiller.ORM";
+    private static final String PACKAGE_BASE = "Majorana.ORM";
 
     private static final LocalDate defDate = LocalDate.of(1970,1,1);
 
@@ -55,7 +55,7 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
 
     protected MajoranaDBConnectionFactory dbFactory;
 
-    protected SmokDatasourceName dbName;
+    protected MajDatasourceName dbName;
 
     protected List<MajoranaRepositoryField> repoFields = new LinkedList<>();
 
@@ -74,7 +74,7 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
      */
 
 
-    public MajoranaAnnotationRepository(MajoranaDBConnectionFactory dbFactory,  SmokDatasourceName dbName ,Class<T> clazz){
+    public MajoranaAnnotationRepository(MajoranaDBConnectionFactory dbFactory,  MajDatasourceName dbName ,Class<T> clazz){
         this.dbFactory = dbFactory;
         this.dbName = dbName;
         this.clazz =clazz;
@@ -437,7 +437,7 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
      * @return sqlParameter sourcde
      */
 
-    public SqlParameterSource getSqlParameterSourceWithDeletedAt(SmokDatasourceName sDn,T entity){
+    public SqlParameterSource getSqlParameterSourceWithDeletedAt(MajDatasourceName sDn,T entity){
         Map<String, Object> sourceMap =getParameterMap(entity);
         sourceMap.put("deleted_at", (Boolean) sourceMap.getOrDefault("deleted",false)?  dbFactory.getDBTime(sDn) : SQLHelper.BLANK_TIMESTAMP);
         return new MapSqlParameterSource(sourceMap);
@@ -452,13 +452,13 @@ public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
      * @return
      */
 
-    public Map<String, Object> getParameterMapWithDeletedAt(SmokDatasourceName sDn,T entity){
+    public Map<String, Object> getParameterMapWithDeletedAt(MajDatasourceName sDn,T entity){
         Map<String, Object> sourceMap =getParameterMap(entity);
         sourceMap.put("deleted_at", (Boolean) sourceMap.getOrDefault("deleted",false)?  dbFactory.getDBTime(sDn) : SQLHelper.BLANK_TIMESTAMP);
         return sourceMap;
     }
 
-    protected Timestamp getDeletedA(BaseDistillerEntity bse){
+    protected Timestamp getDeletedA(BaseMajoranaEntity bse){
         return Timestamp.valueOf (bse.isDeleted() ? bse.getDeletedAt() : SQLHelper.BLANK_TIMESTAMP);
     }
 

@@ -1,9 +1,13 @@
-package Distiller.ORM;
+package Majorana.ORM;
 
 import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+/***
+ * Stored the data on the annotated fields of a Entity for a repository
+ */
 
 public class MajoranaRepositoryField {
 

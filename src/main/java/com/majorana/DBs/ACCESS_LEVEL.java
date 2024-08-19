@@ -1,4 +1,4 @@
-package main.Distiller.enum_const;
+package main.Majorana.enum_const;
 
 /**
  *

@@ -1,4 +1,4 @@
-package Distiller.DBs;
+package Majorana.DBs;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.context.DriverContext;

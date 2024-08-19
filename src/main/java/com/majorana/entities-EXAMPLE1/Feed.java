@@ -1,8 +1,8 @@
 package com.majorana.entities;
 
-import Distiller.ORM.Updateable;
+import com.majorana.Utils.newannot.Updateable;
 import jakarta.persistence.Column;
-import main.Distiller.enum_const.ACCESS_LEVEL;
+import main.Majorana.enum_const.ACCESS_LEVEL;
 
 
 /**
@@ -10,7 +10,7 @@ import main.Distiller.enum_const.ACCESS_LEVEL;
  * for each non transient and non static field
  */
 
-public class Feed extends BaseDistillerEntity {
+public class Feed extends BaseMajoranaEntity {
 
   private static final String TABLE_NAME = TableNames.FEEDS;
 

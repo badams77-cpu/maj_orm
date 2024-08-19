@@ -1,4 +1,4 @@
-package Distiller.ORM;
+package Majorana.ORM;
 
 import com.datastax.driver.core.ColumnDefinitions;
 import com.datastax.oss.driver.api.core.cql.ColumnDefinition;

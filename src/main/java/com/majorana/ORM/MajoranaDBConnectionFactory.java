@@ -1,8 +1,8 @@
-package Distiller.ORM;
+package Majorana.ORM;
 
-import Distiller.DBs.*;
-import Distiller.TimeResult;
-import Distiller.Utils.MethodPrefixingLoggerFactory
+import Majorana.DBs.*;
+import Majorana.TimeResult;
+import Majorana.Utils.MethodPrefixingLoggerFactory
         ;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.zaxxer.hikari.HikariDataSource;
@@ -23,6 +23,10 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
 
+/***
+ * This class represents a factory to create database connections using any of the credentials
+ * in the DBEnvSetup class of database from the environment
+ */
 
 public class MajoranaDBConnectionFactory {
 
@@ -35,21 +39,42 @@ public class MajoranaDBConnectionFactory {
         private CassandraState cassandraState;
 
 
-        public MajoranaDBConnectionFactory(DBEnvSetup dbs, CassandraState cassandraState) {
+    /**
+     * Constructor, make a connection factory from the DB Environment, and with
+     * cassandra option
+     *
+     * @param dbs  - DBEnvSetup env var for the credentials
+     * @param cassandraState - is cassandra to to be used
+     */
+
+
+    public MajoranaDBConnectionFactory(DBEnvSetup dbs, CassandraState cassandraState) {
                   dBSourcesFromEnv = dbs;
             mockCass = mock(CassandraTemplate.class);
             this.cassandraState = cassandraState;
         }
 
-        public SmokDatasourceName getMainDBName(){
-            SmokDatasourceName dbName =  dBSourcesFromEnv.getMainSqlDBName();
+    /**
+     *
+     * @return get the name of the main database
+     */
+
+
+    public MajDatasourceName getMainDBName(){
+            MajDatasourceName dbName =  dBSourcesFromEnv.getMainSqlDBName();
             return dbName;
 //            return cassandraState.isEnabbled() ? dBSourcesFromEnv.getMainSqlDBName() :
 //                    dBSourcesFromEnv.getMainSqlDBName();
         }
 
-        public DatabaseVariant getMainVariant(){
-            SmokDatasourceName mainVariant = getMainDBName();
+    /**
+     * Get the variant of the main database
+     *
+     * @return
+     */
+
+    public DatabaseVariant getMainVariant(){
+            MajDatasourceName mainVariant = getMainDBName();
             DBCreds mCreds = dBSourcesFromEnv.getCreds(mainVariant);
             if (mCreds == null){
 
@@ -60,9 +85,15 @@ public class MajoranaDBConnectionFactory {
             return dv;
         }
 
+    /**
+     * Get the group schema from the MajDatasourceName
+     *
+     *
+     * @param dbSrcName
+     * @return group from credentials from the source
+     */
 
-
-        public String getSchemaInDB(SmokDatasourceName dbSrcName){
+    public String getSchemaInDB(MajDatasourceName dbSrcName){
             DBCreds creds = dBSourcesFromEnv.getCreds(dbSrcName);
             if (creds==null){
                 LOGGER.warn("No schema found for src name "+dbSrcName);
@@ -71,8 +102,14 @@ public class MajoranaDBConnectionFactory {
             return creds.getGroup();
         }
 
-        public Optional<JdbcTemplate> getMainJdbcTemplate(){
-            SmokDatasourceName sdn = (dBSourcesFromEnv. getMainSqlDBName());
+    /**
+     * Get trhe main jdbc template
+     *
+     * @return an JbdcTemplate
+     */
+
+    public Optional<JdbcTemplate> getMainJdbcTemplate(){
+            MajDatasourceName sdn = (dBSourcesFromEnv. getMainSqlDBName());
             DataSource daSrc = (dBSourcesFromEnv.getHikDatasource(sdn));
             Optional<JdbcTemplate> jdbc = Optional.ofNullable(  daSrc == null ? null :
                     new JdbcTemplate( daSrc ));
@@ -82,8 +119,14 @@ public class MajoranaDBConnectionFactory {
             return jdbc;
         }
 
+    /**
+     * Get a named parameter template for the main template
+     *
+     * @return named parameter jdbc template
+     */
+
     public Optional<NamedParameterJdbcTemplate> getMainNamedParamJdbcTemplate(){
-        SmokDatasourceName sdn = (dBSourcesFromEnv. getMainSqlDBName());
+        MajDatasourceName sdn = (dBSourcesFromEnv. getMainSqlDBName());
         DataSource daSrc = (dBSourcesFromEnv.getHikDatasource(sdn));
         Optional<NamedParameterJdbcTemplate> jdbc = Optional.ofNullable(  daSrc == null ? null :
                 new NamedParameterJdbcTemplate( daSrc ));
@@ -93,8 +136,14 @@ public class MajoranaDBConnectionFactory {
         return jdbc;
     }
 
+    /**
+     * Get the main cassandra template
+     * 
+     * @return cassandra template
+     */
+    
         public Optional<CassandraTemplate> getMainCassandraTemplate(){
-            SmokDatasourceName sdsn =dBSourcesFromEnv.getMainCassDBName();
+            MajDatasourceName sdsn =dBSourcesFromEnv.getMainCassDBName();
             if (sdsn == null){
                 LOGGER.warn("No Cass Datasource using mock");
                 return Optional.of(mockCass);
@@ -105,7 +154,15 @@ public class MajoranaDBConnectionFactory {
             return ct;
         }
 
-        public Optional<JdbcTemplate> getJdbcTemplate(SmokDatasourceName dbSrcName) {
+    /**
+     * Get the a jdnc template for the named database source
+     * 
+     * 
+     * @param dbSrcName
+     * @return
+     */
+
+    public Optional<JdbcTemplate> getJdbcTemplate(MajDatasourceName dbSrcName) {
             HikariDataSource source = dBSourcesFromEnv.getHikDatasource(dbSrcName);
             if (source==null){
                 LOGGER.warn("No datasource found for src name "+dbSrcName);
@@ -114,7 +171,16 @@ public class MajoranaDBConnectionFactory {
             return Optional.of(new JdbcTemplate(source));
         }
 
-        public Connection getMysqlConn(SmokDatasourceName dbSrcName) throws SQLException {
+    /**
+     * Get an SQL Connection for the named datasource
+     * 
+     * 
+     * @param dbSrcName
+     * @return SQL Connection
+     * @throws SQLException
+     */
+
+    public Connection getMysqlConn(MajDatasourceName dbSrcName) throws SQLException {
             HikariDataSource source = dBSourcesFromEnv.getHikDatasource(dbSrcName);
             if (source==null){
                 LOGGER.warn("No datasource found for src name "+dbSrcName);
@@ -123,11 +189,29 @@ public class MajoranaDBConnectionFactory {
             return source.getConnection();
         }
 
-        public DatabaseVariant getVariant(SmokDatasourceName dbName){
+    /**
+     * Get the variant of the named datasource
+     * 
+     * @param dbName
+     * @return
+     */
+
+    public DatabaseVariant getVariant(MajDatasourceName dbName){
             return dBSourcesFromEnv.getCreds(dbName).getVariant();
         }
 
 
+    /**
+     * 
+     * Translate SQL according to the database variant
+     * 
+     * 
+     * 
+     * @param sql in
+     * @param dbVariant
+     * @return sql out
+     */
+        
         public String translate(String sql, DatabaseVariant dbVariant){
                 String translatedSQL = sql;
                 if (DatabaseVariant.SQL_SERVER == dbVariant) {
@@ -150,8 +234,15 @@ public class MajoranaDBConnectionFactory {
 
         }
 
-        public LocalDateTime getDBTime(SmokDatasourceName dbName){
-            DatabaseVariant dbVariant = dBSourcesFromEnv.getSmokDatasource(dbName).getVariant();
+    /**
+     *  Get the database time zone given the database name
+     * 
+     * @param dbName
+     * @return
+     */
+
+    public LocalDateTime getDBTime(MajDatasourceName dbName){
+            DatabaseVariant dbVariant = dBSourcesFromEnv.getMajDatasource(dbName).getVariant();
 
             switch(dbVariant){
                 case MYSQL:
@@ -168,26 +259,49 @@ public class MajoranaDBConnectionFactory {
             }
         }
 
-        public Optional<CqlSession> getCqlSession(SmokDatasourceName dbName) {
+    /**
+     * Get a CqlSession (cassandra) for the named datab source
+     * 
+     * @param dbName
+     * @return
+     */
+
+    public Optional<CqlSession> getCqlSession(MajDatasourceName dbName) {
             CqlSession cSess = dBSourcesFromEnv.getCqlSession(dbName);
             return Optional.of(cSess);
         }
 
-        public Optional<CassandraTemplate> getCassandraTemplate(SmokDatasourceName dbName){
+    /**
+     * Get a cassandra template for the named database source
+     * 
+     * @param dbName
+     * @return
+     */
+
+        public Optional<CassandraTemplate> getCassandraTemplate(MajDatasourceName dbName){
             CqlSession cSess = dBSourcesFromEnv.getCqlSession(dbName);
             com.datastax.driver.core.Session session =  (com.datastax.driver.core.Session) cSess;
             CassandraTemplate cass = cSess == null ? mockCass: new  CassandraTemplate( session);
             return Optional.of(cass);
         }
 
+    /**
+     * Get a named parameter jdnc template for the named datasource
+     * 
+     * @param dbName
+     * @return
+     */
 
-        public Optional<NamedParameterJdbcTemplate> getNamedParameterJdbcTemplate(SmokDatasourceName dbName) {
+        public Optional<NamedParameterJdbcTemplate> getNamedParameterJdbcTemplate(MajDatasourceName dbName) {
             HikariDataSource hds = dBSourcesFromEnv.getHikDatasource(dbName);    ;
             return Optional.of(new NamedParameterJdbcTemplate(hds));
         }
 
+    /**
+     *  Get a row mapper ot get a localdate time from a database
+     */
 
-        public class TimeMapper implements RowMapper<LocalDateTime> {
+    public class TimeMapper implements RowMapper<LocalDateTime> {
             @Override
                 public LocalDateTime mapRow(ResultSet rs, int i) throws SQLException {
                     java.sql.Timestamp ts = rs.getTimestamp("dbtime");

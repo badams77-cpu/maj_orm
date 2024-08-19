@@ -1,4 +1,4 @@
-package Distiller.DBs;
+package Majorana.DBs;
 
 import java.util.Objects;
 
@@ -6,11 +6,11 @@ import java.util.Objects;
  * Unique name of a datasource to use
  */
 
-public class SmokDatasourceName {
+public class MajDatasourceName {
 
     private final String DataSourceName;
 
-    public SmokDatasourceName(String name){
+    public MajDatasourceName(String name){
         this.DataSourceName =name;
     }
 
@@ -22,7 +22,7 @@ public class SmokDatasourceName {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SmokDatasourceName that = (SmokDatasourceName) o;
+        MajDatasourceName that = (MajDatasourceName) o;
         return Objects.equals(DataSourceName, that.DataSourceName);
     }
 
@@ -33,7 +33,7 @@ public class SmokDatasourceName {
 
     @Override
     public String toString() {
-        return "SmokDatasourceName{" +
+        return "MajDatasourceName{" +
                 "DataSourceName='" + DataSourceName + '\'' +
                 '}';
     }
