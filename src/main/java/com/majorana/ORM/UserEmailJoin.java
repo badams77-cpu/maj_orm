@@ -1,6 +1,6 @@
 package com.majorana.ORM;
 
-import com.majorana.entities.TableNames;
+import com.majorana.entities.ex1.TableNames;
 
 /**
  * Helper SQL to join to user table to populate named of creating or modifying users

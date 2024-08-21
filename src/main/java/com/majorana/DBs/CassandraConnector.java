@@ -1,8 +1,9 @@
-package Majorana.DBs;
+package com.majorana.DBs;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
-import Majorana.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.Utils.MethodPrefixingLogger;
+import com.majorana.Utils.MethodPrefixingLoggerFactory;
 import org.slf4j.Logger;
 
 import java.net.InetSocketAddress;
@@ -15,7 +16,7 @@ import java.net.InetSocketAddress;
 
 public class CassandraConnector {
 
-    private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(CassandraConnector.class);
+    private static final MethodPrefixingLogger LOGGER = MethodPrefixingLoggerFactory.getLogger(CassandraConnector.class);
     private CqlSession session;
 
     private String message = "";

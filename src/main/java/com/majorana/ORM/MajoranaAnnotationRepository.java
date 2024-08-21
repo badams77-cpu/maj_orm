@@ -1,4 +1,4 @@
-package Majorana.ORM;
+package com.majorana.ORM;
 
 import Majorana.Utils.MethodPrefixingLoggerFactory;
 import Majorana.entities.BaseMajoranaEntity;

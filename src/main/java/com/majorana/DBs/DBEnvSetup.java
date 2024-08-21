@@ -1,4 +1,4 @@
-package Majorana.DBs;
+package com.majorana.DBs;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;

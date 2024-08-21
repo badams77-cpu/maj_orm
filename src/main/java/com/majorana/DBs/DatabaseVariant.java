@@ -1,4 +1,4 @@
-package Majorana.DBs;
+package com.majorana.DBs;
 
 import java.util.Arrays;
 import java.util.Optional;

@@ -1,7 +1,7 @@
 
 
 
-package Majorana;
+package com.majorana;
 
 import Majorana.Utils.*;
 

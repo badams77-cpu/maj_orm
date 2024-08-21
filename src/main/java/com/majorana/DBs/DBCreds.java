@@ -1,8 +1,8 @@
-package Majorana.DBs;
+package com.majorana.DBs;
 
 import java.util.Map;
 
-import Majorana.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.Utils.MethodPrefixingLoggerFactory;
 
 import org.slf4j.Logger;
 
@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 public class DBCreds {
 
 
-    private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(DBCreds.class);
+    private static final Logger LOGGER = com.majorana.Utils.MethodPrefixingLoggerFactory.getLogger(DBCreds.class);
 
     private static final String ENV_VAR_NAME = "name";
     private static final String ENV_VAR_ISOLATION_LEVEL = "isolationLevel";
@@ -30,6 +30,15 @@ public class DBCreds {
     private static final String ENV_VAR_USE_SSL = "useSSL";
     private static final String ENV_VAR_VERIFY_SSL_CERT = "verifySSL";
 
+    private static final String ENV_VAR_POOL_NAME = "poolName";
+    private static final String ENV_VAR_MIN_IDLE_CON = "minIdeaCon";
+    private static final String ENV_VAR_MAX_POOLSIZE = "maxPoolSize";
+    private static final String ENV_VAR_MAX_IDEA_TIMEOUT = "maxIdeaTimeout";
+    private static final String ENV_VAR_CON_TIMEOUT = "connectionTimeout";
+
+
+
+
     private static final String[] ENV_VARS = {
                 ENV_VAR_NAME,
                 ENV_VAR_ISOLATION_LEVEL,
@@ -38,12 +47,17 @@ public class DBCreds {
                 ENV_VAR_PORT,
                 ENV_VAR_USERNAME,
                 ENV_VAR_PASSWD,
-            ENV_VAR_REMOTE_DATABASE_NAME_AT_SERVICE,
+                ENV_VAR_REMOTE_DATABASE_NAME_AT_SERVICE,
                 ENV_VAR_PRIORITY,
                 ENV_VAR_GROUP,
                 ENV_VAR_USE_SSL,
                 ENV_VAR_VERIFY_SSL_CERT,
-                ENV_VAR_IS_ALLOWED_PUBLIC_KEY
+                ENV_VAR_IS_ALLOWED_PUBLIC_KEY,
+                ENV_VAR_POOL_NAME,
+                ENV_VAR_MIN_IDLE_CON,
+                ENV_VAR_MAX_POOLSIZE,
+                ENV_VAR_MAX_IDEA_TIMEOUT,
+                ENV_VAR_CON_TIMEOUT
     };
 
 
@@ -61,6 +75,18 @@ public class DBCreds {
     private final String isolationLevel;
     private final boolean allowPublicKeyRetrieval;
 
+    private final String defPoolName = "PoolName";
+    private final int defMinimumIdleTimeout = 34000;
+    private final int defMaxPoolSize = 255;
+    private final int defMinimumIdleCon = 5;
+    private final int defConnectionTimeout = 340000;
+
+    private String poolName = "PoolName";
+    private int minimumIdleTimeout = 34000;
+    private int maxPoolSize = 255;
+    private int minimumIdleCon = 5;
+    private int connectionTimeout = 340000;
+
     public DBCreds(){
         this.name = new MajDatasourceName("");
         this.variant = DatabaseVariant.NONE;
@@ -75,6 +101,7 @@ public class DBCreds {
         this.useSSL = false;
         this.verifySSLCert = false;
         this.allowPublicKeyRetrieval = false;
+
     }
 
     public DBCreds(MajDatasourceName name, String
@@ -100,7 +127,7 @@ public class DBCreds {
     DBCreds(Map<String, String> cred)
     {
         LOGGER.warn("Creating DBCreds from prop map : ",
-                Majorana.Utils.MapDumpHelper.dump( cred, "\n",", ") );
+                com.majorana.Utils.MapDumpHelper.dump( cred, "\n",", ") );
         this.isolationLevel = cred.getOrDefault(ENV_VAR_ISOLATION_LEVEL,"");
         this.name = new MajDatasourceName(cred.getOrDefault(ENV_VAR_NAME,""));
         this.variant = DatabaseVariant.getFromDescription(cred.getOrDefault(ENV_VAR_DB_VARIANT,""));
@@ -114,6 +141,13 @@ public class DBCreds {
         this.useSSL = Boolean.parseBoolean(cred.getOrDefault(ENV_VAR_USE_SSL, ""));
         this.verifySSLCert = Boolean.parseBoolean(cred.getOrDefault(ENV_VAR_VERIFY_SSL_CERT, ""));
         this.allowPublicKeyRetrieval =  Boolean.parseBoolean(cred.getOrDefault(ENV_VAR_IS_ALLOWED_PUBLIC_KEY, "true"));
+
+        this.poolName = cred.getOrDefault(ENV_VAR_POOL_NAME, poolName);
+        this.minimumIdleTimeout = Integer.valueOf(cred.getOrDefault(ENV_VAR_MIN_IDLE_CON, ""+defMinimumIdleTimeout));
+        this.maxPoolSize =   Integer.valueOf(cred.getOrDefault(ENV_VAR_MAX_POOLSIZE, ""+defMaxPoolSize));
+        if (maxPoolSize <10){ maxPoolSize = 10; }
+        this.minimumIdleCon =  Integer.valueOf(cred.getOrDefault(ENV_VAR_MAX_IDEA_TIMEOUT, ""+maxPoolSize));
+        this.connectionTimeout = Integer.valueOf(cred.getOrDefault(ENV_VAR_CON_TIMEOUT, ""+defConnectionTimeout));
     }
 
     public static String[] getCredFields(){
@@ -172,15 +206,55 @@ public class DBCreds {
         return useSSL;
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
+    public String getPoolName() {
+        return poolName;
+    }
+
+    public int getMinimumIdleTimeout() {
+        return minimumIdleTimeout;
+    }
+
+    public void setMinimumIdleTimeout(int minimumIdleTimeout) {
+        this.minimumIdleTimeout = minimumIdleTimeout;
+    }
+
+    public int getMaxPoolSize() {
+        return maxPoolSize;
+    }
+
+    public void setMaxPoolSize(int maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
+    }
+
+    public int getMinimumIdleCon() {
+        return minimumIdleCon;
+    }
+
+    public void setMinimumIdleCon(int minimumIdleCon) {
+        this.minimumIdleCon = minimumIdleCon;
+    }
+
+    public int getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public void setPoolName(String poolName) {
+        this.poolName = poolName;
+    }
+
+    @Override
+    public String toString() {
         return "DBCreds{" +
                 "name=" + name +
                 ", variant=" + variant +
                 ", hostAddress='" + hostAddress + '\'' +
                 ", port=" + port +
                 ", username='" + username + '\'' +
-                ", passwd='" + passwd.replaceAll(".","X") + '\'' +
+                ", passwd='" + passwd + '\'' +
                 ", remoteDatabaseNameAtService='" + remoteDatabaseNameAtService + '\'' +
                 ", priority=" + priority +
                 ", group='" + group + '\'' +
@@ -188,6 +262,16 @@ public class DBCreds {
                 ", verifySSLCert=" + verifySSLCert +
                 ", isolationLevel='" + isolationLevel + '\'' +
                 ", allowPublicKeyRetrieval=" + allowPublicKeyRetrieval +
+                ", defPoolName='" + defPoolName + '\'' +
+                ", defMinimumIdleTimeout=" + defMinimumIdleTimeout +
+                ", defMaxPoolSize=" + defMaxPoolSize +
+                ", defMinimumIdleCon=" + defMinimumIdleCon +
+                ", defConnectionTimeout=" + defConnectionTimeout +
+                ", poolName='" + poolName + '\'' +
+                ", minimumIdleTimeout=" + minimumIdleTimeout +
+                ", maxPoolSize=" + maxPoolSize +
+                ", minimumIdleCon=" + minimumIdleCon +
+                ", connectionTimeout=" + connectionTimeout +
                 '}';
     }
 }

@@ -1,4 +1,4 @@
-package Majorana.Util;
+package com.majorana.Util;
 
 import Majorana.Utils.MapDumpHelper;
 import Majorana.Utils.MethodPrefixingLoggerFactory;

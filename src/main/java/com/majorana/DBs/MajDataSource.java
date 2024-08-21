@@ -1,6 +1,8 @@
-package Majorana.DBs;
+package com.majorana.DBs;
 
 import Majorana.Utils.GenericUtils;
+import com.majorana.Utils.MethodPrefixingLogger;
+import com.majorana.Utils.MethodPrefixingLoggerFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.util.IsolationLevel;
@@ -14,14 +16,23 @@ import org.slf4j.LoggerFactory;
 
 
 public class MajDataSource {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MajDataSource.class);
+    private static final MethodPrefixingLogger LOGGER = MethodPrefixingLoggerFactory.getLogger(MajDataSource.class);
 
-    private DBCreds cred;
+    private String defPoolName = "majDatasource";
+    private int defGetMinimumIdle=2;
+    private int defMaxPoolSize=255;
+    private int defConnectionTimeout = 28740000;
+    private int defMaxLifeTime = 28740000;
+
+    private final int defMinimumIdleTimeout = 34000;
+    private final int defMinimumIdleCon = 5;
+
+    private com.majorana.DBs.DBCreds cred;
 
     // Set this config value to one of the values in com.zaxxer.hikari.util.IsolationLevel, eg TRANSACTION_READ_COMMITTED
     // Leave as blank for the database server default isolation level
 
-    public MajDataSource(DBCreds creds){
+    public MajDataSource(com.majorana.DBs.DBCreds creds){
         this.cred = creds;
     }
 
@@ -54,7 +65,21 @@ public class MajDataSource {
                         cred.isUseSSL(),
                         cred.isVerifySSLCert(),
                         cred.isAllowPublicKeyRetrieval()
+
                 );
+
+                url = String.format(
+                        "jdbc:mysql://%s/%s?zeroDateTimeBehavior=convertToNull&useSSL=%s"+"" +
+                                "&verifyServerCertificate=%s&allowPublicKeyRetrieval=%s",
+
+                        cred.getHostAddress(),
+                        cred.getRemoteDatabaseNameAtService(),
+                        cred.isUseSSL(),
+                        cred.isVerifySSLCert(),
+                        cred.isAllowPublicKeyRetrieval()
+
+                );
+
 //                ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
                 break;
             case SQL_SERVER:
@@ -99,6 +124,15 @@ public class MajDataSource {
         }
 
         conf.setConnectionTestQuery("SELECT 1");
+
+
+
+        conf.setPoolName(cred.getPoolName()==null ? cred.getPoolName(): cred.getName().getDataSourceName());
+        conf.setMinimumIdle( cred.getMinimumIdleTimeout()>defMinimumIdleTimeout ? defMinimumIdleTimeout : cred.getMinimumIdleTimeout());
+        conf.setMaximumPoolSize( cred.getMaxPoolSize() > 10 ? cred.getMaxPoolSize() : defMaxPoolSize);
+        conf.setConnectionTimeout( cred.getConnectionTimeout()==0 ? defConnectionTimeout : cred.getConnectionTimeout());
+        conf.setIdleTimeout( cred.getMinimumIdleTimeout()==0 ? defMinimumIdleTimeout : cred.getMinimumIdleTimeout());
+
 
         HikariDataSource hds = new HikariDataSource(conf);
 

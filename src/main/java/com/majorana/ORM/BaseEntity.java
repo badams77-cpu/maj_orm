@@ -1,4 +1,4 @@
-package Majorana.ORM;
+package com.majorana.ORM;
 
 import jakarta.persistence.Column;
 

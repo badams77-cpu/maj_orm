@@ -1,4 +1,4 @@
-package Majorana.entities;
+package com.majorana.entities;
 
 import Majorana.ORM_ACCESS.EntityPackage;
 
@@ -10,5 +10,5 @@ import Majorana.ORM_ACCESS.EntityPackage;
 
 
 @EntityPackage(major=1, minor=1)
-public class EntityVersion {
+public class DirEntityVersion {
 }

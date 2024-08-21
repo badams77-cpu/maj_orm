@@ -1,12 +1,12 @@
 
 package com.majorana.ORM_ACCESS;
 
-import Majorana.DBs.*;
-import Majorana.ORM.CassMockResultSet;
-import Majorana.ORM.MajoranaAnnotationRepository;
-import Majorana.ORM.MajoranaDBConnectionFactory;
-import Majorana.Utils.MethodPrefixingLoggerFactory;
-import Majorana.entities.*;
+import com.majorana.DBs.*;
+import com.majorana.ORM.CassMockResultSet;
+import com.majorana.ORM.MajoranaAnnotationRepository;
+import com.majorana.ORM.MajoranaDBConnectionFactory;
+import com.majorana.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.entities.*;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.zaxxer.hikari.HikariDataSource;

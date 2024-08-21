@@ -1,4 +1,4 @@
-package Majorana.ORM;
+package com.majorana.ORM;
 
 /**
  * An Annotation for an Entity in Maj ORM that is additional to the jakarta persistance,

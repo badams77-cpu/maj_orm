@@ -1,4 +1,4 @@
-package Majorana.ORM;
+package com.majorana.ORM;
 
 import com.datastax.driver.core.ColumnDefinitions;
 import com.datastax.oss.driver.api.core.cql.ColumnDefinition;

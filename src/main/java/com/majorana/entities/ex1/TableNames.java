@@ -1,4 +1,4 @@
-package com.majorana.entities;
+package com.majorana.entities.ex1;
 
 /**
  *  An example table of names of the tables each entity is persisted too

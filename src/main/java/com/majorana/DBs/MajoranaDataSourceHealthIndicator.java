@@ -1,4 +1,4 @@
-package Majorana.DBs;
+package com.majorana.DBs;
 
 import com.majorana.persist.newannot.TimeResult;
 import Majorana.ORM.MajoranaDBConnectionFactory;

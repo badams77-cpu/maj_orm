@@ -1,19 +1,17 @@
-package com.majorana.entities;
+package Distiller.entities;
 
-import Majorana.ORM.*;
+import Distiller.ORM.AutoPopTimestamp;
+import Distiller.ORM.Nullable;
+import Distiller.ORM.PopulatedCreated;
+import Distiller.ORM.Updateable;
+import Distiller.ORM.PopulatedUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+//import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+//import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-/**
- *  The base entity any Maj DB entity is a super class of
- *  include integer id for sql dbs and a UUID for cassandra
- *  and a created, modified and deleted dates to provide
- *  a audit trail of usage of the data
- *
- */
 
 public abstract class BaseMajoranaEntity {
 
@@ -68,11 +66,11 @@ public abstract class BaseMajoranaEntity {
 
     public abstract String getTableName();
 
-    public String getBaseFields(){
+    public static String getBaseFields(){
         return baseFieldss;
     }
 
-    public abstract String getFields();
+    public static  String getFields(){ return "";}
 
     public UUID getUuid() {
         return uuid;

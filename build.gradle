@@ -1,17 +1,20 @@
 buildscript {
-  repositories {
-    maven {
-      url = uri("https://plugins.gradle.org/m2/")
+    repositories {
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
+
     }
-  }
-  dependencies {
-    classpath("io.spring.gradle:dependency-management-plugin:1.1.4")
-  }
+
+    dependencies {
+        classpath("io.spring.gradle:dependency-management-plugin:1.1.4")
+    }
 }
 
+
 plugins {
-  id 'java-library'
-  id 'java'
+    id 'java-library'
+    id 'java'
 //  id 'io.spring.dependency-management'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'org.springframework.boot' version '2.7.18'
@@ -28,6 +31,27 @@ apply plugin: "org.springframework.boot"
 apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
 
+
+//plugins {
+//  id 'java-library'
+//  id 'java'
+//  id 'io.spring.dependency-management'
+
+//    id 'com.github.johnrengelman.shadow' version '7.1.2'
+//    id 'org.springframework.boot' version '2.7.18'
+
+//}
+//apply plugin: "io.spring.dependency-management"
+
+//apply plugin: 'java'
+//apply plugin: 'idea'
+//    id 'org.jetbrains.
+//apply plugin: 'java-library'
+//apply plugin: 'io.spring.dependency-management'
+//apply plugin: "org.springframework.boot"
+//apply plugin: 'application'
+//apply plugin: 'com.github.johnrengelman.shadow'
+
 mainClassName = 'MajDB.Main'
 
 //mainClass = 'MajDbORM.Main'
@@ -37,7 +61,21 @@ application {
 }
 
   dependencyManagement {
-    dependencies {
+
+      repositories {
+          maven {
+              url "https://repo1.maven.org/maven2/"
+          }
+          flatDir {
+              dirs 'libs'
+          }
+          mavenCentral()
+      }
+
+
+
+
+      dependencies {
 //      build project(':MajDbORM')
 //      build project(':MajDbORMTweeter')
     }
@@ -46,9 +84,9 @@ application {
     }
   }
 
-configurations {
-    jaxDoclet
-}
+//configurations {
+//    jaxDoclet
+//}
 
 
 javadoc {
@@ -374,11 +412,13 @@ jar {
 
 
 repositories {
-  maven {
-    url "https://plugins.gradle.org/m2/"
-  }
-
  // maven {
+ //   url "https://plugin.gradle.org/m2/"
+ // }
+    maven {
+        url = uri("https://plugins.gradle.org/m2/")
+    }
+//  maven {
 //    url 'https://plugins.gradle.org/m2/'
 //  }
   maven {

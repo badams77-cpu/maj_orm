@@ -1,4 +1,4 @@
-package Majorana.extraEntities;
+package com.majorana.entities.ex2;
 
 import com.majorana.persist.newannot.Updateable;
 import Majorana.entities.BaseMajoranaEntity;
