@@ -15,7 +15,7 @@ buildscript {
 plugins {
     id 'java-library'
     id 'java'
-    id 'io.spring.dependency-management'
+//    id 'io.spring.dependency-management'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'org.springframework.boot' version '2.7.18'
 
