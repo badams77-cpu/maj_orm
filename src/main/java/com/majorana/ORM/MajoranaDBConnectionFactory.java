@@ -1,8 +1,7 @@
 package com.majorana.ORM;
 
-import com.majorana.DBs.*;
-import com.majorana.Utils.MethodPrefixingLoggerFactory
-        ;
+import com.majorana.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.DBs.*        ;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;

@@ -2,6 +2,7 @@ package com.majorana.ORM;
 
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
 import com.majorana.DBs.MajDatasourceName;
+import com.majorana.persist.newannot.*;
 //import com.majorana.ORM.domain.entity.BaseMajEntity;
 import com.majorana.Utils.SQLHelper;
 import jakarta.persistence.Column;

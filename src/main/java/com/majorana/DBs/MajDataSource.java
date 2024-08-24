@@ -1,5 +1,4 @@
 package com.majorana.DBs;
-
 import com.majorana.Utils.GenericUtils;
 import com.majorana.Utils.MethodPrefixingLogger;
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
@@ -27,12 +26,12 @@ public class MajDataSource {
     private final int defMinimumIdleTimeout = 34000;
     private final int defMinimumIdleCon = 5;
 
-    private com.majorana.DBs.DBCreds cred;
+    private DBCreds cred;
 
     // Set this config value to one of the values in com.zaxxer.hikari.util.IsolationLevel, eg TRANSACTION_READ_COMMITTED
     // Leave as blank for the database server default isolation level
 
-    public MajDataSource(com.majorana.DBs.DBCreds creds){
+    public MajDataSource(DBCreds creds){
         this.cred = creds;
     }
 

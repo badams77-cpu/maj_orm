@@ -1,5 +1,7 @@
 package com.com.majorana.ORM.ex1;
 
+import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.entities.ex1.TableNames;
 import jakarta.persistence.Column;
 
 
@@ -23,7 +25,7 @@ public class Category extends BaseMajoranaEntity {
 	
 	public final static String fields = ", cid, cname, npages";
 
-	public String getFields(){
+	public static String getFields(){
 		return getBaseFields()+", "+fields;
 	}
 

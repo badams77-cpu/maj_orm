@@ -1,8 +1,9 @@
-package com.com.majorana.ORM.ex1;
+package com.majorana.entities.ex1;
 
 import com.majorana.ORM.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import com.majorana.persist.newannot.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -1,5 +1,8 @@
-package com.com.majorana.ORM.ex1;
+package com.majorana.entities.ex1;
 
+
+
+import com.majorana.ORM.BaseMajoranaEntity;
 import jakarta.persistence.Column;
 
 /**
@@ -42,7 +45,7 @@ public class Article extends BaseMajoranaEntity {
 		return TABLE_NAME;
 	}
 
-	public String getFields(){
+	public static String getFields(){
 		return getBaseFields()+", "+fields;
 	}
 

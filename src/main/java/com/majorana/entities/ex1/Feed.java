@@ -1,5 +1,7 @@
 package com.com.majorana.ORM.ex1;
 
+import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.entities.ex1.TableNames;
 import com.majorana.enum_const.ACCESS_LEVEL;
 import com.majorana.persist.newannot.Updateable;
 import jakarta.persistence.Column;
@@ -69,7 +71,7 @@ public class Feed extends BaseMajoranaEntity {
 
   public final static String fields = ", feedid,feedname,owner,last_access,last_updated, expiry_time, regularality, no_items, no_scanned, accessname, password, priority, nextBuild, popularity, category, filterType";
 
-  public String getFields(){
+  public static String getFields(){
     return getBaseFields()+fields;
   }
 

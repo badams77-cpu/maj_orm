@@ -7,7 +7,7 @@ import com.majorana.Utils.*;
 
 import com.majorana.ORM_ACCESS.*;
 
-import com.com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.ORM.BaseMajoranaEntity;
 
 import org.junit.Before;
 import org.junit.BeforeClass;

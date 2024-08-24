@@ -4,6 +4,11 @@ import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
 
+import com.majorana.enum_const.*;
+import com.majorana.persist.newannot.*;
+import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.DBs.DBCreds;
+
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 /*
@@ -26,7 +31,7 @@ public class DBEnvSetup {
 
     private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(DBEnvSetup.class);
 
-    private final static String[] CredFields = DBCreds.getCredFields();
+    private final static String[] CredFields = com.majorana.DBs.DBCreds.getCredFields();
 
     private final static String PREFIX = "Majorana";
 

@@ -6,7 +6,7 @@ import com.majorana.ORM.CassMockResultSet;
 import com.majorana.ORM.MajoranaAnnotationRepository;
 import com.majorana.ORM.MajoranaDBConnectionFactory;
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.com.majorana.ORM.*;
+import com.majorana.ORM.*;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.zaxxer.hikari.HikariDataSource;
@@ -52,9 +52,9 @@ public class DbBean {
 
   private CassandraTemplate cassandraTemplate;
 
-  private DBEnvSetup envSetup ;
+  private com.majorana.DBs.DBEnvSetup envSetup ;
 
-  private CassandraState cassandraState;
+  private com.majorana.DBs.CassandraState cassandraState;
 
   private CassandraState cassandraIsMain;
 
@@ -78,10 +78,10 @@ public class DbBean {
 
 
   private DbBean(){
-      cassandraState = new CassandraState(false);
-      envSetup = new DBEnvSetup(cassandraState);
+      cassandraState = new com.majorana.DBs.CassandraState(false);
+      envSetup = new com.majorana.DBs.DBEnvSetup(cassandraState, new HashMap<String, String>());
       factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));
-      jdbcTemplate = factory. getMainJdbcTemplate().orElse(null);
+      jdbcTemplate = factory.getMainJdbcTemplate().orElse(null);
       cassandraTemplate = factory.getMainCassandraTemplate().orElse(null);
       cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
       if (jdbcTemplate==null){
@@ -126,7 +126,7 @@ public class DbBean {
     @Deprecated
   private DbBean(String url, String driver, String user, String pass){
       cassandraState = new CassandraState(cassandraDbIsPresent.isEnabbled());
-      envSetup = new DBEnvSetup(cassandraState);
+      envSetup = new DBEnvSetup(cassandraState, new HashMap<>());
       factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));
 
       jdbcTemplate = factory.getMainJdbcTemplate().orElse(null);
@@ -164,9 +164,9 @@ public class DbBean {
           if (dbCon!=null){ return true; }
           try {
               Class.forName(dbDriver);
-              Majorana.DBs.MajDatasourceName smn = envSetup.getMainDBName();
-              Majorana.DBs.MajDatasourceName casn = envSetup.getMainCassDBName();
-              Majorana.DBs.MajDatasourceName jdsn = envSetup.getMainSqlDBName();
+              com.majorana.DBs.MajDatasourceName smn = envSetup.getMainDBName();
+              com.majorana.DBs.MajDatasourceName casn = envSetup.getMainCassDBName();
+              com.majorana.DBs.MajDatasourceName jdsn = envSetup.getMainSqlDBName();
 
               cassDsn = casn;
               jdbcDsn = jdsn;

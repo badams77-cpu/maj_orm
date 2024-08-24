@@ -2,7 +2,7 @@ package com.majorana.Utils;
 
 import com.majorana.ORM.MajoranaAnnotationRepository;
 import com.majorana.ORM.MajoranaRepositoryField;
-import com.com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.ORM.BaseMajoranaEntity;
 import com.google.common.base.Objects;
 
 import java.lang.reflect.InvocationTargetException;

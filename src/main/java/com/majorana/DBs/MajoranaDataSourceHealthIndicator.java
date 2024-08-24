@@ -11,6 +11,7 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  *  Used with Spring DB Health Indicators, to show weather the database connections are active
  */
-
+@Service
 public class MajoranaDataSourceHealthIndicator extends AbstractHealthIndicator {
 
 
