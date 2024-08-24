@@ -1,6 +1,6 @@
 package com.majorana.DBs;
 
-import Majorana.Utils.GenericUtils;
+import com.majorana.Utils.GenericUtils;
 import com.majorana.Utils.MethodPrefixingLogger;
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
 import com.zaxxer.hikari.HikariConfig;

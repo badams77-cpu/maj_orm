@@ -1,7 +1,7 @@
 package com.majorana.Util;
 
-import Majorana.Utils.MapDumpHelper;
-import Majorana.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.Utils.MapDumpHelper;
+import com.majorana.Utils.MethodPrefixingLoggerFactory;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;

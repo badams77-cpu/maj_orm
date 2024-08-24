@@ -15,7 +15,7 @@ buildscript {
 plugins {
     id 'java-library'
     id 'java'
-//  id 'io.spring.dependency-management'
+    id 'io.spring.dependency-management'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'org.springframework.boot' version '2.7.18'
 
@@ -165,10 +165,11 @@ class BootMaClass extends  org.springframework.boot.gradle.plugin.ResolveMainCla
 
     }
 
-//    @Inject
-//7    public BootMaClass(File f){
-//        file =  project.getObjects().fileProperty().fileValue( f) ;
-//    }
+
+    @Inject
+    public BootMaClass(File f){
+        file =  project.getObjects().fileProperty().fileValue( f) ;
+    }
 
 /*    public BootMaClass(groovy.lang.Closure<org.gradle.api.provider.Provider<File>> f){
         file =  project.getObjects().fileProperty().fileValue( f) ;

@@ -1,10 +1,9 @@
 package com.majorana.entities.ex2;
 
 import com.majorana.persist.newannot.Updateable;
-import Majorana.entities.BaseMajoranaEntity;
-import Majorana.entities.TableNames;
+import com.majorana.entities.ex1.BaseMajoranaEntity;
 import jakarta.persistence.Column;
-import main.Majorana.enum_const.ACCESS_LEVEL;
+import com.majorana.enum_const.ACCESS_LEVEL;
 
 /**
  * An example persisted entity for a database

@@ -1,6 +1,6 @@
 package com.majorana.entities;
 
-import Majorana.ORM_ACCESS.EntityPackage;
+import com.majorana.ORM_ACCESS.EntityPackage;
 
 /**
  * Specifies the version of all the entities in the same package and directory

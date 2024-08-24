@@ -1,8 +1,8 @@
 package com.majorana.ORM;
 
-import Majorana.DBs.*;
-import Majorana.TimeResult;
-import Majorana.Utils.MethodPrefixingLoggerFactory
+import com.majorana.DBs.*;
+import com.majorana.TimeResult;
+import com.majorana.Utils.MethodPrefixingLoggerFactory
         ;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.zaxxer.hikari.HikariDataSource;

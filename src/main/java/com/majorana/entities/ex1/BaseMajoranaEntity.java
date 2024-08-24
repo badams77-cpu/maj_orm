@@ -1,6 +1,6 @@
 package com.majorana.entities.ex1;
 
-import Majorana.ORM.*;
+import com.majorana.ORM.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 

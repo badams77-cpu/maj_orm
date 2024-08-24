@@ -1,6 +1,6 @@
 package com.majorana.ORM;
 
-import Majorana.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.Utils.MethodPrefixingLoggerFactory;
 import org.slf4j.Logger;
 
 import javax.sql.rowset.serial.SerialBlob;

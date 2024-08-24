@@ -1,10 +1,10 @@
 package com.majorana.ORM;
 
-import Majorana.Utils.MethodPrefixingLoggerFactory;
-import Majorana.entities.BaseMajoranaEntity;
-import Majorana.DBs.MajDatasourceName;
-//import Majorana.ORM.domain.entity.BaseMajEntity;
-import Majorana.Utils.SQLHelper;
+import com.majorana.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.entities.BaseMajoranaEntity;
+import com.majorana.DBs.MajDatasourceName;
+//import com.majorana.ORM.domain.entity.BaseMajEntity;
+import com.majorana.Utils.SQLHelper;
 import jakarta.persistence.Column;
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.PreparedStatementCreator;

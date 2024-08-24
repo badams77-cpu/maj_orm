@@ -3,11 +3,11 @@
 
 package com.majorana;
 
-import Majorana.Utils.*;
+import com.majorana.Utils.*;
 
-import Majorana.ORM_ACCESS.*;
+import com.majorana.ORM_ACCESS.*;
 
-import Majorana.entities.BaseMajoranaEntity;
+import com.majorana.entities.BaseMajoranaEntity;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
