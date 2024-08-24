@@ -549,6 +549,18 @@ dependencies {
     implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-processor', version: '4.18.1'
     implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-runtime', version: '4.18.1'
 
+    implementation('org.springframework:spring-beans:5.3.37')
+    implementation('org.springframework:spring-core:5.3.37')
+    implementation('org.springframework:spring-tx:5.3.37')
+
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa:2.7.18')
+    implementation group: 'org.springframework.data', name: 'spring-data-commons', version: '2.7.18'
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.1.0'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-core', version: '4.18.1'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-query-builder', version: '4.18.1'
+    implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-runtime', version: '4.18.1'
+
+
 // https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j
 //    testImplementation 'org.slf4j:slf4j-reload4j:2.0.9'
     implementation 'org.slf4j:slf4j-api:1.7.30'
