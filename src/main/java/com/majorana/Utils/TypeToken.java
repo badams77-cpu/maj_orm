@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 public abstract class TypeToken<T> {
     private Type type;
 
-    protected TypeToken(){
+    public TypeToken(){
         Type superClass = getClass().getGenericSuperclass();
         this.type = ((ParameterizedType) superClass).getActualTypeArguments()[0];
     }

@@ -40,7 +40,7 @@ public class MajoranaDataSourceHealthIndicator extends AbstractHealthIndicator {
     }
 
     @Override
-    protected void doHealthCheck(Health.Builder builder) throws Exception {
+    public void doHealthCheck(Health.Builder builder) throws Exception {
         String sql = "select 1 as status;";
         String down = "";
         DatabaseVariant variant = dbEnvSetup.getCreds(datasourceName).getVariant();
@@ -68,7 +68,7 @@ public class MajoranaDataSourceHealthIndicator extends AbstractHealthIndicator {
         }
     }
 
-    protected class HealthMapper implements  RowMapper<Boolean> {
+    public class HealthMapper implements  RowMapper<Boolean> {
         public Boolean mapRow(ResultSet rs, int i) throws SQLException {
             return rs.getBoolean(1);
         }

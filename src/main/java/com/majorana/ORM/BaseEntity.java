@@ -2,6 +2,8 @@ package com.majorana.ORM;
 
 import jakarta.persistence.Column;
 
+import com.majorana.persist.newannot.*;
+
 import java.time.LocalDateTime;
 
 /**

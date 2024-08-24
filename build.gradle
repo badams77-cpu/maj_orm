@@ -210,7 +210,7 @@ class BootMaClass extends  org.springframework.boot.gradle.plugin.ResolveMainCla
         return createRFProperty(file);
     }
 
-    protected Property<String> createProperty(String s){
+    public Property<String> createProperty(String s){
         Property<String> ret =  project.getObjects().property(String.class);
         if (s==null){
             System.err.println("createProperty file is null");
@@ -222,7 +222,7 @@ class BootMaClass extends  org.springframework.boot.gradle.plugin.ResolveMainCla
         return ret;
     }
 
-    protected RegularFileProperty createRFProperty(File s){
+    public RegularFileProperty createRFProperty(File s){
         RegularFileProperty ret =  project.getObjects().fileProperty();
         if (s==null){
             System.err.println("createRFProperty file is null");

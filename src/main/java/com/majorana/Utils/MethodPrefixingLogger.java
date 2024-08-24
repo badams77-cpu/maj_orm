@@ -15,7 +15,7 @@ public class MethodPrefixingLogger implements Logger {
     
     private final String targetClassName;
     
-    protected MethodPrefixingLogger(Class target){
+    public MethodPrefixingLogger(Class target){
         mainLogger = LoggerFactory.getLogger(target);
         targetClassName = target.getName();
     }

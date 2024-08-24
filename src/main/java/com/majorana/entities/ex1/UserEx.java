@@ -18,32 +18,32 @@ public class UserEx extends BaseMajoranaEntity {
 	  public final static String fields = "uid,username,membertype,email,forename,surname,currentFeed";
 
 	@Column(name="uid")
-	  protected int uid;
+	  public int uid;
 	@Updateable
 	@Column(name="username")
-	  protected String username;
+	  public String username;
 	@Updateable
 	@Column(name="membertype")
-	  protected String membertype;
+	  public String membertype;
 	@Updateable
 	@Column(name="email")
-	  protected String email;
+	  public String email;
 	@Updateable
 	@Column(name="forename")
-	  protected String forename;
+	  public String forename;
 	@Updateable
 	@Column(name="surname")
-	  protected String surname;
+	  public String surname;
 	@Updateable
 	@Column(name="currentFeed")
-      protected int currentFeed;
+      public int currentFeed;
 	@Updateable
 	@Column(name="feedName")
-      protected String feedName;
+      public String feedName;
 
 	@Updateable
 	@Column(name="accessLevel")
-	  protected int accessLevel;
+	  public int accessLevel;
 
 	public String getFields(){
 		return getBaseFields()+fields;

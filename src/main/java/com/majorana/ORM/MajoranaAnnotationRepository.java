@@ -51,17 +51,17 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
 
     private static final String[] columnClassNames = { jakarta.persistence.Column.class.getCanonicalName() };
 
-    protected Class<T> clazz;
+    public Class<T> clazz;
 
-    protected MajoranaDBConnectionFactory dbFactory;
+    public MajoranaDBConnectionFactory dbFactory;
 
-    protected MajDatasourceName dbName;
+    public MajDatasourceName dbName;
 
-    protected List<MajoranaRepositoryField> repoFields = new LinkedList<>();
+    public List<MajoranaRepositoryField> repoFields = new LinkedList<>();
 
-    protected Method preSave;
+    public Method preSave;
 
-    protected Method postLoad;
+    public Method postLoad;
 
     /**
      * Creates a Repository class for a type of class clazz, using DB name dbName
@@ -204,7 +204,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
     }
 
 
-    protected String getCreateString(T sUser){
+    public String getCreateString(T sUser){
         StringBuffer buffy =  new StringBuffer();
         SqlParameterSource params = getSqlParameterSource(sUser);
         buffy.append("("+ repoFields.stream().filter(x->!x.isTransient()).map(x->x.getDbColumn()).collect(Collectors.joining(",") )+ ")");
@@ -214,7 +214,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         return buffy.toString();
     }
 
-    protected String getUpdateString(T sUser){
+    public String getUpdateString(T sUser){
         StringBuffer buffy =  new StringBuffer();
         buffy.append(" SET "+ repoFields.stream().filter(x->!x.isTransient()).filter(x->x.isUpdateable())
                 .map(x->x.getDbColumn() + ":" + ((x.isPopulatedUpdated())?"now() " : "?"))
@@ -390,7 +390,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         return repoFields;
     }
 
-    protected PreparedStatementCreator getSqlPreparedStatementParameter(String sql, T entity, boolean genKey) {
+    public PreparedStatementCreator getSqlPreparedStatementParameter(String sql, T entity, boolean genKey) {
 
 
 
@@ -398,7 +398,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         PreparedStatementCreator pc = new MajorPreparedStatCreator() {
 
 
-            protected boolean genKey;
+            public boolean genKey;
 
             public void MajorPreparedStatCreator(boolean genKey){
                 this.genKey = genKey;
@@ -424,7 +424,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         return pc;
     }
 
-    protected SqlParameterSource getSqlParameterSource(T entity){
+    public SqlParameterSource getSqlParameterSource(T entity){
         return new MapSqlParameterSource(getParameterMap(entity));
     }
 
@@ -458,7 +458,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         return sourceMap;
     }
 
-    protected Timestamp getDeletedA(BaseMajoranaEntity bse){
+    public Timestamp getDeletedA(BaseMajoranaEntity bse){
         return Timestamp.valueOf (bse.isDeleted() ? bse.getDeletedAt() : SQLHelper.BLANK_TIMESTAMP);
     }
 
@@ -730,7 +730,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         };
     }
 
-    protected class RepositoryFieldMapper implements RowMapper<T> {
+    public class RepositoryFieldMapper implements RowMapper<T> {
 
         @Override
         public T mapRow(ResultSet rs, int rowNum) throws SQLException {

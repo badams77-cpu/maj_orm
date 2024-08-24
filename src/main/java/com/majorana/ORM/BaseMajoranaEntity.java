@@ -1,10 +1,6 @@
-package Distiller.entities;
+package com.majorana.ORM;
 
-import Distiller.ORM.AutoPopTimestamp;
-import Distiller.ORM.Nullable;
-import Distiller.ORM.PopulatedCreated;
-import Distiller.ORM.Updateable;
-import Distiller.ORM.PopulatedUpdated;
+import com.majorana.persist.newannot.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 //import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -19,45 +15,45 @@ public abstract class BaseMajoranaEntity {
 //    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0, name = "id")
     @Id()
     @Column(name="id")
-    protected int id;
+    public int id;
 
 //    @org.springframework.data.cassandra.core.mapping.Column("id")
     @Column(name="uuid")
     @Nullable
     @Id()
-    protected UUID uuid;
+    public UUID uuid;
     @Updateable
 //    @org.springframework.data.cassandra.core.mapping.Column("deleted")
     @Column(name="deleted")
-    protected boolean deleted;
+    public boolean deleted;
     @Updateable
     @Nullable
 //    @org.s pringframework.data.cassandra.core.mapping.Column("deletedAt")
     @Column(name="deleted_at")
-    protected LocalDateTime deletedAt;
+    public LocalDateTime deletedAt;
 //    @org.springframework.data.cassandra.core.mapping.Column("created_by_userid")
     @Column(name="created_by_userid")
-    protected int createdByUserid;
+    public int createdByUserid;
 //    @org.springframework.data.cassandra.core.mapping.Column("update_by_userid")
     @Column(name="updated_by_userid")
-    protected int updatedByUserid;
+    public int updatedByUserid;
     @PopulatedCreated
     @AutoPopTimestamp(updated = false , created = true)
 //    @org.springframework.data.cassandra.core.mapping.Column("created")
     @Column(name="created")
-    protected LocalDateTime created;
+    public LocalDateTime created;
     @Updateable
     @PopulatedUpdated
     @AutoPopTimestamp(updated = false , created = true)
 //    @org.springframework.data.cassandra.core.mapping.Column("updated")
     @Column(name="updated")
-    protected LocalDateTime updated;
+    public LocalDateTime updated;
     @Column(name="created_by_useremail")
 //    @org.springframework.data.cassandra.core.mapping.Column("created_by_useremail")
-    protected transient String createdByUserEmail;
+    public transient String createdByUserEmail;
 //    @org.springframework.data.cassandra.core.mapping.Column("updated_by_useremail")
     @Column(name="updated_by_useremail")
-    protected transient String updatedByUserEmail;
+    public transient String updatedByUserEmail;
 
     private static String baseFieldss = "id, uuid, deleted, deleted_at, created, created_at, updated, updated_by_userid, created_by_userid" +
             " updated_by_useremail, " +
