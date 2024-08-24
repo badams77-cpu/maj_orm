@@ -1,4 +1,4 @@
-package com.majorana.entities;
+package com.majorana.enum_const.;
 
 import com.majorana.ORM_ACCESS.EntityPackage;
 

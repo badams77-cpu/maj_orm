@@ -1,7 +1,6 @@
 package com.majorana.ORM;
 
 import com.majorana.DBs.*;
-import com.majorana.TimeResult;
 import com.majorana.Utils.MethodPrefixingLoggerFactory
         ;
 import com.datastax.oss.driver.api.core.CqlSession;

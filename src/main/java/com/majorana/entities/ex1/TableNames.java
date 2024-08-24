@@ -1,5 +1,8 @@
 package com.majorana.entities.ex1;
 
+import com.majorana.ORM_ACCESS.EntityPackage;
+import com.majorana.enum_const.DirEntityVersion;
+
 /**
  *  An example table of names of the tables each entity is persisted too
  *
@@ -11,7 +14,7 @@ package com.majorana.entities.ex1;
  */
 
 
-@EntityVersion(major=1,minor=0)
+@EntityPackage(major=1,minor=0)
 public class TableNames {
 
     public static final String NO_TABLE = null;
