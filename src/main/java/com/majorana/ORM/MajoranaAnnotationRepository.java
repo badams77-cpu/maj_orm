@@ -1,7 +1,6 @@
 package com.majorana.ORM;
 
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.majorana.entities.BaseMajoranaEntity;
 import com.majorana.DBs.MajDatasourceName;
 //import com.majorana.ORM.domain.entity.BaseMajEntity;
 import com.majorana.Utils.SQLHelper;

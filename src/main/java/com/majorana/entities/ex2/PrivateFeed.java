@@ -1,8 +1,8 @@
-package com.majorana.entities.ex2;
+package com.com.majorana.ORM.ex2;
 
 import com.majorana.enum_const.ACCESS_LEVEL;
 import com.majorana.persist.newannot.Updateable;
-import com.majorana.entities.ex1.BaseMajoranaEntity;
+import com.com.majorana.ORM.ex1.BaseMajoranaEntity;
 import jakarta.persistence.Column;
 
 /**

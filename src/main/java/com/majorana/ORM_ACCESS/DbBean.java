@@ -6,7 +6,7 @@ import com.majorana.ORM.CassMockResultSet;
 import com.majorana.ORM.MajoranaAnnotationRepository;
 import com.majorana.ORM.MajoranaDBConnectionFactory;
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.majorana.entities.*;
+import com.com.majorana.ORM.*;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.zaxxer.hikari.HikariDataSource;
@@ -432,7 +432,7 @@ public class DbBean {
     }
 
 
-    public MultiId storeBean(    Majorana.entities.BaseMajoranaEntity bde) throws SQLException {
+    public MultiId storeBean(    com.majorana.ORM.BaseMajoranaEntity bde) throws SQLException {
 
         Class beanClass = bde.getClass();
 
@@ -486,7 +486,7 @@ public class DbBean {
 
     }
 
-    public MultiId updateBean( MultiId mid,  Majorana.entities.BaseMajoranaEntity bde) throws SQLException {
+    public MultiId updateBean( MultiId mid,  com.majorana.ORM.BaseMajoranaEntity bde) throws SQLException {
 
         Class beanClass = bde.getClass();
 
@@ -554,7 +554,7 @@ public class DbBean {
 
     }
 
-    public MultiId deleteBeanById( MultiId mid,  Majorana.entities.BaseMajoranaEntity bde) throws SQLException {
+    public MultiId deleteBeanById( MultiId mid,  com.majorana.ORM.BaseMajoranaEntity bde) throws SQLException {
 
         Class beanClass = bde.getClass();
 
@@ -620,7 +620,7 @@ public class DbBean {
 
     }
 
-    public MultiId deleteBeanByParams( MultiId mid,  Majorana.entities.BaseMajoranaEntity bde) throws SQLException {
+    public MultiId deleteBeanByParams( MultiId mid,  com.majorana.ORM.BaseMajoranaEntity bde) throws SQLException {
 
         Class beanClass = bde.getClass();
 

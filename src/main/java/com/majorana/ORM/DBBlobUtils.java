@@ -3,6 +3,8 @@ package com.majorana.ORM;
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
 import org.slf4j.Logger;
 
+import com.majorana.persist.newannot.*;
+
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;

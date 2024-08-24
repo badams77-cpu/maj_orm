@@ -7,7 +7,7 @@ import com.majorana.Utils.*;
 
 import com.majorana.ORM_ACCESS.*;
 
-import com.majorana.entities.BaseMajoranaEntity;
+import com.com.majorana.ORM.BaseMajoranaEntity;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -49,7 +49,7 @@ public class EntityFieldsTest {
 
     private static DbBean dbBean  = null;
 
-    private static final String ENTITIES_DIR = "Majorana.entities";
+    private static final String ENTITIES_DIR = "com.majorana.ORM";
 
     public EntityFieldsTest(){
         dbBean = DbBean.getSingletonLazy();

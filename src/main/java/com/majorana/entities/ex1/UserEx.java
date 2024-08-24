@@ -1,4 +1,4 @@
-package com.majorana.entities.ex1;
+package com.com.majorana.ORM.ex1;
 
 import com.majorana.persist.newannot.Updateable;
 import jakarta.persistence.Column;

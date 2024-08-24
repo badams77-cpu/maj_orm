@@ -1,5 +1,5 @@
 
-package com.majorana.entities.ex1;
+package com.com.majorana.ORM.ex1;
 
 import com.majorana.enum_const.ACCESS_LEVEL;
 import com.majorana.persist.newannot.Updateable;
