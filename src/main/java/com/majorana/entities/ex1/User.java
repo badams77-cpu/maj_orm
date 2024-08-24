@@ -1,6 +1,7 @@
 
 package com.majorana.entities.ex1;
 
+import com.majorana.ORM.BaseMajoranaEntity;
 import com.majorana.enum_const.ACCESS_LEVEL;
 import com.majorana.persist.newannot.Updateable;
 import jakarta.persistence.Column;
@@ -42,7 +43,7 @@ public class User extends BaseMajoranaEntity {
   public final static String fields=", uid, username, membertype, email, forename, surname";
 
 
-  public String getFields(){
+  public static String getFields(){
     return getBaseFields()+fields;
   }
 

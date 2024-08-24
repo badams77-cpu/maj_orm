@@ -1,5 +1,6 @@
 package com.majorana.entities.ex1;
 
+import com.majorana.ORM.BaseMajoranaEntity;
 import com.majorana.persist.newannot.Updateable;
 import jakarta.persistence.Column;
 
@@ -45,7 +46,7 @@ public class UserEx extends BaseMajoranaEntity {
 	@Column(name="accessLevel")
 	  public int accessLevel;
 
-	public String getFields(){
+	public static String getFields(){
 		return getBaseFields()+fields;
 	}
 

@@ -9,6 +9,7 @@ import com.datastax.driver.core.Session;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.majorana.DBs.*;
 import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.ORM.CassMockResultSet;
 import com.majorana.ORM.MajoranaAnnotationRepository;
 import com.majorana.ORM.MajoranaDBConnectionFactory;
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
