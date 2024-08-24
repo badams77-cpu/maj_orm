@@ -166,20 +166,20 @@ class BootMaClass extends  org.springframework.boot.gradle.plugin.ResolveMainCla
     }
 
 
-    @Inject
+//    @Inject
     public BootMaClass(File f){
         file =  project.getObjects().fileProperty().fileValue( f) ;
     }
 
-/*    public BootMaClass(groovy.lang.Closure<org.gradle.api.provider.Provider<File>> f){
+    public BootMaClass(groovy.lang.Closure<org.gradle.api.provider.Provider<File>> f){
         file =  project.getObjects().fileProperty().fileValue( f) ;
-    }*/
+    }
 
-  //  @Inject
-  //  public BootMaClass(org.gradle.api.provider.Provider<File> f){
-  //      file =  project.getObjects().fileProperty().fileValue( f.get()) ;
-  //
-  //  }
+    @Inject
+    public BootMaClass(org.gradle.api.provider.Provider<File> f){
+        file =  project.getObjects().fileProperty().fileValue( f.get()) ;
+
+    }
 
     public void setMainClass(Provider file){
         this.file = file.get();
@@ -307,19 +307,20 @@ Closure bootJarClosure = { f-> {
   }
 };
 
+/*
 //bmt1.setMainClass( new File(project.buildDir,"classes/MajDbORM/Main.class"));
 BootMaClass bmt2 = (BootMaClass) tasks.replace( "bootRunMainClassName", BootMaClass.class ).configure(
-    bootMaClosure //fileProviderMainClass  //, fileProviderMainClass)
+    bootMaClosure : fileProviderMainClass  //, fileProviderMainClass)
 //            new BootMaClosure<org.gradle.api.provider.Property<File>>(filePropMainClass))
 );
 bmt2.dependsOn(compileJava);
 
 BootMaClass bmt1 = (BootMaClass) tasks.replace( "bootJarMainClassName", BootMaClass.class ).configure (
-    bootMaClosure //fileProviderMainClass  //, fileProviderMainClass)
+    bootMaClosure : fileProviderMainClass  //, fileProviderMainClass)
 //            new BootMaClosure<org.gradle.api.provider.Property<File>>(filePropMainClass))
 );
 bmt1.dependsOn(compileJava);
-
+*/
 Task bj = tasks.getByName("bootJar");
 if (bj!=null){
     bj.configure(bootJarClosure);
@@ -331,9 +332,9 @@ tasks.getByName("bootJar") {
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-  //  manifest {
-  //      attributes["Main-Class"] = "MainKt"
-  //  }
+    manifest {
+        attributes["Main-Class"] = "com.majorana.Main"
+    }
 
 
 }
@@ -342,6 +343,9 @@ tasks.getByName("distTar") {
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
+    manifest {
+        attributes["Main-Class"] = "com.majorana.Main"
+    }
     //  manifest {
     //      attributes["Main-Class"] = "MainKt"
     //  }
@@ -351,6 +355,10 @@ tasks.getByName("distZip") {
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
+
+    manifest {
+        attributes["Main-Class"] = "com.majorana.Main"
+    }
     //  manifest {
     //      attributes["Main-Class"] = "MainKt"
     //  }
