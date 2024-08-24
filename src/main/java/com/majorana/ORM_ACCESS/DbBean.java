@@ -44,7 +44,7 @@ import static org.mockito.Mockito.mock;
 
 public class DbBean {
 
-  String dbURL = "jdbc:mysql://localhost:3306/distiller";
+  String dbURL = "jdbc:mysql://localhost:3306/Majorana";
   String dbDriver = "com.mysql.jdbc.Driver";
   String dbUser = "";
   String dbPass = "";
