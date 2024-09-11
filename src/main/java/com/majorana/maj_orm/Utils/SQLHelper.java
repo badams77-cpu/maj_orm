@@ -1,4 +1,4 @@
-package com.majorana.Utils;
+package com.majorana.maj_orm.Utils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

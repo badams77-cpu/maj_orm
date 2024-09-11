@@ -1,6 +1,6 @@
-package com.majorana.entities.ex1;
+package com.majorana.maj_orm.entities.ex1;
 
-import com.majorana.persist.newannot.EntityPackage;
+import com.majorana.maj_orm.newannot.EntityPackage;
 
 /**
  *  An example table of names of the tables each entity is persisted too

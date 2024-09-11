@@ -1,6 +1,7 @@
-package com.majorana.ORM;
+package com.majorana.maj_orm.ORM;
 
-import com.majorana.persist.newannot.*;
+import com.majorana.maj_orm.newannot.*;
+import com.majorana.maj_orm.persist.newannot.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 //import org.springframework.data.cassandra.core.cql.PrimaryKeyType;

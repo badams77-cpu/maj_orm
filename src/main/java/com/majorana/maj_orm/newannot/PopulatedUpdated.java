@@ -1,4 +1,4 @@
-package com.majorana.persist.newannot;
+package com.majorana.maj_orm.newannot;
 
 /**
  * Annotation to automatic populated modification time on a field

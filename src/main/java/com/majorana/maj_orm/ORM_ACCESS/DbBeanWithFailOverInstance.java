@@ -1,13 +1,14 @@
-package com.majorana.ORM_ACCESS;
+package com.majorana.maj_orm.ORM_ACCESS;
 
 import com.majorana.DBs.*;
-import com.majorana.ORM.MajoranaAnnotationRepository;
-import com.majorana.ORM.MajoranaDBConnectionFactory;
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
+import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
+import com.majorana.maj_orm.DBs.*;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.springframework.data.cassandra.core.CassandraTemplate;
@@ -17,13 +18,11 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
 
@@ -37,7 +36,7 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
 
     private MajDataSource source;
 
-    private  MajoranaDBConnectionFactory factory;
+    private MajoranaDBConnectionFactory factory;
 
     private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(DbBeanInstance.class);
     private Connection dbCon;
@@ -82,7 +81,7 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
     public DbBeanWithFailOverInstance(DBEnvSetup dbEnvSetup, MajDataSource source, MajDataSourceName name){
         sourceName = null;
         this.source = source;
-            cassandraState = new CassandraState(source.getVariant()==DatabaseVariant.CASSANDRA);
+            cassandraState = new CassandraState(source.getVariant()== DatabaseVariant.CASSANDRA);
             entityFinder = new EntityFinder();
             this.envSetup = dbEnvSetup;
             factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));

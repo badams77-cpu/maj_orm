@@ -1,4 +1,4 @@
-package com.majorana.persist.newannot;
+package com.majorana.maj_orm.newannot;
 
 
 /**

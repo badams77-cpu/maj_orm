@@ -1,5 +1,7 @@
-package com.majorana.ORM;
+package com.majorana.maj_orm.ORM;
 
+import com.majorana.maj_orm.newannot.AutoPopTimestamp;
+import com.majorana.maj_orm.newannot.Updateable;
 import jakarta.persistence.Column;
 
 import com.majorana.persist.newannot.*;

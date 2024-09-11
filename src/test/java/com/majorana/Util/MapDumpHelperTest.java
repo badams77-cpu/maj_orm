@@ -1,8 +1,7 @@
 package com.majorana.Util;
 
-import com.majorana.Utils.MapDumpHelper;
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import org.junit.Before;
+import com.majorana.maj_orm.Utils.MapDumpHelper;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -14,10 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.junit.runners.Suite;
-
 import static org.junit.Assert.*;
-import org.junit.runner.Runner;
 
 
 @RunWith(JUnitPlatform.class)

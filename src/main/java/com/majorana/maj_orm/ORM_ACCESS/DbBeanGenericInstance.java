@@ -1,51 +1,34 @@
 
-package com.majorana.ORM_ACCESS;
+package com.majorana.maj_orm.ORM_ACCESS;
 
 import com.majorana.DBs.*;
-import com.majorana.ORM.CassMockResultSet;
-import com.majorana.ORM.MajoranaAnnotationRepository;
-import com.majorana.ORM.MajoranaDBConnectionFactory;
-import com.majorana.ORM.MajoranaRepositoryField;
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
+import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;
+import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.Row;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.majorana.maj_orm.DBs.CassandraState;
+import com.majorana.maj_orm.DBs.DatabaseVariant;
+import com.majorana.maj_orm.DBs.MajDataSourceName;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.cql.CqlTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.KeyHolder;
 import java.sql.Timestamp;
 import java.lang.reflect.Array;
-import java.sql.Blob;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import javax.sql.rowset.serial.SerialBlob;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-import com.google.gson.reflect.TypeToken;
 
 
 import static org.mockito.Mockito.mock;
@@ -87,7 +70,7 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
 
   private static DbBeanGenericInstance singletonLazy;
 
-  private  MajDataSourceName mainDsn = null;
+  private MajDataSourceName mainDsn = null;
   private  MajDataSourceName cassDsn = null;
   private  MajDataSourceName jdbcDsn = null;
   private  int minMinor  = 0;

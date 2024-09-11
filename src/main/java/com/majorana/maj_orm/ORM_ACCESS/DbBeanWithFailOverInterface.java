@@ -1,6 +1,6 @@
-package com.majorana.ORM_ACCESS;
+package com.majorana.maj_orm.ORM_ACCESS;
 
-import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 
 import java.sql.SQLException;
 import java.util.List;

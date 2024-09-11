@@ -1,7 +1,6 @@
-package com.majorana.Utils;
+package com.majorana.maj_orm.Utils;
 
-import com.majorana.persist.newannot.EntityPackage;
-import com.majorana.entities.ex2.DirEntityVersion;
+import com.majorana.maj_orm.newannot.EntityPackage;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
 

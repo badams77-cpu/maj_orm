@@ -1,17 +1,18 @@
 
-package com.majorana.ORM_ACCESS;
+package com.majorana.maj_orm.ORM_ACCESS;
 
 import com.majorana.DBs.*;
-import com.majorana.ORM.CassMockResultSet;
-import com.majorana.ORM.MajoranaAnnotationRepository;
-import com.majorana.ORM.MajoranaDBConnectionFactory;
-import com.majorana.ORM.MajoranaRepositoryField;
-import com.majorana.ORM.BaseMajoranaEntity;
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.maj_orm.ORM.CassMockResultSet;
+import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
+import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;
+import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.Row;
+import com.majorana.maj_orm.DBs.*;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -758,7 +759,7 @@ public class DbBeanInstance implements DbBeanInstInterface {
     }
 
 
-    public MultiId storeBean(com.majorana.ORM.BaseMajoranaEntity bde) throws SQLException {
+    public MultiId storeBean(BaseMajoranaEntity bde) throws SQLException {
 
         if (bde == null) {
             LOGGER.error("Null Data sent to bean store");

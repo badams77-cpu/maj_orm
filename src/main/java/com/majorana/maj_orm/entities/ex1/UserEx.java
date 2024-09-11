@@ -1,7 +1,7 @@
-package com.majorana.entities.ex1;
+package com.majorana.maj_orm.entities.ex1;
 
-import com.majorana.ORM.BaseMajoranaEntity;
-import com.majorana.persist.newannot.Updateable;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.newannot.Updateable;
 import jakarta.persistence.Column;
 
 /**

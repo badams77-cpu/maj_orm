@@ -1,4 +1,4 @@
-package com.majorana.Utils;
+package com.majorana.maj_orm.Utils;
 
 import java.util.Comparator;
 import java.util.Map;

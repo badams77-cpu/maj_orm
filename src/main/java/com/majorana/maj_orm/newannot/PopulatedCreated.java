@@ -1,4 +1,4 @@
-package com.majorana.persist.newannot;
+package com.majorana.maj_orm.newannot;
 
 /**
  * Annotation to automatical populate create time on a field in an entity

@@ -1,14 +1,16 @@
-package com.majorana.DBs;
+package com.majorana.maj_orm.DBs;
 
 import java.util.Map;
 
+import com.majorana.maj_orm.Utils.MapDumpHelper;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
 import org.slf4j.Logger;
 
 public class DBCreds {
 
 
 
-    private static final Logger LOGGER = com.majorana.Utils.MethodPrefixingLoggerFactory.getLogger(DBCreds.class);
+    private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(DBCreds.class);
 
     private static final String ENV_VAR_NAME = "name";
     private static final String ENV_VAR_ISOLATION_LEVEL = "isolationLevel";
@@ -141,7 +143,7 @@ public class DBCreds {
     DBCreds(Map<String, String> cred)
     {
         LOGGER.warn("Creating DBCreds from prop map : ",
-                com.majorana.Utils.MapDumpHelper.dump( cred, "\n",", ") );
+                MapDumpHelper.dump( cred, "\n",", ") );
         this.isolationLevel = cred.getOrDefault(ENV_VAR_ISOLATION_LEVEL,"");
         this.name = new MajDataSourceName(cred.getOrDefault(ENV_VAR_NAME,""));
         this.variant = DatabaseVariant.getFromDescription(cred.getOrDefault(ENV_VAR_DB_VARIANT,""));

@@ -1,49 +1,39 @@
-package Distiller;
+package com.majorana.ORM_ACCESS;
 
 import com.majorana.Utils.*;
 
 
 import com.majorana.ORM.*;
 
-import com.majorana.ORM_ACCESS.*;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 
-import com.majorana.ORM.BaseMajoranaEntity;
-
-import com.google.common.reflect.TypeToken;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
+import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
+import com.majorana.maj_orm.ORM_ACCESS.DbBean;
+import com.majorana.maj_orm.ORM_ACCESS.DbBeanGenericInterface;
+import com.majorana.maj_orm.ORM_ACCESS.EntityFinder;
+import com.majorana.maj_orm.ORM_ACCESS.MultiId;
+import com.majorana.maj_orm.Utils.*;
 import org.junit.jupiter.api.Test;
 import org.apache.commons.lang3.tuple.Pair;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+
 import java.util.LinkedList;
 
 import java.util.List;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 
-import java.util.HashMap;
-import java.util.Map;
-import java.lang.reflect.Field;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-
-import org.junit.runner.Runner;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-import  org.junit.jupiter.api.Test;
 import  org.junit.jupiter.api.BeforeEach;
 import  org.junit.jupiter.api.AfterEach;
 
 
 public class EntityFieldsTest {
 
-    private static final com.majorana.Utils.MethodPrefixingLogger LOGGER = com.majorana.Utils.MethodPrefixingLoggerFactory.getLogger(EntityFieldsTest.class);
+    private static final MethodPrefixingLogger LOGGER = MethodPrefixingLoggerFactory.getLogger(EntityFieldsTest.class);
 
     private final static String PREFIX = "Distiller";
 
@@ -177,7 +167,7 @@ public class EntityFieldsTest {
 
     @Test
     public void dbCrudRandomWithDbBean() throws Exception {
-        dbBean = new com.majorana.ORM_ACCESS.DbBean();
+        dbBean = new DbBean();
         dbBean.connect();
         EntityFinder ef = new EntityFinder();
         Set<BaseMajoranaEntity> entityTypes = ef. getEntities(ENTITIES_DIR);
@@ -215,7 +205,7 @@ public class EntityFieldsTest {
                 RandomEntity<BaseMajoranaEntity> rde = new RandomEntity<>(dbBean, cl);
                 BaseMajoranaEntity bse= rde.getValue();
                 String table = bse.getTableName();
-                com.majorana.ORM_ACCESS.MultiId id = dbBean.storeBean(rde.getValue());
+                MultiId id = dbBean.storeBean(rde.getValue());
                 assertTrue(
                         id.hasAnyId(), "Storing " + cl + " failed Storing " + cl + " failed "
                 );
@@ -293,23 +283,12 @@ public class EntityFieldsTest {
         LOGGER.warn("DB tests failed DEL for " + failedDEL + " classes " + badDEL.stream().collect(Collectors.joining(", ")));
     }
 
-    @Test
-    public void junkTest() throws Exception {
-        Class et = Distiller.entities.JunkUser.class;
-
-        DbBean dbBean = new DbBean();
-        DbBeanGenericInterface face = dbBean.getTypedBean( et );
-        RandomEntity<BaseMajoranaEntity> rbde = new RandomEntity<>(dbBean, et);
-
-        face.storeBean(rbde.getValue());
-    }
 
 
     @Test
     public void dbCrudRandomWithTypedDbBean() throws Exception {
     //    SubClassFinder finder = new SubClassFinder<BaseMajoranaEntity>();
     //    Set<Class> entityTypes = finder.findSubclasses(  BaseMajoranaEntity.class);
-        List<MajoranaRepositoryField> maflist = MajoranaAnnotationRepository.getRepositoryFields(Distiller.entities.JunkUser.class);
         EntityFinder ef = new EntityFinder();
         dbBean = new DbBean();
         dbBean.connect();
@@ -345,7 +324,7 @@ public class EntityFieldsTest {
              DbBeanGenericInterface face = dbBean.getTypedBean( et );
             try {
                 RandomEntity<BaseMajoranaEntity> rbde = new RandomEntity<>(dbBean, et);
-                com.majorana.ORM_ACCESS.MultiId id = face.storeBean(rbde.getValue());
+                MultiId id = face.storeBean(rbde.getValue());
                 String table = bde.getTableName();
                 if(!id.hasAnyId()){
                     LOGGER.error("Storing " + et + " failed");

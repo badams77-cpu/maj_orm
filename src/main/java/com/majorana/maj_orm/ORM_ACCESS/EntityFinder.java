@@ -1,10 +1,9 @@
-package com.majorana.ORM_ACCESS;
+package com.majorana.maj_orm.ORM_ACCESS;
 
-import com.majorana.ORM.BaseEntity;
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.majorana.Utils.SubClassFinder;
-import com.majorana.ORM.BaseMajoranaEntity;
-import com.majorana.persist.newannot.EntityPackage;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.maj_orm.Utils.SubClassFinder;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.newannot.EntityPackage;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.annotation.Annotation;
@@ -53,7 +52,7 @@ public class EntityFinder {
     public EntityFinder(){
       //  entityClass = jakarta.persistence.Entity.class;
         entityClass = BaseMajoranaEntity.class;
-        entityPackage = com.majorana.persist.newannot.EntityPackage.class;
+        entityPackage = EntityPackage.class;
         entities = new HashMap<String, Class>();
         reverse = new HashMap<Class, String>();
     }

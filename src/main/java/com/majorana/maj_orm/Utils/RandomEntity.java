@@ -1,9 +1,9 @@
-package com.majorana.Utils;
+package com.majorana.maj_orm.Utils;
 
-import com.majorana.ORM_ACCESS.DbBean;
-import com.majorana.ORM.BaseMajoranaEntity;
-import com.majorana.ORM.MajoranaAnnotationRepository;
-import com.majorana.ORM.MajoranaRepositoryField;
+import com.majorana.maj_orm.ORM_ACCESS.DbBean;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
+import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
 import com.google.common.base.Objects;
 import com.google.common.reflect.TypeToken;
 

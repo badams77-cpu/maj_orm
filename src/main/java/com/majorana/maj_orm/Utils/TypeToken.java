@@ -1,4 +1,4 @@
-package com.majorana.Utils;
+package com.majorana.maj_orm.Utils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

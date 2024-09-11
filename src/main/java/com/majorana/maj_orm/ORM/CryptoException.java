@@ -1,4 +1,4 @@
-package com.majorana.ORM;
+package com.majorana.maj_orm.ORM;
 
 /**
  *  An exception indicating a encrypted database in the database was not able ot be encrypted or

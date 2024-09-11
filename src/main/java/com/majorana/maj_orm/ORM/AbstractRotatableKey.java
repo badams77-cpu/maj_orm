@@ -1,4 +1,4 @@
-package com.majorana.ORM;
+package com.majorana.maj_orm.ORM;
 
 /**
  *  Helper Abstract CLass for Rotatable Crypto keys for keeping sensitive data in the database

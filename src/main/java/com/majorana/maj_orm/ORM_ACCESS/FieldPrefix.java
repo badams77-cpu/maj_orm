@@ -1,6 +1,4 @@
-package com.majorana.ORM_ACCESS;
-
-import com.majorana.ORM.BaseMajoranaEntity;
+package com.majorana.maj_orm.ORM_ACCESS;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

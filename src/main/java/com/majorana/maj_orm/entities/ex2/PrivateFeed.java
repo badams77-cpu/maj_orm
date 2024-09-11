@@ -1,8 +1,8 @@
-package com.majorana.entities.ex2;
+package com.majorana.maj_orm.entities.ex2;
 
-import com.majorana.enum_const.ACCESS_LEVEL;
-import com.majorana.persist.newannot.Updateable;
-import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.enum_const.ACCESS_LEVEL;
+import com.majorana.maj_orm.newannot.Updateable;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 import jakarta.persistence.Column;
 
 /**
@@ -13,7 +13,7 @@ import jakarta.persistence.Column;
 
 public class PrivateFeed extends BaseMajoranaEntity {
 
-  private static final String TABLE_NAME = com.majorana.entities.ex2.TableNamesExtra.PRIVATE_FEEDS;
+  private static final String TABLE_NAME = TableNamesExtra.PRIVATE_FEEDS;
 
   @Column(name="feedid")
   private int feedid;

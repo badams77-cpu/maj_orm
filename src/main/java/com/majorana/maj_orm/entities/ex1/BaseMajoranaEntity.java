@@ -1,8 +1,8 @@
-package com.majorana.entities.ex1;
+package com.majorana.maj_orm.entities.ex1;
 
+import com.majorana.maj_orm.newannot.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import com.majorana.persist.newannot.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -61,7 +61,7 @@ public abstract class BaseMajoranaEntity {
     @Column(name="updated_by_useremail")
     public transient String updatedByUserEmail;
 
-    private static String baseFieldss = "id, uuid, deleted, deleted_at, created, created_at, updated, updated_by_userid, created_by_userid" +
+    private static String baseFields = "id, uuid, deleted, deleted_at, created, created_at, updated, updated_by_userid, created_by_userid" +
             " updated_by_useremail, " +
             " created_by_useremail, " +
             " created_by_userid ";
@@ -69,7 +69,7 @@ public abstract class BaseMajoranaEntity {
     public abstract String getTableName();
 
     public String getBaseFields(){
-        return baseFieldss;
+        return baseFields;
     }
 
     public abstract String getFields();

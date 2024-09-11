@@ -1,4 +1,4 @@
-package com.majorana.persist.newannot;
+package com.majorana.maj_orm.newannot;
 
 /**
  * An Annotation for an Entity in Maj ORM that is additional to the jakarta persistance,

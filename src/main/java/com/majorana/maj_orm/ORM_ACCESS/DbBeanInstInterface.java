@@ -1,9 +1,9 @@
 
-package com.majorana.ORM_ACCESS;
+package com.majorana.maj_orm.ORM_ACCESS;
 
-import com.majorana.ORM.MajoranaAnnotationRepository;
-import com.majorana.ORM.MajoranaRepositoryField;
-import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
+import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 
 import java.sql.ResultSet;

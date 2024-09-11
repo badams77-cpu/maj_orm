@@ -1,6 +1,6 @@
-package com.majorana.entities.ex2;
+package com.majorana.maj_orm.entities.ex2;
 
-import com.majorana.persist.newannot.EntityPackage;
+import com.majorana.maj_orm.newannot.EntityPackage;
 
 /**
  * Specifies the version of all the entities in the same package and directory

@@ -1,4 +1,4 @@
-package com.majorana.DBs;
+package com.majorana.maj_orm.DBs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

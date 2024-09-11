@@ -1,4 +1,4 @@
-package com.majorana.enum_const;
+package com.majorana.maj_orm.enum_const;
 
 /**
  *

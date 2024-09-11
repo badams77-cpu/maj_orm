@@ -1,4 +1,4 @@
-package com.majorana.DBs;
+package com.majorana.maj_orm.DBs;
 
 /**
  * CassandraState sets weather a cassandra connection with be tried by the ORM

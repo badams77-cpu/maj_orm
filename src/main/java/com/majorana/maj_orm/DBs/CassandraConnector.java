@@ -1,10 +1,9 @@
-package com.majorana.DBs;
+package com.majorana.maj_orm.DBs;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
-import com.majorana.Utils.MethodPrefixingLogger;
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import org.slf4j.Logger;
+import com.majorana.maj_orm.Utils.MethodPrefixingLogger;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
 
 import java.net.InetSocketAddress;
 

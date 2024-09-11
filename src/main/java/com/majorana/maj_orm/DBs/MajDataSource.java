@@ -1,12 +1,10 @@
-package com.majorana.DBs;
-import com.majorana.Utils.GenericUtils;
-import com.majorana.Utils.MethodPrefixingLogger;
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
+package com.majorana.maj_orm.DBs;
+import com.majorana.maj_orm.Utils.GenericUtils;
+import com.majorana.maj_orm.Utils.MethodPrefixingLogger;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.util.IsolationLevel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Maj Datasource - Generic Datasourcer for any surported database type

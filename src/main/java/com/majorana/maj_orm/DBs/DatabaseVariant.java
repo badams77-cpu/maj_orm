@@ -1,4 +1,4 @@
-package com.majorana.DBs;
+package com.majorana.maj_orm.DBs;
 
 import java.util.Arrays;
 import java.util.Optional;

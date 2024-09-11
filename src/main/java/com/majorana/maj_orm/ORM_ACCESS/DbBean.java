@@ -1,10 +1,6 @@
 
-package com.majorana.ORM_ACCESS;
+package com.majorana.maj_orm.ORM_ACCESS;
 
-import java.lang.invoke.TypeDescriptor;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -13,16 +9,19 @@ import java.util.stream.Collectors;
 import com.majorana.DBs.*;
 
 
-import com.majorana.ORM.MajoranaDBConnectionFactory;
-import  com.majorana.ORM.MajoranaRepositoryField;
-import com.majorana.Utils.MethodPrefixingLogger;
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;
+import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
+import com.majorana.maj_orm.Utils.MethodPrefixingLogger;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;;
 
 
-import com.majorana.ORM.MajoranaAnnotationRepository;
-import com.datastax.oss.driver.shaded.guava.common.reflect.TypeParameter;
+import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
+import com.majorana.maj_orm.DBs.CassandraState;
+import com.majorana.maj_orm.DBs.DBEnvSetup;
+import com.majorana.maj_orm.DBs.MajDataSource;
+import com.majorana.maj_orm.DBs.MajDataSourceName;
 
 ;
 //importBoundStatement;
@@ -95,7 +94,7 @@ public class DbBean implements DbBeanInterface{
   }
 
     public DbBeanWithFailOverInterface getFailoverBean( List<MajDataSourceName> names){
-        List<MajDataSource> source = names.stream().map( m ->mainBean.getEnvSetup().getMajDataSource(m))
+        List<MajDataSource> source = names.stream().map(m ->mainBean.getEnvSetup().getMajDataSource(m))
                 .filter(s->s!=null).collect(Collectors.toUnmodifiableList());
         List<DbBeanWithFailOverInterface> chain = new LinkedList<>();
         DbBeanWithFailOverInstance last = null;

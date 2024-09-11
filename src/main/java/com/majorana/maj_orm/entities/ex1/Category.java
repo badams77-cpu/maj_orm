@@ -1,7 +1,6 @@
-package com.com.majorana.ORM.ex1;
+package com.majorana.maj_orm.entities.ex1;
 
-import com.majorana.ORM.BaseMajoranaEntity;
-import com.majorana.entities.ex1.TableNames;
+import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 import jakarta.persistence.Column;
 
 

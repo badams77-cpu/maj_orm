@@ -1,6 +1,6 @@
-package com.majorana.ORM;
+package com.majorana.maj_orm.ORM;
 
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
 import org.slf4j.Logger;
 
 import com.majorana.persist.newannot.*;

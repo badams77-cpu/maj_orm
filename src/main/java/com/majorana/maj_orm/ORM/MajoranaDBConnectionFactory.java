@@ -1,8 +1,9 @@
-package com.majorana.ORM;
+package com.majorana.maj_orm.ORM;
 
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.majorana.DBs.*        ;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.maj_orm.DBs.*        ;
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.majorana.maj_orm.DBs.*;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.springframework.data.cassandra.core.CassandraTemplate;

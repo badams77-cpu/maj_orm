@@ -1,9 +1,10 @@
-package com.majorana.ORM;
+package com.majorana.maj_orm.ORM;
 
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.majorana.DBs.MajDataSourceName;
+import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
+import com.majorana.maj_orm.DBs.MajDataSourceName;
 //import com.majorana.ORM.domain.entity.BaseSmokEntity;
-import com.majorana.Utils.SQLHelper;
+import com.majorana.maj_orm.Utils.SQLHelper;
+import com.majorana.maj_orm.newannot.*;
 import com.majorana.persist.newannot.*;
 import jakarta.persistence.Column;
 import org.slf4j.Logger;
