@@ -59,7 +59,7 @@ public class CassMockResultSet {
         for( ColumnDefinitions.Definition cd : crs.getColumnDefinitions().asList()){
             columnIndices.put(cd.getName().toString(), cols++);
         }
-        List<com.datastax.driver.core.Row> crows = crs.all().stream().collect(Collectors.toList());
+        List<c crows = crs.all().stream().collect(Collectors.toList());
         data = new Object[crows.size()][];
         int rows = 0;
         for(com.datastax.driver.core.Row r : crows){

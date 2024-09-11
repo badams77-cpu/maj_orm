@@ -1,6 +1,6 @@
 package com.majorana.maj_orm.ORM_ACCESS;
 
-import com.majorana.DBs.*;
+import com.majorana.maj_orm.DBs.*;
 import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
 import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;
 import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
