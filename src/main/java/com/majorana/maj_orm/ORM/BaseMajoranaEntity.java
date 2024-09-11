@@ -1,6 +1,5 @@
 package com.majorana.maj_orm.ORM;
 
-import com.majorana.maj_orm.newannot.*;
 import com.majorana.maj_orm.persist.newannot.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;

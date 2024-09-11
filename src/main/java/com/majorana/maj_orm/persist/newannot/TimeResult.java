@@ -1,4 +1,4 @@
-package com.majorana.maj_orm.newannot;
+package com.majorana.maj_orm.persist.newannot;
 
 import jakarta.persistence.TemporalType;
 import org.springframework.data.cassandra.core.mapping.Column;

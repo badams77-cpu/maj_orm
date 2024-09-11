@@ -1,6 +1,6 @@
 package com.majorana.maj_orm.DBs;
 
-import com.majorana.maj_orm.newannot.TimeResult;
+import com.majorana.maj_orm.persist.newannot.TimeResult;
 import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;

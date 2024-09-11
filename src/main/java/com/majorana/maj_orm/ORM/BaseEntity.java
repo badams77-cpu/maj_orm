@@ -1,10 +1,10 @@
 package com.majorana.maj_orm.ORM;
 
-import com.majorana.maj_orm.newannot.AutoPopTimestamp;
-import com.majorana.maj_orm.newannot.Updateable;
+import com.majorana.maj_orm.persist.newannot.AutoPopTimestamp;
+import com.majorana.maj_orm.persist.newannot.Updateable;
 import jakarta.persistence.Column;
 
-import com.majorana.persist.newannot.*;
+import com.majorana.maj_orm.persist.newannot.*;
 
 import java.time.LocalDateTime;
 

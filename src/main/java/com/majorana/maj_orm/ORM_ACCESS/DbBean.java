@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import com.majorana.DBs.*;
+import com.majorana.maj_orm.DBs.*;
 
 
 import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;

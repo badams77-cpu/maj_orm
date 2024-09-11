@@ -3,7 +3,7 @@ package com.majorana.maj_orm.ORM;
 import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
 import org.slf4j.Logger;
 
-import com.majorana.persist.newannot.*;
+import com.majorana.maj_orm.persist.newannot.*;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.ByteArrayOutputStream;

@@ -1,6 +1,6 @@
 package com.majorana.maj_orm.entities.ex1;
 
-import com.majorana.maj_orm.newannot.*;
+import com.majorana.maj_orm.persist.newannot.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 
