@@ -5,10 +5,6 @@ import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-/***
- * Stored the data on the annotated fields of a Entity for a repository
- */
-
 public class MajoranaRepositoryField {
 
     private String name;
@@ -23,6 +19,8 @@ public class MajoranaRepositoryField {
 
     private boolean isId;
 
+    private boolean isAltId;
+
     private boolean populatedCreated;
 
     private boolean populatedUpdated;
@@ -33,6 +31,14 @@ public class MajoranaRepositoryField {
 
     public MajoranaRepositoryField(){
 
+    }
+
+    public boolean isAltId() {
+        return isAltId;
+    }
+
+    public void setAltId(boolean altId) {
+        isAltId = altId;
     }
 
     public boolean isTransient() {

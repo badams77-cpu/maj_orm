@@ -1,9 +1,12 @@
-package com.majorana.persist.newannot;
+package com.majorana.ORM;
 
-/**
- * Not yet used
- */
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface Postload {
 
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import com.majorana.persist.newannot.*;
 
 public abstract class BaseMajoranaEntity {
 

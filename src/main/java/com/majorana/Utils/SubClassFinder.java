@@ -1,8 +1,10 @@
 package com.majorana.Utils;
 
 import com.majorana.ORM_ACCESS.EntityPackage;
+import Distiller.entities.EntityVersion;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
+
 import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.Scanners;
 import org.reflections.scanners.SubTypesScanner;
@@ -10,13 +12,11 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.*;
+import java.io.*;
 import java.util.stream.Collectors;
 
 public class SubClassFinder<T> {
@@ -26,6 +26,8 @@ public class SubClassFinder<T> {
     private int minMajor;
     private int minMinor;
     private Pair<Integer, Integer> version;
+
+    private static final String[] systemPackagesPrefixes = {"java","javax"};
 
     public SubClassFinder(int major, int minor) {
         this.minMajor = major;
@@ -51,9 +53,9 @@ public class SubClassFinder<T> {
 
     }
 
-    public Set<T> getSubclassInstances( Class sup) {
+    public Set<T> getSubclassInstancesInPackagePrefix( String packagePrefix, Class sup) {
         PairComparator pc = new PairComparator();
-        Set<Class> packClasses = findSubclasses( sup);
+        Set<Class> packClasses = findSubclassesInPackagePrefix(packagePrefix,  sup);
         Set<T> filtered = packClasses.stream()
                 .filter( cl-> pc.compare(version, getEntityVersions(cl))>=0)
                 .map(cl -> getInst(cl))
@@ -74,13 +76,77 @@ public class SubClassFinder<T> {
     }
 
 
-
+/*
     public static Set<Class> findSubclasses( Class sup) {
-        Set<Class> packClasses = findAllClassesUsingReflectionsLibrarySUbclassing(sup);
+        Set<Class> packClasses = findAllClassesUsingReflectionsLibrary();
        Set<Class> filtered = packClasses.stream()
-    //            .filter(x -> sup.isAssignableFrom(x))
+                .filter(x -> sup.isAssignableFrom(x))
                 .collect(Collectors.toSet());
-        return packClasses;
+        return filtered;
+    }
+*/
+    public Set<Class> findSubclassesInPackagePrefix(String packagePrefix, Class sup){
+        List<String> packages = getPackages();
+        List<String> goodPackages = packages.stream().filter(p->p.startsWith(packagePrefix)).collect(Collectors.toUnmodifiableList());
+        Set<Class> results =new HashSet<>();
+        for(String pack : goodPackages) {
+            Set<Class> goodCLasses = findSubclassesInPack(pack, sup);
+            results.addAll(goodCLasses);
+        }
+        return results;
+    }
+
+    public Set<Class> findSubclassesInPackagePrefix(String packagePrefix, Class sup, int major, int minor){
+        List<String> packages = getPackages();
+        List<String> prefixPackages = packages.stream().filter(p->p.startsWith(packagePrefix)).collect(Collectors.toUnmodifiableList());
+        List<String> goodPackages = prefixPackages.stream().map(p-> Pair.of(p, getHighestVersionInPackage(p)))
+                .filter( pair->pair.getRight().getLeft()< major || (pair.getRight().getLeft()==major &&
+                        pair.getRight().getRight()>=minor)).map(p->p.getLeft()).collect(Collectors.toUnmodifiableList());
+
+        Set<Class> results =new HashSet<>();
+        for(String pack : goodPackages) {
+            Set<Class> goodCLasses = findSubclassesInPack(pack, sup);
+            results.addAll(goodCLasses);
+        }
+        return results;
+    }
+
+    public  Set<Class> findSubclassesInPack(String pack, Class sup){
+        Set<Class> packClasses = findAllClassesInPackage(pack);
+        Set<Class> filtered = packClasses.stream()
+                .filter(x -> sup.isAssignableFrom(x))
+                .collect(Collectors.toSet());
+        return filtered;
+    }
+
+    public Set<Class> findAllClassesInPackage(String package1){
+        List<ClassLoader> classLoadersList = getLoaders();
+        Set<Class> classes = new HashSet<Class>();
+        for(ClassLoader lo : classLoadersList){
+            Set<Class> loClasses = findAllClassesUsingClassLoader1(package1, lo);
+            classes.addAll(loClasses);
+        }
+        return classes;
+    }
+
+    public Set<Class> findAllClassesUsingClassLoader1(String packageName, ClassLoader loader) {
+        InputStream stream = loader
+                .getResourceAsStream(packageName.replaceAll("[.]", "/"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        return reader.lines()
+                .filter(line -> line.endsWith(".class"))
+                .map(line -> getClass(line, packageName))
+                .collect(Collectors.toSet());
+    }
+
+    public List<ClassLoader> getLoaders(){
+        List<ClassLoader> classLoadersList = Thread.getAllStackTraces().keySet() //Get all active threads
+                .stream()
+                .map(thread -> thread.getContextClassLoader()) //Get the classloader of the thread (may be null)
+                .filter(p -> p != null) //Filter out every null object from the stream
+                .collect(Collectors.
+                        toCollection(ArrayList::new));
+        return classLoadersList;
     }
 
 
@@ -90,7 +156,8 @@ public class SubClassFinder<T> {
                     .stream()
                     .map(thread -> thread.getContextClassLoader()) //Get the classloader of the thread (may be null)
                     .filter(p -> p != null) //Filter out every null object from the stream
-                    .collect(Collectors.toCollection(ArrayList::new));
+                    .collect(Collectors.
+                            toCollection(ArrayList::new));
 
             classLoadersList.add(  ClassLoader.getPlatformClassLoader());
             Collection<URL> allPackagePrefixes = Arrays.stream(Package.getPackages()).map(p -> p.getName())
@@ -101,9 +168,9 @@ public class SubClassFinder<T> {
                         return c3;
                     }).get();
             ConfigurationBuilder config = new ConfigurationBuilder().addUrls(allPackagePrefixes).addScanners(
-                    new SubTypesScanner(),
-                    new TypeAnnotationsScanner(),
-                    new FieldAnnotationsScanner()
+                    new SubTypesScanner()
+                //    new TypeAnnotationsScanner(),
+                //    new FieldAnnotationsScanner()
             ) .setClassLoaders(classLoadersList.toArray(new ClassLoader[0]));
             Reflections reflections = new Reflections(config);
 
@@ -133,7 +200,7 @@ public class SubClassFinder<T> {
                         return c3;
                     }).get();
             ConfigurationBuilder config = new ConfigurationBuilder().addUrls(allPackagePrefixes).addScanners(
-                    Scanners.SubTypes.filterResultsBy( s-> true)
+                    Scanners.SubTypes.filterResultsBy( s-> s.getClass().isAssignableFrom(c))
             ) .setClassLoaders(classLoadersList.toArray(new ClassLoader[0]));
             Reflections reflections = new Reflections(config);
 
@@ -163,7 +230,6 @@ public class SubClassFinder<T> {
         classLoadersList.add(  ClassLoader.getPlatformClassLoader());
 
         ConfigurationBuilder config = new ConfigurationBuilder().addScanners(
-                new SubTypesScanner(),
                 new TypeAnnotationsScanner(),
                 new FieldAnnotationsScanner()
                 ).forPackages(packageName)
@@ -180,28 +246,21 @@ public class SubClassFinder<T> {
     }
 //    let’s retrieve all the functional interfaces of the  package:
 
-    public Set<Class<?>> getAnnotatedClassInPackage(String pack, Class anno) {
-
-        List<ClassLoader>  classLoadersList = Thread.getAllStackTraces().keySet() //Get all active threads
-                .stream()
-                .map(thread -> thread.getContextClassLoader()) //Get the classloader of the thread (may be null)
-                .filter(p->p!=null) //Filter out every null object from the stream
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        ConfigurationBuilder config = new ConfigurationBuilder().addScanners(
-                new SubTypesScanner(),
-                new TypeAnnotationsScanner(),
-                new FieldAnnotationsScanner()
-        ).forPackages(pack).setUrls((ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0]))));;
-
-        Reflections reflections = new Reflections(config);
-        return reflections.getTypesAnnotatedWith(anno);
+    public Set<Class> getAnnotatedClassInPackage(String pack, Class anno) {
+         Set<Class> ret = new HashSet<>();
+         Set<Class> classPack =  findAllClassesInPackage(pack);
+         for(Class c : classPack){
+             if (c.getAnnotationsByType(anno).length>0){
+                 ret.add(c);
+             }
+         }
+        return ret;
     }
 
     public Pair<Integer, Integer> getHighestVersionInPackage(String pack){
         int major = 0;
         int minor = 0;
-        Set<Class<?>> entityPackages = getAnnotatedClassInPackage(pack, EntityPackage.class);
+        Set<Class> entityPackages = getAnnotatedClassInPackage(pack, EntityPackage.class);
         Comparator<Pair<Integer,Integer>> comp =  new PairComparator();
         List<Class> res = entityPackages.stream().sorted( (a,b)->comp.compare( getEntityVersions(b), getEntityVersions(a) )).collect(Collectors.toList());
         if (res.size()==0){ return Pair.of(0,0); }
@@ -210,7 +269,7 @@ public class SubClassFinder<T> {
     }
 
     public Pair<Integer, Integer> getEntityVersions(Class cl){
-        Optional<Annotation> annOpt = Arrays.stream(cl.getAnnotationsByType(EntityPackage.class)).findFirst();
+        Optional<Annotation> annOpt = java.util.Arrays.stream(cl.getAnnotationsByType(EntityPackage.class)).findFirst();
         if (annOpt.isEmpty()){ return Pair.of(0,0); }
         EntityPackage pack = (EntityPackage) annOpt.get();
         return Pair.of(pack.major(), pack.minor());
@@ -281,6 +340,32 @@ public class SubClassFinder<T> {
             LOGGER.warn("Class "+className+" in package "+packageName+" not found");
         }
         return null;
+    }
+
+
+    public List<String> getPackages(){
+
+        List<String> result = new LinkedList<String>();
+
+        List<Package> packages = Arrays.stream(Package.getPackages()).collect(Collectors.toList());
+
+        for(Package pack : packages) {
+            int n = 0;
+            for (Package p : packages) {
+                boolean isSystemPackage = false;
+                String pname = p.getName();
+                for (int j = 0; j < systemPackagesPrefixes.length; j++) {
+                    String spname = systemPackagesPrefixes[j];
+                    if (pname.startsWith(spname)) {
+                        isSystemPackage = true;
+                        break;
+                    } else {
+                        result.add(p.getName());
+                    }
+                }
+            }
+        }
+        return result;
     }
 }
 

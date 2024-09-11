@@ -1,7 +1,6 @@
 package com.majorana.entities.ex1;
 
-import com.majorana.ORM_ACCESS.EntityPackage;
-import com.majorana.enum_const.DirEntityVersion;
+import com.majorana.persist.newannot.EntityPackage;
 
 /**
  *  An example table of names of the tables each entity is persisted too

@@ -1,13 +1,8 @@
-package com.majorana.DBs;
+package Distiller.DBs;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
-
-import com.majorana.enum_const.*;
-import com.majorana.persist.newannot.*;
-import com.majorana.ORM.BaseMajoranaEntity;
-import com.majorana.DBs.DBCreds;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -22,18 +17,13 @@ import org.springframework.core.env.PropertySource;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * DBEnvSetup reads database credentials from the OS environment variables, and creates the
- * necessary database connections
- */
-
 public class DBEnvSetup {
 
     private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(DBEnvSetup.class);
 
-    private final static String[] CredFields = com.majorana.DBs.DBCreds.getCredFields();
+    private final static String[] CredFields = DBCreds.getCredFields();
 
-    private final static String PREFIX = "Majorana";
+    private final static String PREFIX = "Distiller";
 
     private final static String DB_VERSION = "DBVersion";
 
@@ -61,13 +51,13 @@ public class DBEnvSetup {
 
     private CassandraState cassandraState;
 
-    private  Map<MajDatasourceName, DBCreds> envCredMap;
+    private  Map<SmokDatasourceName, DBCreds> envCredMap;
 
-    private  Map<MajDatasourceName, HikariDataSource> dataSources;
+    private  Map<SmokDatasourceName, HikariDataSource> dataSources;
 
-    private  Map<MajDatasourceName, MajDataSource> MajDataSourceMap;
+    private  Map<SmokDatasourceName, SmokDataSource> smokDataSourceMap;
 
-    private  Map<MajDatasourceName, CqlSession> MajCassMap;
+    private  Map<SmokDatasourceName, CqlSession> smokCassMap;
 
     public static Map<String, String> getAllKnownProperties() {
         Map<String, String> rtn = System.getenv();
@@ -124,8 +114,8 @@ public class DBEnvSetup {
         LOGGER.warn( "props "+propsByDb);
         envCredMap = new HashMap<>();
         dataSources = new HashMap<>();
-        MajDataSourceMap = new HashMap<>();
-        MajCassMap = new HashMap<>();
+        smokDataSourceMap = new HashMap<>();
+        smokCassMap = new HashMap<>();
         envCredList = new LinkedList<>();
         Map<String, Object> map = new HashMap<>();
         for(Iterator<Map.Entry<String, Map<String, String>>> it = propsByDb.entrySet().iterator(); it.hasNext(); ) {
@@ -146,12 +136,12 @@ public class DBEnvSetup {
                 filter( en->en.getKey().startsWith(PREFIX+SEPERATOR)).
                 collect(Collectors.toMap(en->en.getKey().substring(PREFIX.length()+1),en->en.getValue()));
 
-        Set<String> names =  dbEnvMap.keySet().stream().map(x->x.substring(0,x.indexOf(SEPERATOR))).collect(Collectors.toSet());
+        Set<String> names =  dbEnvMap.keySet().stream().filter(x->x.indexOf(SEPERATOR)>0).map(x->x.substring(0,x.indexOf(SEPERATOR))).collect(Collectors.toSet());
 
         LOGGER.warn("Read "+names.size()+" DBs to connect to: "+names);
 
         for(String smkDS : names){
-            MajDatasourceName sdsn = new MajDatasourceName(smkDS);
+            SmokDatasourceName sdsn = new SmokDatasourceName(smkDS);
             Map<String, Object> credData =
                     dbEnvMap.entrySet().stream().filter( en->en.getKey().startsWith(sdsn.getDataSourceName()))
                             .collect(Collectors.toMap( x->x.getKey(), y-> y.getValue()));
@@ -184,15 +174,15 @@ public class DBEnvSetup {
                 credMap.put(field, value);
             }
 
-            MajCassMap = new HashMap<>();
+            smokCassMap = new HashMap<>();
 
             if (found >= CredFields.length) {
                 DBCreds creds = new DBCreds(credMap);
                 try {
                     envCredMap.put(sdsn, creds);
                     envCredList.add(creds);
-                    MajDataSource src = new MajDataSource(creds);
-                    MajDataSourceMap.put(sdsn, src);
+                    SmokDataSource src = new SmokDataSource(creds);
+                    smokDataSourceMap.put(sdsn, src);
                     if (creds.getVariant() == DatabaseVariant.CASSANDRA) {
                         CassandraConnector cassConn = new CassandraConnector();
                         cassConn.connect(creds, cassandraState);
@@ -203,7 +193,7 @@ public class DBEnvSetup {
                           continue;
                         }
                         cqlSess.execute("USE " + CqlIdentifier.fromCql(creds.getName().getDataSourceName()));
-                        MajCassMap.put(sdsn, cqlSess);
+                        smokCassMap.put(sdsn, cqlSess);
                         cassandraState.setEnabled(true);
                     } else {
                         HikariDataSource hikariDataSource = src.getHikariDataSource();
@@ -221,7 +211,7 @@ public class DBEnvSetup {
         }
     }
 
-    public DBCreds getCreds(MajDatasourceName dbName){
+    public DBCreds getCreds(SmokDatasourceName dbName){
         DBCreds creds =  envCredMap.get(dbName);
         if (creds ==null){
             LOGGER.warn("creds no creds for dbName "+dbName);
@@ -242,20 +232,20 @@ public class DBEnvSetup {
         return checkDbVersion;
     }
 
-    public HikariDataSource getHikDatasource(MajDatasourceName dbSrcName)
+    public HikariDataSource getHikDatasource(SmokDatasourceName dbSrcName)
     {
         return dataSources.get(dbSrcName);
     }
 
-    public MajDataSource getMajDatasource(MajDatasourceName dbSrcName){
-        return MajDataSourceMap.get(dbSrcName);
+    public SmokDataSource getSmokDatasource(SmokDatasourceName dbSrcName){
+        return smokDataSourceMap.get(dbSrcName);
     }
 
-    public CqlSession getCqlSession(MajDatasourceName dbSrcName){
-        return MajCassMap.get(dbSrcName);
+    public CqlSession getCqlSession(SmokDatasourceName dbSrcName){
+        return smokCassMap.get(dbSrcName);
     }
 
-    public MajDatasourceName getMainCassDBName(){
+    public SmokDatasourceName getMainCassDBName(){
         DBCreds creds = envCredList.stream().filter(x-> x.getVariant()== DatabaseVariant.CASSANDRA)
                 .findFirst().orElse(new DBCreds())
         ;
@@ -266,7 +256,7 @@ public class DBEnvSetup {
         return creds.getName();
     }
 
-    public MajDatasourceName getMainSqlDBName(){
+    public SmokDatasourceName getMainSqlDBName(){
         DBCreds creds = envCredList.stream().filter(x->x.getVariant() !=DatabaseVariant.CASSANDRA)
                 .findFirst().orElse(null);
                 ;
@@ -277,7 +267,7 @@ public class DBEnvSetup {
         return creds.getName();
     }
 
-    public MajDatasourceName getMainDBName(){
+    public SmokDatasourceName getMainDBName(){
         DBCreds creds = envCredList.stream()
                 .findFirst().orElse(null)
                 ;

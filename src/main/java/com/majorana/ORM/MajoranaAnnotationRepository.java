@@ -1,9 +1,9 @@
 package com.majorana.ORM;
 
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import com.majorana.DBs.MajDatasourceName;
-import com.majorana.persist.newannot.*;
-//import com.majorana.ORM.domain.entity.BaseMajEntity;
+import com.majorana.ORM.BaseMajoranaEntity;
+import Distiller.DBs.SmokDatasourceName;
+//import com.majorana.ORM.domain.entity.BaseSmokEntity;
 import com.majorana.Utils.SQLHelper;
 import jakarta.persistence.Column;
 import org.slf4j.Logger;
@@ -22,24 +22,17 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.Date;
 import java.util.stream.Collectors;
 
-/**
- *  THis is the keys ORM class in the Maj System, it reads an CLass type by reflect, and its
- *  jakarta and Majorana ORM annotations to persist to the database and back
- *
- * @param <T>
- */
-
-
-
-public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
+public class MajoranaAnnotationRepository<T extends BaseDistillerEntity> {
 
     private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(MajoranaAnnotationRepository.class);
 
-    private static final String PACKAGE_BASE = "Majorana.ORM";
+    private static final String PACKAGE_BASE = "com.majorana.ORM";
 
     private static final LocalDate defDate = LocalDate.of(1970,1,1);
 
@@ -51,30 +44,20 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
 
     private static final String[] columnClassNames = { jakarta.persistence.Column.class.getCanonicalName() };
 
-    public Class<T> clazz;
+    protected Class<T> clazz;
 
-    public MajoranaDBConnectionFactory dbFactory;
+    protected MajoranaDBConnectionFactory dbFactory;
 
-    public MajDatasourceName dbName;
+    protected SmokDatasourceName dbName;
 
-    public List<MajoranaRepositoryField> repoFields = new LinkedList<>();
+    protected List<MajoranaRepositoryField> repoFields = new LinkedList<>();
 
-    public Method preSave;
+    protected Method preSave;
 
-    public Method postLoad;
-
-    /**
-     * Creates a Repository class for a type of class clazz, using DB name dbName
-     * and using the dbFactory which the Majorana ORM sets up with the environment data for
-     * its credentials
-     *
-     * @param dbFactory - A majorana db Factory
-     * @param dbName String
-     * @param clazz Class
-     */
+    protected Method postLoad;
 
 
-    public MajoranaAnnotationRepository(MajoranaDBConnectionFactory dbFactory,  MajDatasourceName dbName ,Class<T> clazz){
+    public MajoranaAnnotationRepository(MajoranaDBConnectionFactory dbFactory,  SmokDatasourceName dbName ,Class<T> clazz){
         this.dbFactory = dbFactory;
         this.dbName = dbName;
         this.clazz =clazz;
@@ -82,30 +65,33 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         findMethods(clazz);
     }
 
-    /**
-     * produces a list of fields to persist from the data on the class c
-     *
-     * @param c
-     * @return
-     */
+    public static int mapParams(java.sql.PreparedStatement ps, Object[] args) throws SQLException {
+        int i = 1;
+        for (Object arg : args) {
+            if (arg instanceof Date) {
+                ps.setTimestamp(i++, new Timestamp(((Date) arg).getTime()));
+            } else if (arg instanceof Integer) {
+                ps.setInt(i++, (Integer) arg);
+            } else if (arg instanceof Long) {
+                ps.setLong(i++, (Long) arg);
+            } else if (arg instanceof Double) {
+                ps.setDouble(i++, (Double) arg);
+            } else if (arg instanceof Float) {
+                ps.setFloat(i++, (Float) arg);
+            } else if (arg instanceof java.util.Date){
+                ps.setTimestamp(i++, new java.sql.Timestamp( ((java.util.Date) arg).getTime()));
+            } else {
+                ps.setString(i++, (String) arg);
+            }
+        }
+        return i;
+    }
 
     public static List<MajoranaRepositoryField> getRepositoryFields(Class c){
        return setFieldsByReflection(c);
     }
 
-    /**
-     *  String getReadString(...)
-     *
-     *  Given a table and parameter names and values, produces a SQL string to find the data in
-     *  the given database table
-     *
-     * @param table
-     * @param paramNames
-     * @param params
-     * @return
-     */
-
-    public String getReadString(String table, String[] paramNames , Object[] params){
+    public String getReadStringNP(String table, String[] paramNames , Object[] params){
         StringBuffer buffy =  new StringBuffer();
 //        SqlParameterSource params = getSqlParameterSource(sUser);
         buffy.append("SELECT "+ repoFields.stream().filter(x->!x.isTransient()).map(x->x.getDbColumn()).collect(Collectors.joining(",") ));
@@ -125,17 +111,51 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         return buffy.toString();
     }
 
-    /**
-     *  String delete String
-     *
-     *  Given a table and params to match, form a delete SQL string to perform
-     *  a database deletion.
-     *
-     * @param table
-     * @param paramNames
-     * @param params
-     * @return sql string
-     */
+
+
+    public String getReadStringNPSelectClause(String table, String sql1, String[] paramNames , Object[] params){
+        StringBuffer buffy =  new StringBuffer();
+//        SqlParameterSource params = getSqlParameterSource(sUser);
+        buffy.append("SELECT "+ repoFields.stream().filter(x->!x.isTransient()).map(x->x.getDbColumn()).collect(Collectors.joining(",") ));
+        buffy.append(" FROM "+table );
+        List<String>  paramsList = new LinkedList<>();
+        for(int i=0; i<Math.min(paramNames.length, params.length); i++){
+            if (params[i]!=null && paramNames[i]!=null) {
+                String t = paramNames[i] + " =? ";
+                paramsList.add(t);
+            }
+        }
+
+        if (sql1!=null){
+            buffy.append( sql1);
+        }
+        buffy.append(";");
+        return buffy.toString();
+    }
+
+    public String getReadStringSelectClause(String table, String sql1){
+        StringBuffer buffy =  new StringBuffer();
+//        SqlParameterSource params = getSqlParameterSource(sUser);
+        buffy.append("SELECT "+ repoFields.stream().filter(x->!x.isTransient()).map(x->x.getDbColumn()).collect(Collectors.joining(",") ));
+        buffy.append(" FROM "+table );
+
+        if (sql1!=null){
+            buffy.append( sql1);
+        }
+        buffy.append(";");
+        return buffy.toString();
+    }
+
+
+    public String getReadString(String table){
+        StringBuffer buffy =  new StringBuffer();
+//        SqlParameterSource params = getSqlParameterSource(sUser);
+        buffy.append("SELECT "+ repoFields.stream().filter(x->!x.isTransient()).map(x->x.getDbColumn()).collect(Collectors.joining(",") ));
+        buffy.append(" FROM "+table );
+
+        buffy.append(";");
+        return buffy.toString();
+    }
 
     public String getDeleteString(String table, String[] paramNames , Object[] params){
         StringBuffer buffy =  new StringBuffer();
@@ -158,44 +178,43 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         return buffy.toString();
     }
 
-    /**
-     * Create a INsert string to store an entity  of class T in the database, uses named paramters
-     *
-     * @param sUser
-     * @return sql String
-     */
-
     public String getCreateStringNP(T sUser){
         StringBuffer buffy =  new StringBuffer();
         SqlParameterSource params = getSqlParameterSource(sUser);
         buffy.append("("+ repoFields.stream().filter(x->!x.isTransient()).map(x->x.getDbColumn()).collect(Collectors.joining(",") )+ ")");
         buffy.append(" VALUES ("+ repoFields.stream().filter(x->!x.isTransient())
-                .map(x->x.isPopulatedCreated() || x.isPopulatedUpdated()? "now()": ":"+x.getField().getName())
+                .map(x->x.isPopulatedCreated() || x.isPopulatedUpdated()? "now()": ":"+x.getDbColumn())
                 .collect(Collectors.joining(",") )+ ");");
         return buffy.toString();
     }
 
-    /**
-     * Creates an update string o update a value in the database from its entity type using
-     * named parameters
-     *
-     * @param sUser
-     * @return
-     */
+    public List<MajoranaRepositoryField> getRepoFields() {
+        return repoFields;
+    }
 
     public String getUpdateStringNP(T sUser){
         StringBuffer buffy =  new StringBuffer();
         buffy.append(" SET "+ repoFields.stream().filter(x->!x.isTransient()).filter(x->x.isUpdateable())
-                .map(x->x.getDbColumn() + ":" + ((x.isPopulatedUpdated())?"now() " : ":"+x.getField().getName()))
-                .collect(Collectors.joining(",") )+ " WHERE id=:id");
+                .map(x->x.getDbColumn() + " = :" + getIdField().getDbColumn())
+                .collect(Collectors.joining(",") )+ " WHERE "+getIdField().getDbColumn()+"=:"+getIdField().getDbColumn());
         return buffy.toString();
     }
 
-    /**
-     * CReates an SQL select clause listing the all the db columns to retrieve from the database
-     *
-     * @return SQL fields for the select clause
-     */
+    public String getUpAltIdStringNP(T sUser){
+        StringBuffer buffy =  new StringBuffer();
+        buffy.append(" SET "+ repoFields.stream().filter(x->!x.isTransient()).filter(x->x.isAltId())
+                .map(x->x.getDbColumn() + " = " + ((x.isPopulatedUpdated())?"now() " : ":"+x.getDbColumn()))
+                .collect(Collectors.joining(",") ));
+        return buffy.toString();
+    }
+
+    public String getUpdateStringNPSansWhere(T sUser){
+        StringBuffer buffy =  new StringBuffer();
+        buffy.append(" SET "+ repoFields.stream().filter(x->!x.isTransient()).filter(x->x.isUpdateable())
+                .map(x->x.getDbColumn() + " = " + ((x.isPopulatedUpdated())?"now() " : ":"+x.getDbColumn()))
+                .collect(Collectors.joining(",") ));
+        return buffy.toString();
+    }
 
     public String getSqlFieldString(){
         StringBuffer buffy =  new StringBuffer();
@@ -204,7 +223,14 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
     }
 
 
-    public String getCreateString(T sUser){
+    public String getSqlFieldStringWithPrefix(String s){
+        StringBuffer buffy =  new StringBuffer();
+        buffy.append(repoFields.stream().filter(x->!x.isTransient()).map(x->s+","+x.getDbColumn()).collect(Collectors.joining(", ") ) );
+        return buffy.toString();
+    }
+
+
+    protected String getCreateString(T sUser){
         StringBuffer buffy =  new StringBuffer();
         SqlParameterSource params = getSqlParameterSource(sUser);
         buffy.append("("+ repoFields.stream().filter(x->!x.isTransient()).map(x->x.getDbColumn()).collect(Collectors.joining(",") )+ ")");
@@ -214,7 +240,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         return buffy.toString();
     }
 
-    public String getUpdateString(T sUser){
+    protected String getUpdateString(T sUser){
         StringBuffer buffy =  new StringBuffer();
         buffy.append(" SET "+ repoFields.stream().filter(x->!x.isTransient()).filter(x->x.isUpdateable())
                 .map(x->x.getDbColumn() + ":" + ((x.isPopulatedUpdated())?"now() " : "?"))
@@ -237,24 +263,13 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         }
     }
 
-    /**
-     * Tests if a target string is in a list
-     *
-     *
-     * @param potentialTargets
-     * @param test
-     * @return
-     */
+    public MajoranaRepositoryField getIdField(){
+        return repoFields.stream().filter( p->p.isId()).findFirst().orElse(null);
+    }
 
     public static boolean isInStringArray( String potentialTargets[], String test){
         return Arrays.stream(potentialTargets).anyMatch( pt -> pt.equals(test));
     }
-
-    /**
-     * Creates a random key UUID
-     *
-     * @return String of the UUID
-     */
 
     public String getKeyUuid(){
         return repoFields.stream().filter(
@@ -263,12 +278,6 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
 
                 .findFirst().orElse("");
     }
-
-    /**
-     *  Creates a random key ID
-     *
-     * @return random key stream
-     */
 
     public String getKeyId(){
         return repoFields.stream().filter(
@@ -282,123 +291,156 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         List<Annotation> ret = new LinkedList<>();
         Annotation[] annotations = field.getDeclaredAnnotations();
         String name = field.getName();
-        LOGGER.warn(" Searching annotations for field "+name+" on class "+clazz.getCanonicalName());
+        LOGGER.trace(" Searching annotations for field "+name+" on class "+clazz.getCanonicalName());
         ret.addAll(Arrays.stream(annotations).collect(Collectors.toUnmodifiableList()));
-        while(ret.isEmpty()){
+        while(clazz!=null && clazz!=Object.class){
             clazz = clazz.getSuperclass();
-            if (clazz==null){ break; }
+            if (clazz==null || clazz==Object.class){ break; }
             try {
                 Field newField = clazz.getDeclaredField(name);
                 //Field newField = fields.stream().filter(f -> f.getName().equals(name)).findFirst().orElse(null);
                 if (newField != null) {
                     Annotation[] annot = newField.getDeclaredAnnotations();
                     ret.addAll(Arrays.stream(annotations).collect(Collectors.toUnmodifiableList()));
-                    break;
+                 //   continue;
                 }
             } catch (NoSuchFieldException e){
-                LOGGER.warn("Class "+ clazz+" no field "+name);
+                LOGGER.trace("Class "+ clazz+" no field "+name);
             }
 
         }
-        LOGGER.info("CLass "+clazz+ " found "+ ret.size()+" new field annotations: ("+ret.stream()
+        LOGGER.trace("CLass "+clazz+ " found "+ ret.size()+" new field annotations: ("+ret.stream()
                 .map(a->a.annotationType().getCanonicalName()).collect(Collectors.joining(", ")));
         return ret.toArray(new Annotation[0]);
     }
 
     private static List<MajoranaRepositoryField> setFieldsByReflection(Class clazz){
 
-        List<MajoranaRepositoryField> repoFields = new LinkedList<>();
 
-        List<Field> fields = getClassFields(clazz);
-        List<Method> methods = getClassMethods(clazz);
-        for(Field field : fields){
-            Annotation[] annotations =  getAnnotationsOnClassAndSuper(field, clazz); //field.getDeclaredAnnotations();
-            boolean toAdd = false;
-            MajoranaRepositoryField majoranaField = new MajoranaRepositoryField();
-            majoranaField.setField(field);
-            majoranaField.setValueType(field.getType());
-            majoranaField.setName(field.getName());
-            majoranaField.setDbColumn(field.getName());
+
+        List<MajoranaRepositoryField> repoFields = new LinkedList<>();
+        Set<String> setNames = new HashSet<>();
+        List<Field> fields = new LinkedList<> ();
+        List<Method> methods = new LinkedList<>();
+        while(clazz!=null && clazz!=Object.class) {
+            fields.addAll(getClassFields(clazz));
+            methods.addAll(getClassMethods(clazz));
+            for (Field field : fields) {
+                if (clazz.getName().equals("JunkUser")) {
+                    field = field;
+
+                }
+                Annotation[] annotations = getAnnotationsOnClassAndSuper(field, clazz); //field.getDeclaredAnnotations();
+                boolean toAdd = false;
+                MajoranaRepositoryField majoranaField = new MajoranaRepositoryField();
+                majoranaField.setField(field);
+                majoranaField.setValueType(field.getType());
+                majoranaField.setName(field.getName());
+                majoranaField.setDbColumn(field.getName());
 
 //            if (field.getName().equals("createdByUserEmail")){
 //                LOGGER.warn("createdByUserEmail");
 //            }
 
 
-            boolean isStatic = Modifier.isStatic(field.getModifiers());
-            if  (isStatic){ continue; }
-            boolean isTransient = Modifier.isTransient(field.getModifiers());
-            majoranaField.setTransient(isTransient);
+                boolean isStatic = Modifier.isStatic(field.getModifiers());
+                if (isStatic) {
+                    continue;
+                }
+                boolean isTransient = Modifier.isTransient(field.getModifiers());
+                majoranaField.setTransient(isTransient);
 
-            boolean updateable = false;
-            boolean popCreated = false;
-            boolean popUpdated = false;
-            boolean nullable = false;
-            boolean isId = false;
-            boolean hasId = false;
-            for(Annotation ann : annotations){
-                if (ann.annotationType().equals(jakarta.persistence.Id.class) && !hasId) {
-                    isId = true;
-                    hasId=true;
-                }
-                if (ann.annotationType().equals(Updateable.class)){
-                    updateable = true;
-                }
-                if (ann.annotationType().equals(PopulatedCreated.class)){
-                    popCreated = true;
-                }
-                if (ann.annotationType().equals(PopulatedUpdated.class)){
-                    popUpdated = true;
-                }
-                if (ann.annotationType().equals(Nullable.class)){
-                    nullable = true;
-                }
+                boolean updateable = false;
+                boolean popCreated = false;
+                boolean popUpdated = false;
+                boolean nullable = false;
+                boolean isAltId = false;
+                boolean isId = false;
+                boolean hasId = false;
 
-                if (  isInStringArray( columnClassNames, ann.annotationType().getCanonicalName())){
-                    toAdd=true;
-//                    Column column = field.getAnnotation(Column.class);
-                    Column column = (Column) ann;
-                    String dbField = column.name();
-                    if (dbField!=null){
-                        majoranaField.setDbColumn(dbField);
+                for (Annotation ann : annotations) {
+                    if (ann.annotationType().equals(jakarta.persistence.Id.class) && !hasId) {
+                        isId = true;
+                        hasId = true;
                     }
-                    majoranaField.setColumnAnnotation(column);
+                    if (ann.annotationType().equals(Updateable.class)) {
+                        updateable = true;
+                    }
+                    if (ann.annotationType().equals(AltID.class)) {
+                        isAltId = true;
+                    }
+                    if (ann.annotationType().equals(PopulatedCreated.class)) {
+                        popCreated = true;
+                    }
+                    if (ann.annotationType().equals(PopulatedUpdated.class)) {
+                        popUpdated = true;
+                    }
+                    if (ann.annotationType().equals(Nullable.class)) {
+                        nullable = true;
+                    }
+
+                    if (isInStringArray(columnClassNames, ann.annotationType().getCanonicalName())) {
+                        toAdd = true;
+//                    Column column = field.getAnnotation(Column.class);
+                        Column column = (Column) ann;
+                        String dbField = column.name();
+                        if (dbField != null) {
+                            majoranaField.setDbColumn(dbField);
+                        }
+                        majoranaField.setColumnAnnotation(column);
+                    }
+                }
+                majoranaField.setUpdateable(updateable);
+                majoranaField.setPopulatedCreated(popCreated);
+                majoranaField.setPopulatedUpdated(popUpdated);
+                majoranaField.setNullable(nullable);
+                majoranaField.setId(isId);
+                majoranaField.setAltId(isAltId);
+                //   Class curMethodClass = clazz;
+                //   while(clazz!=null && clazz!=Object.class){
+                //        methods = getClassMethods(curMethodClass);
+                for (Method method : methods) {
+                    if (isGetter(method) && method.getName().equalsIgnoreCase("GET" + field.getName())
+                            || method.getName().equalsIgnoreCase("IS" + field.getName().toUpperCase())
+                            || (method.getName().equalsIgnoreCase(field.getName().toUpperCase()))
+                    ) {
+                        if (majoranaField.getGetter() == null) {
+                            majoranaField.setGetter(method);
+                        }
+                    } else if (isSetter(method) && method.getName().equalsIgnoreCase("SET" + field.getName())) {
+                        if (majoranaField.getSetter() == null) {
+                            majoranaField.setSetter(method);
+                        }
+                    }
+                }
+                //       curMethodClass = curMethodClass.getSuperclass();
+                //   }
+
+                boolean haveRequiredData = majoranaField.checkFields();
+                if (toAdd && haveRequiredData && !setNames.contains(majoranaField.getName())) {
+                    repoFields.add(majoranaField);
+                    setNames.add(majoranaField.getName());
+                } else if (!haveRequiredData) {
+                    LOGGER.warn("setFieldsByReflection: Class: " + clazz.getName() + " Field: " + majoranaField.getName() + " missing info " + majoranaField.getMissing());
                 }
             }
-            majoranaField.setUpdateable(updateable);
-            majoranaField.setPopulatedCreated(popCreated);
-            majoranaField.setPopulatedUpdated(popUpdated);
-            majoranaField.setNullable(nullable);
-            majoranaField.setId(isId);
-            for(Method method: methods){
-                if (isGetter(method) && method.getName().equalsIgnoreCase("GET"+field.getName())
-                        || method.getName().equalsIgnoreCase("IS"+field.getName().toUpperCase())
-                        || ( method.getName().equalsIgnoreCase(field.getName().toUpperCase()) )
-                ){
-                    majoranaField.setGetter(method);
-                } else if (isSetter(method) && method.getName().equalsIgnoreCase("SET"+field.getName())) {
-                    majoranaField.setSetter(method);
-                }
-            }
-            boolean haveRequiredData = majoranaField.checkFields();
-            if (toAdd && haveRequiredData) {
-                repoFields.add(majoranaField);
-            } else if (!haveRequiredData){
-                LOGGER.warn("setFieldsByReflection: Class: "+clazz.getName()+" Field: "+majoranaField.getName()+" missing info "+majoranaField.getMissing());
-            }
+            clazz = clazz.getSuperclass();
+        }
+        if (!repoFields.stream().anyMatch(f->f.isId()) && repoFields.stream().anyMatch(f->f.isAltId())){
+            MajoranaRepositoryField alt = repoFields.stream().filter(f->f.isAltId()).findFirst().orElse(null);
+            alt.setAltId(false);
+            alt.setId(true);
         }
         return repoFields;
     }
 
-    public PreparedStatementCreator getSqlPreparedStatementParameter(String sql, T entity, boolean genKey) {
-
-
+    protected PreparedStatementCreator getSqlPreparedStatementParameter(String sql, T entity, boolean genKey) {
 
      //   Connection conn = dbFactory.getMysqlConn(dbName)s
         PreparedStatementCreator pc = new MajorPreparedStatCreator() {
 
 
-            public boolean genKey;
+            protected boolean genKey;
 
             public void MajorPreparedStatCreator(boolean genKey){
                 this.genKey = genKey;
@@ -424,45 +466,27 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         return pc;
     }
 
-    public SqlParameterSource getSqlParameterSource(T entity){
+    protected SqlParameterSource getSqlParameterSource(T entity){
         return new MapSqlParameterSource(getParameterMap(entity));
     }
 
-    /**
-     * FOr a named datasource sDn and an Entity, create an SqlParameyer source to
-     * store in the database, using the annotations on the entity class
-     *
-     * @param sDn
-     * @param entity
-     * @return sqlParameter sourcde
-     */
-
-    public SqlParameterSource getSqlParameterSourceWithDeletedAt(MajDatasourceName sDn,T entity){
+    public SqlParameterSource getSqlParameterSourceWithDeletedAt(SmokDatasourceName sDn,T entity){
         Map<String, Object> sourceMap =getParameterMap(entity);
         sourceMap.put("deleted_at", (Boolean) sourceMap.getOrDefault("deleted",false)?  dbFactory.getDBTime(sDn) : SQLHelper.BLANK_TIMESTAMP);
         return new MapSqlParameterSource(sourceMap);
     }
 
-    /**
-     * FOr a named database source snd am entity, creates an map comtaining the parameters
-     * and names to store in the database
-     *
-     * @param sDn
-     * @param entity
-     * @return
-     */
-
-    public Map<String, Object> getParameterMapWithDeletedAt(MajDatasourceName sDn,T entity){
+    public Map<String, Object> getParameterMapWithDeletedAt(SmokDatasourceName sDn,T entity){
         Map<String, Object> sourceMap =getParameterMap(entity);
         sourceMap.put("deleted_at", (Boolean) sourceMap.getOrDefault("deleted",false)?  dbFactory.getDBTime(sDn) : SQLHelper.BLANK_TIMESTAMP);
         return sourceMap;
     }
 
-    public Timestamp getDeletedA(BaseMajoranaEntity bse){
+    protected Timestamp getDeletedA(BaseDistillerEntity bse){
         return Timestamp.valueOf (bse.isDeleted() ? bse.getDeletedAt() : SQLHelper.BLANK_TIMESTAMP);
     }
 
-    private Map<String, Object> getParameterMap(T entity){
+    public Map<String, Object> getParameterMap(T entity){
         if (preSave!=null){
             invokeMethod(entity, preSave);
         }
@@ -471,7 +495,13 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
             try {
                 Object ob = invokeGetter(entity, field.getGetter());
                 if (ob!=null) {
-                    if (ob instanceof LocalDate) {
+                    if (ob instanceof UUID){
+                        ob = ob.toString();
+                    } else
+
+                    if (ob instanceof java.sql.Blob) {
+                        // ok
+                    } else if (ob instanceof LocalDate) {
                         ob = java.sql.Date.valueOf((LocalDate) ob);
                     } else if (ob instanceof LocalTime) {
                         ob = Time.valueOf((LocalTime) ob);
@@ -479,6 +509,8 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                         ob = Timestamp.valueOf((LocalDateTime) ob);
                     } else if (field.getValueType().isEnum()) {
                         ob = ((Enum) ob).name();
+                    } else if (ob instanceof java.util.Date) {
+                        ob = new java.sql.Timestamp(((Date) ob).getTime());
                     } else {
                         // Default
                     }
@@ -500,25 +532,22 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         return (int) day1;
     }
 
-    /**
-     * GIven an list of Repository fields an a empty entity, and a random number generator
-     * populate the object with a random value
-     *
-     * @param lmf
-     * @param ob
-     * @param r
-     */
-
     public static void setRandom(List<MajoranaRepositoryField> lmf, Object ob, Random r){
         int cnt=0;
         for(MajoranaRepositoryField field : lmf){
             try {
+               if (field.getValueType()==Blob.class){
+                   byte[] by = new byte[1];
+                   by[0]= (byte) r.nextInt(127);
+                   Blob b = new javax.sql.rowset.serial.SerialBlob(by);
+
+               }
             if (field.getValueType()==UUID.class) {
                 UUID ns =  UUID.randomUUID();
                 invokeSetter( ob, ns, field.getSetter());
             } else if (field.getValueType()==LocalDate.class) {
                 int y = 1970 + r.nextInt(100);
-                int m = r.nextInt(12);
+                int m = r.nextInt(12)+1;
                 int d = daysInMonth( y, m);
                 LocalDate ld = LocalDate.of( y, m, d);
                 invokeSetter( ob, ld, field.getSetter());
@@ -527,12 +556,15 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                 invokeSetter( ob, lt, field.getSetter());
             } else if (field.getValueType()== LocalDateTime.class) {
                 int y = 1970 + r.nextInt(100);
-                int m = r.nextInt(12);
-                int d = daysInMonth( y, m);
-                LocalTime lt = LocalTime.of( r.nextInt(24), r.nextInt(60), r.nextInt(60));
-                LocalDate ld = LocalDate.of( y, m, d);
+                int m = r.nextInt(12) + 1;
+                int d = daysInMonth(y, m);
+                LocalTime lt = LocalTime.of(r.nextInt(24), r.nextInt(60), r.nextInt(60));
+                LocalDate ld = LocalDate.of(y, m, d);
                 LocalDateTime ldt = ld.atTime(lt);
-                invokeSetter( ob, ldt,  field.getSetter());
+                invokeSetter(ob, ldt, field.getSetter());
+            } else if (field.getValueType().equals(java.util.Date.class)){
+                Date d = new Date(r.nextLong(1000000000L));
+                invokeSetter(ob, d, field.getSetter());
             } else if (field.getValueType().isEnum()) {
                 List<Object> enumList =  Arrays.asList(field.getValueType().getEnumConstants());
                 int e_i = r.nextInt(enumList.size());
@@ -559,7 +591,9 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                 }
             } else {
                 switch( field.getValueType().getName()) {
-
+                    case "java.util.Date":
+                        invokeSetter( ob, new java.util.Date(r.nextLong(100000000000L)),  field.getSetter());
+                        break;
                     case "java.lang.Integer":
                         invokeSetter( ob, r.nextInt(10000),  field.getSetter());
                         //  if (ob){ invokeSetter(entity, null, setter); }
@@ -616,7 +650,9 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                 boolean isNull = ob==null;
                 boolean isNullable = field.isNullable();
 //                if (ob==null) {
-                
+                    if (field.getValueType()==Blob.class){
+                        ps.setBlob(i, (java.sql.Blob) ob);
+                    }
 //                } else {
                     if (field.getValueType()==UUID.class) {
                         String ns = isNullable ? null : UUID.randomUUID().toString();
@@ -657,7 +693,10 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                          }
                     } else {
                             switch( field.getValueType().getName()) {
-
+                                case "java.util.Date":
+                                    java.sql.Timestamp dt =new java.sql.Timestamp(((java.util.Date)ob).getTime());
+                                    ps.setTimestamp(i, dt);
+                                    break;
                                 case "java.lang.Integer":
                                     ps.setInt(i, isNull ? 0 : ((Integer) ob).intValue());
                                     //  if (ob){ invokeSetter(entity, null, setter); }
@@ -704,22 +743,10 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         LOGGER.warn("Values: "+s);
     }
 
-    /**
-     *  Gets a Jdbctemplate mapper to convert a database result to a entity T
-     *
-     * @return
-     */
 
     public RowMapper<T> getMapper(){
         return new RepositoryFieldMapper();
     }
-
-    /**
-     *  Maps a single integer from an database result with one result .e.g. select count(*)
-     *
-     * @return
-     */
-
 
     public RowMapper<Integer> getIntegerMapper(){
         return new RowMapper<Integer>() {
@@ -730,7 +757,9 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         };
     }
 
-    public class RepositoryFieldMapper implements RowMapper<T> {
+    protected class RepositoryFieldMapper implements RowMapper<T> {
+
+        private static final Logger LOGGER = MethodPrefixingLoggerFactory.getLogger(MajoranaAnnotationRepository.RepositoryFieldMapper.class);
 
         @Override
         public T mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -746,15 +775,25 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                     Method setter = field.getSetter();
                     String col = field.getDbColumn();
                     try {
+                        if (java.sql.Blob.class.isAssignableFrom(field.getValueType())){
+                            invokeSetter(entity, rs.getBlob(col), setter);
+                        } else
                         if (field.getValueType().isEnum()) {
                             try {
-                                Method valueOf = field.getValueType().getMethod("valueOf", String.class);
-                                Object value = valueOf.invoke(null, rs.getString(col));
+                                Object value = null;
+                                if (rs.getString(col)==null){
+                                    Method valueOf = field.getValueType().getMethod("valueOf", String.class);
+                                    value = valueOf.invoke(null, "UNKNOWN");
+                                } else {
+                                    Method valueOf = field.getValueType().getMethod("valueOf", String.class);
+                                    value = valueOf.invoke(null, rs.getString(col));
+                                }
                                 invokeSetter(entity, value, setter);
                             } catch (Exception e) {
                                 Method valueOf = field.getValueType().getMethod("fromString", String.class);
                                 Object value = valueOf.invoke(null, rs.getString(col));
-                                invokeSetter(entity, value, setter);
+
+                                if (value!=null){ invokeSetter(entity, value, setter); }
                             }
                         } else {
                             switch (field.getValueType().getName()) {
@@ -774,7 +813,8 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                                     invokeSetter(entity, rs.getBoolean(col), setter);
                                     break;
                                 case "java.util.UUID":
-                                    invokeSetter(entity, UUID.fromString(rs.getString(col)), setter);
+                                    String s = rs.getString(col);
+                                    invokeSetter(entity, UUID.fromString(s), setter);
                                     break;
                                 case "java.lang.Integer":
                                     invokeSetter(entity, rs.getInt(col), setter);
@@ -809,9 +849,13 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                                 case "java.lang.String":
                                     invokeSetter(entity, rs.getString(col), setter);
                                     break;
+                                case "java.util.Date":
+                                    java.sql.Timestamp ti = rs.getTimestamp(col);
+                                    invokeSetter(entity, new java.util.Date(ti.getTime()), setter);
+                                    break;
                                 case "java.time.LocalDate":
-                                    java.sql.Date date = rs.getDate(col);
-                                    LocalDate ld = date != null ? date.toLocalDate() : null;
+                                    java.sql.Date date1 = rs.getDate(col);
+                                    LocalDate ld = date1 != null ? date1.toLocalDate() : null;
                                     invokeSetter(entity, ld, setter);
                                     break;
                                 case "java.time.LocalTime":
@@ -861,48 +905,19 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         }
         return false;
     }
-
-    /**
-     *  Given an Objectm, set is variable value using the java.lang.reflect setter method
-     *
-     *
-     * @param obj
-     * @param variableValue
-     * @param setter
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     * @throws InvocationTargetException
-     */
-
     public static void invokeSetter(Object obj,Object variableValue,Method setter) throws IllegalAccessException, IllegalArgumentException , InvocationTargetException
     {
             setter.invoke(obj,variableValue);
     }
 
-    /**
-     * Given an object, read a variable using a java.lang.reflet getter method
-     *
-     *
-     * @param obj
-     * @param getter
-     * @return
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     * @throws InvocationTargetException
-     */
-
     public static Object invokeGetter(Object obj,Method getter) throws IllegalAccessException, IllegalArgumentException , InvocationTargetException
     {
+            if (obj==null){
+                return null;
+            }
             Object f = getter.invoke(obj);
             return f;
     }
-
-    /**
-     * Given a method (java.lang.reflect), on a object, invoke a method on it
-     *
-     * @param obj
-     * @param method
-     */
 
         public void invokeMethod(Object obj,Method method)
         {
@@ -941,7 +956,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
             out.add(method);
         }
         Class supClass = clazz.getSuperclass();
-        while (supClass.getPackage().getName().contains(PACKAGE_BASE)){
+        while (supClass!=null && supClass!=Object.class){
             Method[] supMethods = supClass.getDeclaredMethods();
             for(Method method : supMethods){
                 out.add(method);

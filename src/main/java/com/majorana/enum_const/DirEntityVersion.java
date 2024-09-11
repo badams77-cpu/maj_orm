@@ -1,6 +1,6 @@
 package com.majorana.enum_const;
 
-import com.majorana.ORM_ACCESS.EntityPackage;
+import com.majorana.persist.newannot.EntityPackage;
 
 /**
  * Specifies the version of all the entities in the same package and directory

@@ -1,17 +1,11 @@
-package com.majorana.DBs;
+package Distiller.DBs;
 
 import java.util.Map;
 
-import com.majorana.Utils.MethodPrefixingLoggerFactory;
-
 import org.slf4j.Logger;
 
-/**
- * DBCreds specifies a connection to a database to try, multiple DNCreds may specify
- * multiple connectinns.
- */
-
 public class DBCreds {
+
 
 
     private static final Logger LOGGER = com.majorana.Utils.MethodPrefixingLoggerFactory.getLogger(DBCreds.class);
@@ -31,37 +25,37 @@ public class DBCreds {
     private static final String ENV_VAR_VERIFY_SSL_CERT = "verifySSL";
 
     private static final String ENV_VAR_POOL_NAME = "poolName";
-    private static final String ENV_VAR_MIN_IDLE_CON = "minIdeaCon";
+    private static final String ENV_VAR_MIN_IDLE_CON = "minIdleConnections";
     private static final String ENV_VAR_MAX_POOLSIZE = "maxPoolSize";
-    private static final String ENV_VAR_MAX_IDEA_TIMEOUT = "maxIdeaTimeout";
+    private static final String ENV_VAR_MAX_IDLE_TIMEOUT = "maxIdleTimeout";
     private static final String ENV_VAR_CON_TIMEOUT = "connectionTimeout";
 
 
 
 
     private static final String[] ENV_VARS = {
-                ENV_VAR_NAME,
-                ENV_VAR_ISOLATION_LEVEL,
-                ENV_VAR_DB_VARIANT,
-                ENV_VAR_HOST_ADDRESS,
-                ENV_VAR_PORT,
-                ENV_VAR_USERNAME,
-                ENV_VAR_PASSWD,
-                ENV_VAR_REMOTE_DATABASE_NAME_AT_SERVICE,
-                ENV_VAR_PRIORITY,
-                ENV_VAR_GROUP,
-                ENV_VAR_USE_SSL,
-                ENV_VAR_VERIFY_SSL_CERT,
-                ENV_VAR_IS_ALLOWED_PUBLIC_KEY,
-                ENV_VAR_POOL_NAME,
-                ENV_VAR_MIN_IDLE_CON,
-                ENV_VAR_MAX_POOLSIZE,
-                ENV_VAR_MAX_IDEA_TIMEOUT,
-                ENV_VAR_CON_TIMEOUT
+            ENV_VAR_NAME,
+            ENV_VAR_ISOLATION_LEVEL,
+            ENV_VAR_DB_VARIANT,
+            ENV_VAR_HOST_ADDRESS,
+            ENV_VAR_PORT,
+            ENV_VAR_USERNAME,
+            ENV_VAR_PASSWD,
+            ENV_VAR_REMOTE_DATABASE_NAME_AT_SERVICE,
+            ENV_VAR_PRIORITY,
+            ENV_VAR_GROUP,
+            ENV_VAR_USE_SSL,
+            ENV_VAR_VERIFY_SSL_CERT,
+            ENV_VAR_IS_ALLOWED_PUBLIC_KEY,
+            ENV_VAR_POOL_NAME,
+            ENV_VAR_MIN_IDLE_CON,
+            ENV_VAR_MAX_POOLSIZE,
+            ENV_VAR_MAX_IDLE_TIMEOUT,
+            ENV_VAR_CON_TIMEOUT
     };
 
 
-    private final MajDatasourceName name;
+    private final SmokDatasourceName name;
     private final DatabaseVariant variant;
     private final String hostAddress;
     private final int port;
@@ -85,10 +79,30 @@ public class DBCreds {
     private int minimumIdleTimeout = 34000;
     private int maxPoolSize = 255;
     private int minimumIdleCon = 5;
-    private int connectionTimeout = 340000;
+    private long connectionTimeout = 340000;
+
+    public String getDefPoolName() {
+        return defPoolName;
+    }
+
+    public long getDefMinimumIdleTimeout() {
+        return defMinimumIdleTimeout;
+    }
+
+    public int getDefMaxPoolSize() {
+        return defMaxPoolSize;
+    }
+
+    public int getDefMinimumIdleCon() {
+        return defMinimumIdleCon;
+    }
+
+    public int getDefConnectionTimeout() {
+        return defConnectionTimeout;
+    }
 
     public DBCreds(){
-        this.name = new MajDatasourceName("");
+        this.name = new SmokDatasourceName("");
         this.variant = DatabaseVariant.NONE;
         this.hostAddress = "127.0.0.1";
         this.port = 3303;
@@ -104,10 +118,10 @@ public class DBCreds {
 
     }
 
-    public DBCreds(MajDatasourceName name, String
+    public DBCreds(SmokDatasourceName name, String
             group, int  priorty, DatabaseVariant variant, String remoteDatabaseNameAtService,
                    String hostAddress, int port, String username, String passwd, boolean useSSL, boolean verifySSLCert,
-            String isolationLevel, boolean allowPublicKeyRetrieval)
+                   String isolationLevel, boolean allowPublicKeyRetrieval)
     {
         this.isolationLevel = isolationLevel;
         this.name = name;
@@ -129,7 +143,7 @@ public class DBCreds {
         LOGGER.warn("Creating DBCreds from prop map : ",
                 com.majorana.Utils.MapDumpHelper.dump( cred, "\n",", ") );
         this.isolationLevel = cred.getOrDefault(ENV_VAR_ISOLATION_LEVEL,"");
-        this.name = new MajDatasourceName(cred.getOrDefault(ENV_VAR_NAME,""));
+        this.name = new SmokDatasourceName(cred.getOrDefault(ENV_VAR_NAME,""));
         this.variant = DatabaseVariant.getFromDescription(cred.getOrDefault(ENV_VAR_DB_VARIANT,""));
         this.hostAddress = cred.getOrDefault(ENV_VAR_HOST_ADDRESS,"");
         this.port = Integer.parseInt(cred.getOrDefault(ENV_VAR_PORT, "0"));
@@ -146,7 +160,7 @@ public class DBCreds {
         this.minimumIdleTimeout = Integer.valueOf(cred.getOrDefault(ENV_VAR_MIN_IDLE_CON, ""+defMinimumIdleTimeout));
         this.maxPoolSize =   Integer.valueOf(cred.getOrDefault(ENV_VAR_MAX_POOLSIZE, ""+defMaxPoolSize));
         if (maxPoolSize <10){ maxPoolSize = 10; }
-        this.minimumIdleCon =  Integer.valueOf(cred.getOrDefault(ENV_VAR_MAX_IDEA_TIMEOUT, ""+maxPoolSize));
+        this.minimumIdleCon =  Integer.valueOf(cred.getOrDefault(ENV_VAR_MAX_IDLE_TIMEOUT, ""+maxPoolSize));
         this.connectionTimeout = Integer.valueOf(cred.getOrDefault(ENV_VAR_CON_TIMEOUT, ""+defConnectionTimeout));
     }
 
@@ -190,7 +204,7 @@ public class DBCreds {
         return group;
     }
 
-    public MajDatasourceName getName() {
+    public SmokDatasourceName getName() {
         return name;
     }
 
@@ -222,30 +236,6 @@ public class DBCreds {
         return maxPoolSize;
     }
 
-    public void setMaxPoolSize(int maxPoolSize) {
-        this.maxPoolSize = maxPoolSize;
-    }
-
-    public int getMinimumIdleCon() {
-        return minimumIdleCon;
-    }
-
-    public void setMinimumIdleCon(int minimumIdleCon) {
-        this.minimumIdleCon = minimumIdleCon;
-    }
-
-    public int getConnectionTimeout() {
-        return connectionTimeout;
-    }
-
-    public void setConnectionTimeout(int connectionTimeout) {
-        this.connectionTimeout = connectionTimeout;
-    }
-
-    public void setPoolName(String poolName) {
-        this.poolName = poolName;
-    }
-
     @Override
     public String toString() {
         return "DBCreds{" +
@@ -274,4 +264,29 @@ public class DBCreds {
                 ", connectionTimeout=" + connectionTimeout +
                 '}';
     }
+
+    public void setMaxPoolSize(int maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
+    }
+
+    public int getMinimumIdleCon() {
+        return minimumIdleCon;
+    }
+
+    public void setMinimumIdleCon(int minimumIdleCon) {
+        this.minimumIdleCon = minimumIdleCon;
+    }
+
+    public long getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public void setConnectionTimeout(long connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public void setPoolName(String poolName) {
+        this.poolName = poolName;
+    }
+
 }

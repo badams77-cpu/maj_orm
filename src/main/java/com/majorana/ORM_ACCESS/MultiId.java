@@ -2,11 +2,6 @@ package com.majorana.ORM_ACCESS;
 
 import java.util.UUID;
 
-/**
- * Since we support both cassandra and regular SQL , we need a result for
- * an new id from either for a new onject in a DB
- */
-
 public class MultiId {
 
     private int id = 0;

@@ -1,13 +1,18 @@
 package com.majorana.ORM_ACCESS;
+
+import com.majorana.ORM.BaseEntity;
 import com.majorana.Utils.MethodPrefixingLoggerFactory;
-import jakarta.persistence.Entity;
+import com.majorana.Utils.SubClassFinder;
+import com.majorana.ORM.BaseMajoranaEntity;
+import com.majorana.persist.newannot.EntityPackage;
 import org.apache.commons.lang3.tuple.Pair;
-import org.reflections.Reflections;
-import org.slf4j.Logger;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import org.reflections.Reflections;
+import org.slf4j.Logger;
 
 public class EntityFinder {
 
@@ -43,16 +48,20 @@ public class EntityFinder {
 
     private static final String[] systemPackagesPrefixes = {"java","javax"};
 
+    private String packagePrefix = "";
+
     public EntityFinder(){
-        entityClass = Entity.class;
-        entityPackage = EntityPackage.class;
+      //  entityClass = jakarta.persistence.Entity.class;
+        entityClass = BaseDistillerEntity.class;
+        entityPackage = com.majorana.ORM_ACCESS.EntityPackage.class;
         entities = new HashMap<String, Class>();
         reverse = new HashMap<Class, String>();
     }
 
-    public EntityFinder(Class entityClass, Class entityPackage){
+    public EntityFinder(Class entityClass, Class entityPackageVersion, String packagePrefix){
         this.entityClass = entityClass;
         this.entityPackage = entityPackage;
+        this.packagePrefix = packagePrefix;
         entities = new HashMap<String, Class>();
         reverse = new HashMap<Class, String>();
     }
@@ -69,6 +78,20 @@ public class EntityFinder {
     public String getNameForClass(Class name){
         return reverse.getOrDefault(name, null);
     }
+
+    public Set<BaseDistillerEntity> getEntities(String packagePrefix){
+        Set<BaseDistillerEntity> entityTypes = getEntitiesForPackagePrefix(packagePrefix).stream().
+                map( p->
+                {try {
+                    return p.newInstance();
+                } catch (Exception e){ return null;}})
+                .filter(p->p!=null)
+                .map(p-> (BaseDistillerEntity) p)
+                .collect(Collectors.toSet());
+        return entityTypes;
+    }
+
+
 
     public List<Pair<String, Class>> getValidEntities(){
         List<Pair<String, Class>> valid = new LinkedList<>();
@@ -106,10 +129,10 @@ public class EntityFinder {
             pack = getPackages();
         }
         for(String pak : pack){
-            List<Pair<Class, String>> entitiesAndNames = getEntitiesForPackage(pak);
-            for(Pair<Class, String> datum : entitiesAndNames){
-                String name = datum.getRight();
-                Class clazz =datum.getLeft();
+            Set<Class> entitiesAndNames = getEntitiesForPackage(pak);
+            for(Class datum : entitiesAndNames){
+                String name = datum.getCanonicalName();
+                Class clazz =datum;
                 entities.put(name, clazz);
                 reverse.put(clazz, name);
             }
@@ -142,14 +165,44 @@ public class EntityFinder {
         return result;
     }
 
-    public List<Pair<Class, String>> getEntitiesForPackage(String pack) {
+
+
+    public Set<Class> getEntitiesForPackagePrefix(String pack) {
+
+//        Reflections reflections = new Reflections(pack);
+
+        //      Set<Class<?>> types = reflections
+        //            .getSubTypesOf(entityClass);
+
+        SubClassFinder finder = new SubClassFinder();
+        Set<Class> types = finder.findSubclassesInPackagePrefix(pack, entityClass);
+
+        return (Set<Class>) types;
+    }
+
+
+    public Set<Class> getEntitiesForPackage(String pack) {
+
+//        Reflections reflections = new Reflections(pack);
+
+        //      Set<Class<?>> types = reflections
+        //            .getSubTypesOf(entityClass);
+
+        SubClassFinder finder = new SubClassFinder();
+        Set<Class> types = finder.findSubclasses(pack, entityClass);
+
+        return (Set<Class>) types;
+    }
+
+
+    public List<Pair<Class, String>> getAnnotatedEntitiesForPackage(String pack) {
 
         Reflections reflections = new Reflections(pack);
 
         Set<Class<?>> types = reflections
-                .getTypesAnnotatedWith(entityClass);
+                .getSubTypesOf(entityClass);
         List<Pair<Class, String>> results = types.stream()
-                .map(clazz -> Pair.of((Class) clazz.getClass(), clazz.getAnnotation(Entity.class).name()))
+                .map(clazz -> Pair.of((Class) clazz.getClass(), clazz.getCanonicalName()))
                 .map( pa -> pa.getRight()==null || pa.getRight().equals("") ? Pair.of(pa.getLeft(), pa.getLeft().getCanonicalName()) : pa)
                 .collect(Collectors.toList()) ;
         
