@@ -279,8 +279,8 @@ public class MajoranaDBConnectionFactory {
 
         public Optional<CassandraTemplate> getCassandraTemplate(MajDataSourceName dbName){
             CqlSession cSess = dBSourcesFromEnv.getCqlSession(dbName);
-            com.datastax.driver.core.Session session =  (com.datastax.driver.core.Session) cSess;
-            CassandraTemplate cass = cSess == null ? mockCass: new  CassandraTemplate( session);
+//            com.daSession session =  (com.datastax.driver.core.Session) cSess;
+            CassandraTemplate cass = cSess == null ? mockCass: new  CassandraTemplate( cSess);
             return Optional.of(cass);
         }
 

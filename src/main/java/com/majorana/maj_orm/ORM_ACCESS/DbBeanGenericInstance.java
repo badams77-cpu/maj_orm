@@ -1,7 +1,7 @@
 
 package com.majorana.maj_orm.ORM_ACCESS;
 
-import com.datastax.driver.core.Session;
+//import com.datastax.driver.core.Session;
 import com.majorana.maj_orm.DBs.*;
 import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
 import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;
@@ -130,7 +130,7 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
               cs = cqlTemplate.getSession();
           } else {
               cassandraTemplate = mock(CassandraTemplate.class);
-              cs = mock(Session.class);
+              cs = mock(CqlSession.class);
           }
       }
       factory = dbBean.getFactory();

@@ -1,9 +1,9 @@
 package com.majorana.ORM_ACCESS;
 
-import com.majorana.Utils.*;
+import com.majorana.maj_orm.Utils.*;
 
 
-import com.majorana.ORM.*;
+import com.majorana.maj_orm.ORM.*;
 
 import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 

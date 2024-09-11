@@ -219,7 +219,7 @@ public class DbBeanInstance implements DbBeanInstInterface {
 //    }
 
     public PreparedStatement getCassPreparedStatement(String sql) {
-        PreparedStatement preparedStatement = cqlTemplate.getCqlSession().prepare(sql);
+        PreparedStatement preparedStatement = cqlTemplate.getSession().prepare(sql);
         return preparedStatement;
     }
 
@@ -375,15 +375,15 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
     public ResultSet execSQL(String sql, Object... params) throws SQLException {
         if (isCass) {
-            try {
+            /*            try {
                 PreparedStatement pres = cs.prepare(sql);
                 BoundStatement bounds = pres.bind(params);
-                return new CassMockResultSet(cs.execute(bounds)).buildMock();
-            } catch (Exception e) {
+                return new CassMockResultSet(cqlTemplate.queryForResultSet(bounds)).buildMock();
+            } catch (Exception e) {.
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
-            }
-
+            } */
+            return null;
         } else {
 
             ResultSet rs = null;

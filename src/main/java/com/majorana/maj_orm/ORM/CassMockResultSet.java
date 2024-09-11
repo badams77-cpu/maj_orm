@@ -1,16 +1,19 @@
 package com.majorana.maj_orm.ORM;
 
-import com.datastax.driver.core.ColumnDefinitions;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.ColumnDefinition;
+import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.Row;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
 
+import com.datastax.oss.driver.api.core.cql.ColumnDefinition;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -53,16 +56,18 @@ public class CassMockResultSet {
             this.rowIndex = -1;
         }
 
-    public CassMockResultSet(com.datastax.driver.core.ResultSet crs){
+/*
+    public CassMockResultSet( com.datastax.oss.driver.api.core.cql.ResultSet crs) {
         columnIndices = new LinkedHashMap<>();
         int cols = 1;
-        for( ColumnDefinitions.Definition cd : crs.getColumnDefinitions().asList()){
+        for( ColumnDefinition cd : crs.getColumnDefinitions()) {
+
             columnIndices.put(cd.getName().toString(), cols++);
         }
-        List<c crows = crs.all().stream().collect(Collectors.toList());
+        List<Row>   crows = crs.all().stream().collect(Collectors.toList());
         data = new Object[crows.size()][];
         int rows = 0;
-        for(com.datastax.driver.core.Row r : crows){
+        for(Row r : crows){
             Object[] or = new Object[cols];
             for(int j=0 ; j<cols; j++){
                 or[j] = r.getObject(j);
@@ -71,7 +76,7 @@ public class CassMockResultSet {
         }
         this.rowIndex = -1;
     }
-
+*/
         public CassMockResultSet(final String[] columnNames, final Object[][] data) {
             this.columnIndices = IntStream.range(0, columnNames.length).boxed()
                     .collect(Collectors.toMap(k -> columnNames[k], Function.identity(), (a, b) -> {
@@ -81,7 +86,7 @@ public class CassMockResultSet {
             this.rowIndex = -1;
         }
 
-        public ResultSet buildMock() throws SQLException {
+     /*   public ResultSet buildMock() throws SQLException {
             final ResultSet rs = mock(ResultSet.class);
 
             // mock rs.next()
@@ -140,6 +145,8 @@ public class CassMockResultSet {
             return rs;
         }
 
+      */
+
         /**
          * Creates the mock ResultSet.
          *
@@ -148,10 +155,10 @@ public class CassMockResultSet {
          * @return a mocked ResultSet
          * @throws SQLException
          */
-        public static ResultSet create(final String[] columnNames, final Object[][] data)
-                throws SQLException {
-            return new CassMockResultSet(columnNames, data).buildMock();
-        }
+ //       public static ResultSet create(final String[] columnNames, final Object[][] data)
+ //               throws SQLException {
+ //           return new CassMockResultSet(columnNames, data).buildMock();
+ //       }
 
 
 }
