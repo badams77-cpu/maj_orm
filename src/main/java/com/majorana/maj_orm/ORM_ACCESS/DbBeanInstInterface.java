@@ -38,7 +38,6 @@ public interface DbBeanInstInterface {
     public int updateSQL(String sql, Object... params) throws SQLException;
   public MajoranaAnnotationRepository getRepo(Class beanClass);
 
-  public MajoranaAnnotationRepository getRepo(String entityName);
 
 
 

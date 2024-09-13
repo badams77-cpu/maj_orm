@@ -28,6 +28,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.sql.DataSource;
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -237,6 +238,8 @@ public class DbBeanInstance implements DbBeanInstInterface {
         }
 
     }
+
+
 
     protected static synchronized DbBeanInstance getSingletonLazy(CassandraState state, Map<String, String> inMap) {
         if (singletonLazy == null) {
