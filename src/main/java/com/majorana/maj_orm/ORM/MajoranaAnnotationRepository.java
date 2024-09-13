@@ -814,7 +814,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                                     break;
                                 case "java.util.UUID":
                                     String s = rs.getString(col);
-                                    invokeSetter(entity, UUID.fromString(s), setter);
+                                    invokeSetter(entity, s==null ? null : UUID.fromString(s), setter);
                                     break;
                                 case "java.lang.Integer":
                                     invokeSetter(entity, rs.getInt(col), setter);

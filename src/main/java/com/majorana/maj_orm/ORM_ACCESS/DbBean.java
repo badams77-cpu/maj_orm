@@ -26,6 +26,8 @@ import com.majorana.maj_orm.DBs.MajDataSourceName;
 ;
 //importBoundStatement;
 
+import javax.sql.DataSource;
+
 import static org.mockito.Mockito.mock;
 
 // Singleton class to handle all DB access
@@ -76,6 +78,10 @@ public class DbBean implements DbBeanInterface{
     public DbBean(){
       mainBean = DbBeanInstance.getSingletonLazy(new CassandraState(false), new HashMap<>());
   }
+
+    public DataSource getDatasource(){
+        return mainBean.getDs();
+    }
 
     public void getSingletonLazy() {
         mainBean = DbBeanInstance.getSingletonLazy(new CassandraState(false), new HashMap<>());
