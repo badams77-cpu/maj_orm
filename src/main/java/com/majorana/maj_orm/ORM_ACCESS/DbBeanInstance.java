@@ -133,15 +133,15 @@ public class DbBeanInstance implements DbBeanInstInterface {
         entityFinder = new EntityFinder();
         this.envSetup = dbEnv;
         factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));
-        if (!factory.getMainCassandraTemplate().isPresent()) {
+  //      if (!factory.getMainCassandraTemplate().isPresent()) {
   //          cassandraTemplate = mock(CassandraTemplate.class);
   //          CqlTemplate cqlTemplate = mock(CqlTemplate.class);
             cassandraIsMain = new CassandraState(false);
-        } else {
+   //     } else {
   //          cassandraTemplate = factory.getMainCassandraTemplate().orElse(null);
   //          CqlTemplate cqlTemplate = (CqlTemplate) cassandraTemplate.getCqlOperations();
  //           cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
-        }
+ //       }
         jdbcTemplate = factory.getMainJdbcTemplate().orElse(null);
         namedTemplate = factory.getMainNamedParamJdbcTemplate().orElse(null);
 
@@ -155,15 +155,15 @@ public class DbBeanInstance implements DbBeanInstInterface {
         entityFinder = new EntityFinder();
         envSetup = new DBEnvSetup(cassandraState, addMap);
         factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));
-        if (factory.getMainCassandraTemplate() == null) {
+   //     if (factory.getMainCassandraTemplate() == null) {
    //         cassandraTemplate = mock(CassandraTemplate.class);
   //          cqlTemplate = mock(CqlTemplate.class);
   //          cassandraIsMain = new CassandraState(false);
-        } else {
+    //    } else {
    //         cassandraTemplate = factory.getMainCassandraTemplate().orElse(null);
    //         cqlTemplate = (CqlTemplate) cassandraTemplate.getCqlOperations();
             cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
-        }
+       // }
         jdbcTemplate = factory.getMainJdbcTemplate().orElse(null);
         namedTemplate = factory.getMainNamedParamJdbcTemplate().orElse(null);
 

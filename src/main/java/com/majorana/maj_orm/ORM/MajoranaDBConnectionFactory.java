@@ -6,7 +6,6 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.majorana.maj_orm.DBs.*;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
-import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,8 +32,6 @@ public class MajoranaDBConnectionFactory {
 
         private DBEnvSetup dBSourcesFromEnv;
 
-        private CassandraTemplate mockCass;
-
         private CassandraState cassandraState;
 
 
@@ -49,7 +46,7 @@ public class MajoranaDBConnectionFactory {
 
     public MajoranaDBConnectionFactory(DBEnvSetup dbs, CassandraState cassandraState) {
                   dBSourcesFromEnv = dbs;
-            mockCass = mock(CassandraTemplate.class);
+//            mockCass = mock(CassandraTemplate.class);
             this.cassandraState = cassandraState;
         }
 
@@ -141,17 +138,7 @@ public class MajoranaDBConnectionFactory {
      * @return cassandra template
      */
     
-        public Optional<CassandraTemplate> getMainCassandraTemplate(){
-            MajDataSourceName sdsn =dBSourcesFromEnv.getMainCassDBName();
-            if (sdsn == null){
-                LOGGER.warn("No Cass Datasource using mock");
-                return Optional.of(mockCass);
-            }
-            Optional<CassandraTemplate> ct = getCassandraTemplate(
-                    dBSourcesFromEnv. getMainCassDBName()
-            );
-            return ct;
-        }
+
 
     /**
      * Get the a jdnc template for the named database source
@@ -250,9 +237,10 @@ public class MajoranaDBConnectionFactory {
                 case SQL_SERVER:
                     return getJdbcTemplate(dbName).map( template->template.query("select SYSDATETIME() as dbtime", new TimeMapper())).orElse(new LinkedList<LocalDateTime>()).stream().findFirst().orElse(null);
                 case CASSANDRA:
-                    return getCassandraTemplate(dbName).map( template->template.select("select toTimestamp(now() as dbtime)", TimeResult.class))
-                            .orElse(new LinkedList<>())
-                            .stream().findFirst().orElse(new TimeResult()).getDatetime();
+    //                return getCassandraTemplate(dbName).map( template->template.select("select toTimestamp(now() as dbtime)", TimeResult.class))
+     //                       .orElse(new LinkedList<>())
+      //                      .stream().findFirst().orElse(new TimeResult()).getDatetime();
+                    return null;
                 default:
                     return null;
             }
@@ -276,12 +264,6 @@ public class MajoranaDBConnectionFactory {
      * @return
      */
 
-        public Optional<CassandraTemplate> getCassandraTemplate(MajDataSourceName dbName){
-//            CqlSession cSess = dBSourcesFromEnv.getCqlSession(dbName);
-//            com.daSession session =  (com.datastax.driver.core.Session) cSess;
-//            CassandraTemplate cass = cSess == null ? mockCass: new  CassandraTemplate( cSess);
-            return Optional.empty();
-        }
 
     /**
      * Get a named parameter jdnc template for the named datasource
