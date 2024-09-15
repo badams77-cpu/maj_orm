@@ -97,12 +97,12 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
             dbi.jdbcDsn = dbBean.getMainBean().getJdbcDsn();
             dbi.cassDsn = dbBean.getMainBean().getCassDsn();
             dbi.mainDsn = dbBean.getMainBean().getMainDsn();
-            dbi.cassandraTemplate = mainBean.getCassandraTemplate();
-            dbi.cqlTemplate = mainBean.getCqlTemplate();
+        //    dbi.cassandraTemplate = mainBean.getCassandraTemplate();
+        //    dbi.cqlTemplate = mainBean.getCqlTemplate();
             dbi.jdbcTemplate = mainBean.getJdbcTemplate();
             dbi.namedTemplate = mainBean.getNamedTemplate();
             dbi.factory = mainBean.getFactory();
-            dbi.cs= mainBean.getCs();
+       //     dbi.cs= mainBean.getCs();
             dbi.ds = mainBean.getDs();
             try {
                 dbi.clazzArray = (T[]) Array.newInstance(S1, 0);

@@ -2,23 +2,16 @@
 package com.majorana.maj_orm.ORM_ACCESS;
 
 import com.majorana.maj_orm.DBs.*;
-import com.majorana.maj_orm.ORM.CassMockResultSet;
 import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
 import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;
 import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
 import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
 import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.cql.BoundStatement;
-import com.datastax.oss.driver.api.core.cql.PreparedStatement;
-import com.datastax.oss.driver.api.core.cql.Row;
 import com.majorana.maj_orm.DBs.*;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.cassandra.core.CassandraTemplate;
-import org.springframework.data.cassandra.core.cql.CqlTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -58,7 +51,7 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
     private HikariDataSource ds;
     // Cassandra Session
-    private CqlSession cs;
+//    private CqlSession cs;
 
     private MajoranaDBConnectionFactory factory;
 
@@ -66,9 +59,9 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
     private NamedParameterJdbcTemplate namedTemplate;
 
-    private CassandraTemplate cassandraTemplate;
+//    private CassandraTemplate cassandraTemplate;
 
-    private CqlTemplate cqlTemplate;
+//    private CqlTemplate cqlTemplate;
 
     private DBEnvSetup envSetup;
 
@@ -80,7 +73,7 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
     private Map<Class, MajoranaAnnotationRepository> classDBmap = new HashMap<>();
 
-    private CassandraTemplate mockCass = null;
+//    private CassandraTemplate mockCass = null;
 
     private boolean isCass;
 
@@ -107,13 +100,13 @@ public class DbBeanInstance implements DbBeanInstInterface {
         return namedTemplate;
     }
 
-    public CassandraTemplate getCassandraTemplate() {
-        return cassandraTemplate;
-    }
+//    public CassandraTemplate getCassandraTemplate() {
+//        return cassandraTemplate;
+//    }
 
-    public CqlTemplate getCqlTemplate() {
-        return cqlTemplate;
-    }
+//    public CqlTemplate getCqlTemplate() {
+//        return cqlTemplate;
+//    }
 
     public EntityFinder getEntityFinder() {
         return entityFinder;
@@ -141,13 +134,13 @@ public class DbBeanInstance implements DbBeanInstInterface {
         this.envSetup = dbEnv;
         factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));
         if (!factory.getMainCassandraTemplate().isPresent()) {
-            cassandraTemplate = mock(CassandraTemplate.class);
-            CqlTemplate cqlTemplate = mock(CqlTemplate.class);
+  //          cassandraTemplate = mock(CassandraTemplate.class);
+  //          CqlTemplate cqlTemplate = mock(CqlTemplate.class);
             cassandraIsMain = new CassandraState(false);
         } else {
-            cassandraTemplate = factory.getMainCassandraTemplate().orElse(null);
-            CqlTemplate cqlTemplate = (CqlTemplate) cassandraTemplate.getCqlOperations();
-            cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
+  //          cassandraTemplate = factory.getMainCassandraTemplate().orElse(null);
+  //          CqlTemplate cqlTemplate = (CqlTemplate) cassandraTemplate.getCqlOperations();
+ //           cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
         }
         jdbcTemplate = factory.getMainJdbcTemplate().orElse(null);
         namedTemplate = factory.getMainNamedParamJdbcTemplate().orElse(null);
@@ -163,12 +156,12 @@ public class DbBeanInstance implements DbBeanInstInterface {
         envSetup = new DBEnvSetup(cassandraState, addMap);
         factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));
         if (factory.getMainCassandraTemplate() == null) {
-            cassandraTemplate = mock(CassandraTemplate.class);
-            cqlTemplate = mock(CqlTemplate.class);
-            cassandraIsMain = new CassandraState(false);
+   //         cassandraTemplate = mock(CassandraTemplate.class);
+  //          cqlTemplate = mock(CqlTemplate.class);
+  //          cassandraIsMain = new CassandraState(false);
         } else {
-            cassandraTemplate = factory.getMainCassandraTemplate().orElse(null);
-            cqlTemplate = (CqlTemplate) cassandraTemplate.getCqlOperations();
+   //         cassandraTemplate = factory.getMainCassandraTemplate().orElse(null);
+   //         cqlTemplate = (CqlTemplate) cassandraTemplate.getCqlOperations();
             cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
         }
         jdbcTemplate = factory.getMainJdbcTemplate().orElse(null);
@@ -219,10 +212,10 @@ public class DbBeanInstance implements DbBeanInstInterface {
 //        }
 //    }
 
-    public PreparedStatement getCassPreparedStatement(String sql) {
-        PreparedStatement preparedStatement = cqlTemplate.getSession().prepare(sql);
-        return preparedStatement;
-    }
+//    public PreparedStatement getCassPreparedStatement(String sql) {
+//        PreparedStatement preparedStatement = cqlTemplate.getSession().prepare(sql);
+//        return preparedStatement;
+//    }
 
     public void preloadEntities() {
         entityFinder.setAllowedVersions(envSetup.getDbVersionMajor(), envSetup.getDbVersionMinor());
@@ -270,7 +263,7 @@ public class DbBeanInstance implements DbBeanInstInterface {
         factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));
 
         jdbcTemplate = factory.getMainJdbcTemplate().orElse(null);
-        cassandraTemplate = factory.getMainCassandraTemplate().orElse(null);
+      //  cassandraTemplate = factory.getMainCassandraTemplate().orElse(null);
         cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
         if (jdbcTemplate == null) {
             LOGGER.warn("Jdbc DB connection " + envSetup.getMainSqlDBName() + " not found");
@@ -319,21 +312,21 @@ public class DbBeanInstance implements DbBeanInstInterface {
             boolean mCass = creds.getVariant() == DatabaseVariant.CASSANDRA;
             cassandraIsMain = new CassandraState(mCass);
             ds = ds==null ? envSetup.getHikDatasource(envSetup.getMainSqlDBName()) : ds;
-            cs = cs==null ? envSetup.getCqlSession(envSetup.getMainCassDBName()) : cs;
+            //cs = cs==null ? envSetup.getCqlSession(envSetup.getMainCassDBName()) : cs;
 
-            cassandraDbIsPresent = new CassandraState(cs != null);
+            cassandraDbIsPresent = new CassandraState(false);
 
             boolean isCass = creds.getVariant() == DatabaseVariant.CASSANDRA;
 
             dbCon = !isCass && ds != null ? ds.getConnection() : null;
             if (isCass) {
                 if (cassandraDbIsPresent.isEnabbled()) {
-                    cassandraTemplate = factory.getCassandraTemplate(casn).orElse(mockCass);
+        //            cassandraTemplate = factory.getCassandraTemplate(casn).orElse(mockCass);
                 }
             }
             jdbcTemplate = factory.getJdbcTemplate(jdsn).orElse(null);
             namedTemplate = factory.getNamedParameterJdbcTemplate(jdsn).orElse(null);
-            return ds != null || cs != null;
+            return ds != null;
         } catch (SQLException e) {
             LOGGER.error("Error connecting to db " + e);
             return false;
@@ -351,14 +344,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
             }
             dbCon = null;
         }
-        if (cassandraTemplate != null) {
-            CqlSession cs = envSetup.getCqlSession(envSetup.getMainCassDBName());
-            try {
-                cs.closeAsync();
-            } catch (Exception e) {
-                LOGGER.warn("Exception closing cass cqlSession ", e);
-            }
-        }
+    //    if (cassandraTemplate != null) {
+    //        CqlSession cs = envSetup.getCqlSession(envSetup.getMainCassDBName());
+    //        try {
+    //            cs.closeAsync();
+    //        } catch (Exception e) {
+    //            LOGGER.warn("Exception closing cass cqlSession ", e);
+    //        }
+    //    }
 
     }
 
@@ -441,14 +434,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
         if (isCass) {
             try {
 
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cs.execute(bounds).wasApplied() ? 1 : 0;
+           //     PreparedStatement pres = cs.prepare(sql);
+           //     BoundStatement bounds = pres.bind(params);
+           //     return cs.execute(bounds).wasApplied() ? 1 : 0;
             } catch (Exception e) {
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
             }
-
+            return 0;
         } else {
 
             ResultSet rs = null;
@@ -512,13 +505,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass) {
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.selectOne(bounds, beanClass);
+    //            PreparedStatement pres = cs.prepare(sql);
+   //             BoundStatement bounds = pres.bind(params);
+    //            return cassandraTemplate.selectOne(bounds, beanClass);
             } catch (Exception e) {
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
             }
+            return null;
         } else {
             Map<String, Object> mp = getParamMap(paramNames, params);
             SqlParameterSource sps = new MapSqlParameterSource(mp);
@@ -543,9 +537,10 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass) {
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.selectOne(bounds, beanClass);
+        //        PreparedStatement pres = cs.prepare(sql);
+        //        BoundStatement bounds = pres.bind(params);
+        //        return cassandraTemplate.selectOne(bounds, beanClass);
+                return null;
             } catch (Exception e) {
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
@@ -574,13 +569,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass) {
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.selectOne(bounds, beanClass);
+ //               PreparedStatement pres = cs.prepare(sql);
+ //               BoundStatement bounds = pres.bind(params);
+ //               return cassandraTemplate.selectOne(bounds, beanClass);
             } catch (Exception e) {
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
             }
+            return null;
         } else {
             try {
                 return jdbcTemplate.queryForObject(sql, params, mj.getMapper());
@@ -601,13 +597,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass) {
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.select(bounds, beanClass);
+    //            PreparedStatement pres = cs.prepare(sql);
+    //            BoundStatement bounds = pres.bind(params);
+    //            return cassandraTemplate.select(bounds, beanClass);
             } catch (Exception e) {
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
             }
+            return null;
         } else {
             try {
                 return jdbcTemplate.query(sql, params, mj.getMapper());
@@ -649,13 +646,15 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass) {
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.select(bounds, beanClass);
+
+        //        PreparedStatement pres = cs.prepare(sql);
+        //        BoundStatement bounds = pres.bind(params);
+        //        return cassandraTemplate.select(bounds, beanClass);
             } catch (Exception e) {
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
             }
+            return null;
         } else {
             try {
                 MapSqlParameterSource src = new MapSqlParameterSource(getParamMap(paramNames, params));
@@ -675,13 +674,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass) {
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.select(bounds, beanClass);
+        //        PreparedStatement pres = cs.prepare(sql);
+        //        BoundStatement bounds = pres.bind(params);
+        //        return cassandraTemplate.select(bounds, beanClass);
             } catch (Exception e) {
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
             }
+            return null;
         } else {
             try {
                 MapSqlParameterSource src = new MapSqlParameterSource(getParamMap(paramNames, params));
@@ -705,14 +705,15 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass) {
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(bounds);
-                return rs.all().size();
+        //        PreparedStatement pres = cs.prepare(sql);
+        //        BoundStatement bounds = pres.bind(params);
+        //        com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(bounds);
+        //        return rs.all().size();
             } catch (Exception e) {
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
             }
+            return 0;
         } else {
             try {
                 return jdbcTemplate.query(sql, mj.getMapper()).size();
@@ -742,14 +743,15 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass) {
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(bounds);
-                return rs.all().size();
+         //       PreparedStatement pres = cs.prepare(sql);
+         //       BoundStatement bounds = pres.bind(params);
+          //      com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(bounds);
+         //       return rs.all().size();
             } catch (Exception e) {
                 LOGGER.warn("Error Executing cql in cassandra " + sql, e);
                 throw e;
             }
+            return 0;
         } else {
             try {
                 return jdbcTemplate.query(sql, mj.getMapper()).size();
@@ -779,10 +781,10 @@ public class DbBeanInstance implements DbBeanInstInterface {
         KeyHolder kh = new org.springframework.jdbc.support.GeneratedKeyHolder();
 
         if (isCass) {
-            try {
-                PreparedStatement pres = cs.prepare(sql);
+      //      try {
+     //           PreparedStatement pres = cs.prepare(sql);
                 //org.springframework.data.cassandra.core.query.Update bounds =
-                org.springframework.data.cassandra.core.query.Update.empty();
+     //           org.springframework.data.cassandra.core.query.Update.empty();
                 //Map<String, Object> data = mj. getParameterMapWithDeletedAt(cassDsn, bde);
                 //for(Map.Entry<String, Object> en : data.entrySet()){
                 //    bounds = bound\s.set( en.getKey(), en.getValue());
@@ -790,22 +792,22 @@ public class DbBeanInstance implements DbBeanInstInterface {
                 //        org.springframework.data.cassandra.core.query.Update.addAll( mj.getSqlParameterMapWithDeletedAt(cassDsn,bde))
 
 //                PreparedStatement preparedStatement = cql.prepare("insert into plans (user_id, plan) values (?, ? )");
-                BoundStatement insertStatement = pres.bind(mj.getParameterMapWithDeletedAt(cassDsn, bde));
+  //              BoundStatement insertStatement = pres.bind(mj.getParameterMapWithDeletedAt(cassDsn, bde));
 
                 //CqlTemplate ct = cs.
-                com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(insertStatement);
-                Row row = rs.one();
-                if (row == null) {
-                    return new MultiId();
-                }
+    //            com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(insertStatement);
+    //            Row row = rs.one();
+     //           if (row == null) {
+     //               return new MultiId();
+    //            }
                 return new MultiId(getUUID(mj.getKeyUuid()));
 
                 //pres.bind( mj. getSqlParameterSourceWithDeletedAt(bde)); //params);
                 // return cassandraTemplate.update(bounds, beanClass );
-            } catch (Exception e) {
-                LOGGER.warn("Error Executing cql in cassandra " + sql, e);
-                throw e;
-            }
+    //        } catch (Exception e) {
+    //            LOGGER.warn("Error Executing cql in cassandra " + sql, e);
+    //            throw e;
+    //        }
         } else {
             try {
                 int ch = factory.getNamedParameterJdbcTemplate(jdbcDsn).orElseThrow(
@@ -853,7 +855,7 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         String sql = "UPDATE " + bde.getTableName() + " " + mj.getUpdateStringNP(bde);
         //               + " WHERE "+where;
-//        String sql = mj.getR
+
 
         KeyHolder kh = new org.springframework.jdbc.support.GeneratedKeyHolder();
 
@@ -873,10 +875,10 @@ public class DbBeanInstance implements DbBeanInstInterface {
             }
         }
             if (isCass) {
-                try {
-                    PreparedStatement pres = cs.prepare(sql);
+        //        try {
+       //             PreparedStatement pres = cs.prepare(sql);
                     //org.springframework.data.cassandra.core.query.Update bounds =
-                    org.springframework.data.cassandra.core.query.Update.empty();
+         //           org.springframework.data.cassandra.core.query.Update.empty();
                     //Map<String, Object> data = mj. getParameterMapWithDeletedAt(cassDsn, bde);
                     //for(Map.Entry<String, Object> en : data.entrySet()){
                     //    bounds = bounds.set( en.getKey(), en.getValue());
@@ -884,22 +886,22 @@ public class DbBeanInstance implements DbBeanInstInterface {
                     //        org.springframework.data.cassandra.core.query.Update.addAll( mj.getSqlParameterMapWithDeletedAt(cassDsn,bde))
 
 //                PreparedStatement preparedStatement = cql.prepare("insert into plans (user_id, plan) values (?, ? )");
-                    BoundStatement upStatement = pres.bind(paramMap);
+           //         BoundStatement upStatement = pres.bind(paramMap);
                     //CqlTemplate ct = cs.
-                    com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute
-                            (upStatement);
-                    Row row = rs.one();
-                    if (row == null) {
-                        return new MultiId();
-                    }
+            //        com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute
+            //                (upStatement);
+            //        Row row = rs.one();
+            //        if (row == null) {
+            //            return new MultiId();
+          //          }
                     return new MultiId(getUUID(mj.getKeyUuid()));
 
                     //pres.bind( mj. getSqlParameterSourceWithDeletedAt(bde)); //params);
                     // return cassandraTemplate.update(bounds, beanClass );
-                } catch (Exception e) {
-                    LOGGER.warn("Error Executing cql in cassandra " + sql, e);
-                    throw e;
-                }
+          //      } catch (Exception e) {
+          //          LOGGER.warn("Error Executing cql in cassandra " + sql, e);
+          //          throw e;
+          //      }
             } else {
                 try {
                     int ch = namedTemplate.update(sql, new MapSqlParameterSource(paramMap), kh);
@@ -917,6 +919,81 @@ public class DbBeanInstance implements DbBeanInstInterface {
             }
 
         }
+
+
+    public int updateBeanNP(BaseMajoranaEntity bde, String sqlWhereParam[], Object sqlId[],  String[] paramNames, Object[] params) throws SQLException {
+
+        Class beanClass = bde.getClass();
+
+        MajoranaAnnotationRepository mj = getRepo(beanClass);
+
+        List<MajoranaRepositoryField> mrf = mj.getRepoFields();
+
+
+        String sqlWhere =  Arrays.stream(sqlWhereParam).filter( pn->
+                        mj.getRepoFields().stream().anyMatch( f-> ((MajoranaRepositoryField) f).getDbColumn().equals(pn)))
+                .map( f-> f+"=:"+f).collect(Collectors.joining(" and "));
+
+        String sql = "UPDATE " + bde.getTableName() +" SET "+
+                Arrays.stream(paramNames).filter( pn-> mj.getRepoFields().stream().anyMatch( f-> ((MajoranaRepositoryField) f)
+                        .getDbColumn().equals(pn)))
+                        .map( f->f+"=:"+f) .collect(Collectors.joining(", ")) + " WHERE "+sqlWhere;
+        //               + " WHERE "+where;
+//        String sql = mj.getR
+
+        KeyHolder kh = new org.springframework.jdbc.support.GeneratedKeyHolder();
+
+        Map<String, Object> paramMap = getParamMap(paramNames, params);
+
+        paramMap.putAll(getParamMap(sqlWhereParam, sqlId));
+
+        if (isCass) {
+            try {
+            //    PreparedStatement pres = cs.prepare(sql);
+                //org.springframework.data.cassandra.core.query.Update bounds =
+            //    org.springframework.data.cassandra.core.query.Update.empty();
+                //Map<String, Object> data = mj. getParameterMapWithDeletedAt(cassDsn, bde);
+                //for(Map.Entry<String, Object> en : data.entrySet()){
+                //    bounds = bounds.set( en.getKey(), en.getValue());
+                //}
+                //        org.springframework.data.cassandra.core.query.Update.addAll( mj.getSqlParameterMapWithDeletedAt(cassDsn,bde))
+
+//                PreparedStatement preparedStatement = cql.prepare("insert into plans (user_id, plan) values (?, ? )");
+            //    BoundStatement upStatement = pres.bind(paramMap);
+                //CqlTemplate ct = cs.
+            //    com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute
+            //            (upStatement);
+            //    Row row = rs.one();
+           //     if (row == null) {
+           //         return 0;
+           //     }
+                return 1;
+
+                //pres.bind( mj. getSqlParameterSourceWithDeletedAt(bde)); //params);
+                // return cassandraTemplate.update(bounds, beanClass );
+            } catch (Exception e) {
+                LOGGER.warn("Error Executing cql in cassandra " + sql, e);
+                throw e;
+            }
+        } else {
+            try {
+                int ch = namedTemplate.update(sql, new MapSqlParameterSource(paramMap), kh);
+                if (ch != 0) {
+                    Number n = kh.getKey();
+                    if (n != null) {
+                        return n.intValue();
+                    }
+                }
+                return  0;
+            } catch (Exception e) {
+                LOGGER.warn("Error Update sql in jdbc template " + sql, e);
+                throw e;
+            }
+        }
+
+    }
+
+
 
         private UUID getUUID (String s){
             return UUID.fromString(s);
@@ -971,9 +1048,9 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass){
             try {
-               PreparedStatement pres = cs.prepare(sql);
+     //          PreparedStatement pres = cs.prepare(sql);
                 //org.springframework.data.cassandra.core.query.Update bounds =
-                org.springframework.data.cassandra.core.query.Update.empty();
+      //          org.springframework.data.cassandra.core.query.Update.empty();
                 //Map<String, Object> data = mj. getParameterMapWithDeletedAt(cassDsn, bde);
                 //for(Map.Entry<String, Object> en : data.entrySet()){
                 //    bounds = bounds.set( en.getKey(), en.getValue());
@@ -981,12 +1058,12 @@ public class DbBeanInstance implements DbBeanInstInterface {
                 //        org.springframework.data.cassandra.core.query.Update.addAll( mj.getSqlParameterMapWithDeletedAt(cassDsn,bde))
 
 //                PreparedStatement preparedStatement = cql.prepare("insert into plans (user_id, plan) values (?, ? )");
-                BoundStatement upStatement = pres.bind(paramMap );
+        //        BoundStatement upStatement = pres.bind(paramMap );
                 //CqlTemplate ct = cs.
-                com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(upStatement);
-               Row row  = rs.one();
-                if (row==null){ return new MultiId(); }
-                return new MultiId(mid.getUUID());
+          //      com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(upStatement);
+         //      Row row  = rs.one();
+         //       if (row==null){ return new MultiId(); }
+         //       return new MultiId(mid.getUUID());
 
                 //pres.bind( mj. getSqlParameterSourceWithDeletedAt(bde)); //params);
                 // return cassandraTemplate.update(bounds, beanClass );
@@ -994,6 +1071,7 @@ public class DbBeanInstance implements DbBeanInstInterface {
                 LOGGER.warn("Error Executing cql in cassandra "+sql,e);
                 throw e;
             }
+            return null;
         } else {
             try {
                 int ch = namedTemplate.update(sql, new MapSqlParameterSource(paramMap));
@@ -1039,9 +1117,9 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass){
             try {
-               PreparedStatement pres = cs.prepare(sql);
+          //     PreparedStatement pres = cs.prepare(sql);
                 //org.springframework.data.cassandra.core.query.Update bounds =
-                org.springframework.data.cassandra.core.query.Update.empty();
+           //     org.springframework.data.cassandra.core.query.Update.empty();
                 //Map<String, Object> data = mj. getParameterMapWithDeletedAt(cassDsn, bde);
                 //for(Map.Entry<String, Object> en : data.entrySet()){
                 //    bounds = bounds.set( en.getKey(), en.getValue());
@@ -1049,12 +1127,12 @@ public class DbBeanInstance implements DbBeanInstInterface {
                 //        org.springframework.data.cassandra.core.query.Update.addAll( mj.getSqlParameterMapWithDeletedAt(cassDsn,bde))
 
 //                PreparedStatement preparedStatement = cql.prepare("insert into plans (user_id, plan) values (?, ? )");
-                BoundStatement upStatement = pres.bind(mj.getParameterMapWithDeletedAt(cassDsn, bde) );
+             //   BoundStatement upStatement = pres.bind(mj.getParameterMapWithDeletedAt(cassDsn, bde) );
                 //CqlTemplate ct = cs.
-                com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(upStatement);
-               Row row  = rs.one();
-                if (row==null){ return new MultiId(); }
-                return new MultiId(mid.getUUID());
+               // com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute(upStatement);
+              // Row row  = rs.one();
+              //  if (row==null){ return new MultiId(); }
+              //  return new MultiId(mid.getUUID());
 
                 //pres.bind( mj. getSqlParameterSourceWithDeletedAt(bde)); //params);
                 // return cassandraTemplate.update(bounds, beanClass );
@@ -1062,6 +1140,7 @@ public class DbBeanInstance implements DbBeanInstInterface {
                 LOGGER.warn("Error Executing cql in cassandra "+sql,e);
                 throw e;
             }
+            return null;
         } else {
             try {
                 int ch = jdbcTemplate.update(sql, mj. getSqlParameterSourceWithDeletedAt(jdbcDsn,
@@ -1086,13 +1165,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
     if (isCass){
        try {
-          PreparedStatement pres = cs.prepare(sql);
-           BoundStatement bounds = pres.bind(params);
-            return cassandraTemplate.selectOne(bounds, beanClass );
+  //        PreparedStatement pres = cs.prepare(sql);
+  //         BoundStatement bounds = pres.bind(params);
+  //          return cassandraTemplate.selectOne(bounds, beanClass );
         } catch (Exception e){
           LOGGER.warn("Error Executing cql in cassandra "+sql,e);
           throw e;
         }
+       return null;
   } else {
         try {
             return jdbcTemplate.queryForObject(sql, mj.getMapper());
@@ -1110,13 +1190,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass){
             try {
-               PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.select(bounds, beanClass ).toArray();
+    //           PreparedStatement pres = cs.prepare(sql);
+    //            BoundStatement bounds = pres.bind(params);
+    //            return cassandraTemplate.select(bounds, beanClass ).toArray();
             } catch (Exception e){
                 LOGGER.warn("Error Executing cql in cassandra "+sql,e);
                 throw e;
             }
+            return null;
         } else {
             try {
                 return jdbcTemplate.query(sql, mj.getMapper()).toArray();
@@ -1134,13 +1215,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         if (isCass){
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.select(bounds, beanClass );
+      //          PreparedStatement pres = cs.prepare(sql);
+      //          BoundStatement bounds = pres.bind(params);
+      //          return cassandraTemplate.select(bounds, beanClass );
             } catch (Exception e){
                 LOGGER.warn("Error Executing cql in cassandra "+sql,e);
                 throw e;
             }
+            return null;
         } else {
             SqlParameterSource sps = new MapSqlParameterSource(getParamMap(paramNames, params));
             try {
@@ -1170,13 +1252,14 @@ public class DbBeanInstance implements DbBeanInstInterface {
         MajoranaAnnotationRepository mj = getRepo(beanClass);
         if (isCass){
             try {
-               PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return  cassandraTemplate.select(bounds, beanClass );
+        //       PreparedStatement pres = cs.prepare(sql);
+        //        BoundStatement bounds = pres.bind(params);
+        //        return  cassandraTemplate.select(bounds, beanClass );
             } catch (Exception e){
                 LOGGER.warn("Error Executing cql in cassandra "+sql,e);
                 throw e;
             }
+            return null;
         } else {
             try {
 
@@ -1212,10 +1295,11 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
   public float readFloat( Class beanClass, String sql, List<Object> params) throws Exception {
       if (isCass){
-          PreparedStatement pres = cs.prepare(sql);
-          BoundStatement bounds = pres.bind(params);
-          List<FloatClass> fc = cassandraTemplate.select(bounds, FloatClass.class );
-          return fc.get(0).getF();
+   //       PreparedStatement pres = cs.prepare(sql);
+   //       BoundStatement bounds = pres.bind(params);
+   //       List<FloatClass> fc = cassandraTemplate.select(bounds, FloatClass.class );
+    //      return fc.get(0).getF()
+          return 0.0f;
       } else {
           java.sql.PreparedStatement pstmt = dbCon.prepareStatement(sql);
 
@@ -1231,18 +1315,19 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
 
         if (isCass){
-            String className = object.getClass().getName();
-            ByteArrayOutputStream bis = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bis);
-            oos.writeObject(object);
-            oos.close();
-            bis.close();
-            ByteBuffer buffer = ByteBuffer.wrap(bis.toByteArray());
-            PreparedStatement prepared = getCassPreparedStatement(sql);
-            com.datastax.oss.driver.api.core.cql.ResultSet res = cs.execute(prepared.bind(buffer));
-            AtomicLong l = new AtomicLong(0L);
-            res.forEach( r->{ l.incrementAndGet();});
-            return l.get();
+//            String className = object.getClass().getName();
+//            ByteArrayOutputStream bis = new ByteArrayOutputStream();
+//            ObjectOutputStream oos = new ObjectOutputStream(bis);
+//            oos.writeObject(object);
+//            oos.close();
+//            bis.close();
+//            ByteBuffer buffer = ByteBuffer.wrap(bis.toByteArray());
+//            PreparedStatement prepared = getCassPreparedStatement(sql);
+//            com.datastax.oss.driver.api.core.cql.ResultSet res = cs.execute(prepared.bind(buffer));
+//            AtomicLong l = new AtomicLong(0L);
+//            res.forEach( r->{ l.incrementAndGet();});
+//            return l.get();
+            return 0;
         } else {
 
             ByteArrayOutputStream bis = new ByteArrayOutputStream();
@@ -1273,17 +1358,18 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
 	  public Object readJavaObject( String sql, Object[] params) throws Exception {
         if (isCass){
-            PreparedStatement pres = cs.prepare(sql);
-            BoundStatement bounds = pres.bind(params);
-            List<ByteBuffer> fc = cassandraTemplate.select(bounds, ByteBuffer.class);
-            ByteBuffer buf = fc.get(0);
-            ByteArrayInputStream bais = new ByteArrayInputStream(buf.array());
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            Object object = ois.readObject();
-            String className = object.getClass().getName();
-            ois.close();
-            bais.close();
-            return object;
+//            PreparedStatement pres = cs.prepare(sql);
+//            BoundStatement bounds = pres.bind(params);
+//            List<ByteBuffer> fc = cassandraTemplate.select(bounds, ByteBuffer.class);
+//            ByteBuffer buf = fc.get(0);
+//            ByteArrayInputStream bais = new ByteArrayInputStream(buf.array());
+//            ObjectInputStream ois = new ObjectInputStream(bais);
+//            Object object = ois.readObject();
+//            String className = object.getClass().getName();
+//            ois.close();
+//            bais.close();
+//            return object;
+            return null;
         } else {
             java.sql.PreparedStatement pstmt = dbCon.prepareStatement(sql);
             mapParams(pstmt, params);
@@ -1314,9 +1400,9 @@ public class DbBeanInstance implements DbBeanInstInterface {
         return ds;
     }
 
-    protected CqlSession getCs() {
-        return cs;
-    }
+//    protected CqlSession getCs() {
+//        return cs;
+//    }
 
     protected MajoranaDBConnectionFactory getFactory() {
         return factory;
@@ -1342,9 +1428,9 @@ public class DbBeanInstance implements DbBeanInstInterface {
         return classDBmap;
     }
 
-    protected CassandraTemplate getMockCass() {
-        return mockCass;
-    }
+//    protected CassandraTemplate getMockCass() {
+//        return mockCass;
+//    }
 
     protected boolean isCass() {
         return isCass;

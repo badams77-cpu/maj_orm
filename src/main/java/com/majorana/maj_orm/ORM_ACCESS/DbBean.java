@@ -79,6 +79,7 @@ public class DbBean implements DbBeanInterface{
       mainBean = DbBeanInstance.getSingletonLazy(new CassandraState(false), new HashMap<>());
   }
 
+
     public DataSource getDatasource(){
         return mainBean.getDs();
     }
@@ -120,9 +121,9 @@ public class DbBean implements DbBeanInterface{
         return chain.get(0);
     }
 
-    public PreparedStatement  getCassPreparedStatement(String sql){
-        return mainBean.getCassPreparedStatement(sql);
-    }
+    //public PreparedStatement  getCassPreparedStatement(String sql){
+    //    return mainBean.getCassPreparedStatement(sql);
+    //}
 
   public void preloadEntities(){
        mainBean.preloadEntities();
@@ -156,7 +157,7 @@ public class DbBean implements DbBeanInterface{
           if (mainBean==null) {
               mainBean = new DbBeanInstance();
           }
-          if (mainBean.getCqlTemplate()==null || mainBean.getJdbcTemplate()==null) {
+         if ( mainBean.getJdbcTemplate()==null) {
               return mainBean.connect();
           }
           return false;
@@ -336,6 +337,12 @@ public class DbBean implements DbBeanInterface{
     public MultiId updateBean( MultiId mid,  BaseMajoranaEntity bde) throws SQLException {
 
        return mainBean.updateBean(mid, bde);
+
+    }
+
+    public int updateBeanNP(BaseMajoranaEntity bde, String sqlWhereParam[], Object sqlId[], String[] paramNames, Object[] params ) throws SQLException {
+
+        return mainBean.updateBeanNP(bde, sqlWhereParam, sqlId, paramNames, params);
 
     }
 

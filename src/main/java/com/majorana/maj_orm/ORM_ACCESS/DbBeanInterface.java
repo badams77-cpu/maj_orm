@@ -4,12 +4,12 @@ package com.majorana.maj_orm.ORM_ACCESS;
 import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
 import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
 import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
-import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 
 import java.sql.*;
 import java.util.*;
 
 import static org.mockito.Mockito.mock;
+
 
 ;
 ;
@@ -18,7 +18,7 @@ public interface DbBeanInterface {
 
 // Bean interface
 
-    public PreparedStatement  getCassPreparedStatement(String sql);
+//    public PreparedStatement  getCassPreparedStatement(String sql);
 
   public void preloadEntities();
 
