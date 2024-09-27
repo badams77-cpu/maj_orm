@@ -144,6 +144,9 @@ public class DbBeanInstance implements DbBeanInstInterface {
         cassandraState = new CassandraState(false);
         entityFinder = new EntityFinder();
         this.envSetup = dbEnv;
+        jdbcDsn = envSetup.getMainSqlDBName();
+        cassDsn = envSetup.getMainCassDBName();
+        mainDsn = envSetup.getMainDBName();
         factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));
   //      if (!factory.getMainCassandraTemplate().isPresent()) {
   //          cassandraTemplate = mock(CassandraTemplate.class);
@@ -178,7 +181,9 @@ public class DbBeanInstance implements DbBeanInstInterface {
        // }
         jdbcTemplate = factory.getMainJdbcTemplate().orElse(null);
         namedTemplate = factory.getMainNamedParamJdbcTemplate().orElse(null);
-
+        jdbcDsn = envSetup.getMainSqlDBName();
+        cassDsn = envSetup.getMainCassDBName();
+        mainDsn = envSetup.getMainDBName();
         if (jdbcTemplate == null) {
             LOGGER.warn("Jdbc DB coD/Nnnection " + envSetup.getMainDBName() + " not found");
         }
