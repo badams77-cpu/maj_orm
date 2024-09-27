@@ -48,11 +48,12 @@ public abstract class BaseMajoranaEntity {
 //    @org.springframework.data.cassandra.core.mapping.Column("updated")
     @Column(name="updated")
     public LocalDateTime updated;
-    @Column(name="created_by_useremail")
+//    @Column(name="created_by_useremail")
 //    @org.springframework.data.cassandra.core.mapping.Column("created_by_useremail")
     public transient String createdByUserEmail;
+
 //    @org.springframework.data.cassandra.core.mapping.Column("updated_by_useremail")
-    @Column(name="updated_by_useremail")
+//    @Column(name="updated_by_useremail")
     public transient String updatedByUserEmail;
 
     private static String baseFieldss = "id, uuid, deleted, deleted_at, created, created_at, updated, updated_by_userid, created_by_userid" +
