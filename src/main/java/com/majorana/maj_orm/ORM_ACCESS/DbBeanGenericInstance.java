@@ -93,11 +93,11 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
             dbi.mainDsn = dbBean.getMainBean().getMainDsn();
         //    dbi.cassandraTemplate = mainBean.getCassandraTemplate();
         //    dbi.cqlTemplate = mainBean.getCqlTemplate();
-            dbi.jdbcTemplate = mainBean.getJdbcTemplate();
-            dbi.namedTemplate = mainBean.getNamedTemplate();
-            dbi.factory = mainBean.getFactory();
+            dbi.jdbcTemplate =  dbBean.getMainBean().getJdbcTemplate();
+            dbi.namedTemplate =   dbBean.getMainBean().getNamedTemplate();
+            dbi.factory =  dbBean.getMainBean().getFactory();
        //     dbi.cs= mainBean.getCs();
-            dbi.ds = mainBean.getDs();
+            dbi.ds =  dbBean.getMainBean().getDs();
             try {
                 dbi.clazzArray = (T[]) Array.newInstance(S1, 0);
             } catch (Exception e){
@@ -501,7 +501,7 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
             try {
      //          PreparedStatement pres = cs.prepare(sql);
                 //org.springframework.data.cassandra.core.query.Update bounds =
-                org.springframework.data.cassandra.core.query.Update.empty();
+       //         org.springframework.data.cassandra.core.query.Update.empty();
                 //Map<String, Object> data = mj. getParameterMapWithDeletedAt(cassDsn, bde);
                 //for(Map.Entry<String, Object> en : data.entrySet()){
                 //    bounds = bounds.set( en.getKey(), en.getValue());

@@ -274,7 +274,7 @@ public class MajoranaDBConnectionFactory {
 
         public Optional<NamedParameterJdbcTemplate> getNamedParameterJdbcTemplate(MajDataSourceName dbName) {
             HikariDataSource hds = dBSourcesFromEnv.getHikDatasource(dbName);    ;
-            return Optional.of(new NamedParameterJdbcTemplate(hds));
+            return Optional.ofNullable( hds==null ? null : new NamedParameterJdbcTemplate(hds));
         }
 
     /**
