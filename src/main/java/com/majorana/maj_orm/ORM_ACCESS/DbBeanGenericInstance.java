@@ -89,7 +89,7 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
             DbBeanGenericInstance<T> dbi = new DbBeanGenericInstance<T>( dbBean, S1);
             dbi.clazz= S1;
             dbi.jdbcDsn = dbBean.getMainBean().getJdbcDsn();
-//            dbi.cassDsn = dbBean.getMainBean().getCassDsn();
+            dbi.cassDsn = dbBean.getMainBean().getCassDsn();
             dbi.mainDsn = dbBean.getMainBean().getMainDsn();
         //    dbi.cassandraTemplate = mainBean.getCassandraTemplate();
         //    dbi.cqlTemplate = mainBean.getCqlTemplate();
@@ -111,6 +111,18 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
     }
 
 
+    public MajDataSourceName getMainDsn() {
+        return mainDsn;
+    }
+
+    public MajDataSourceName getCassDsn() {
+        return cassDsn;
+    }
+
+    public MajDataSourceName getJdbcDsn() {
+        return jdbcDsn;
+    }
+
   protected DbBeanGenericInstance(DbBean dbBean, Class<T> clazz){
       this.clazz = clazz;
       this.factory = dbBean.getFactory();
@@ -130,7 +142,9 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
       factory = dbBean.getFactory();
       jdbcTemplate = factory. getMainJdbcTemplate().orElse(null);
       namedTemplate  = factory.getMainNamedParamJdbcTemplate().orElse(null);
-
+      jdbcDsn = dbBean.getMainBean().getJdbcDsn();
+      cassDsn = dbBean.getMainBean().getCassDsn();
+      mainDsn = dbBean.getMainBean().getMainDsn();
       cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
       if (jdbcTemplate==null){
           LOGGER.warn("Jdbc DB connnection not found");
@@ -430,7 +444,7 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
             try {
         //       PreparedStatement pres = cs.prepare(sql);
                 //org.springframework.data.cassandra.core.query.Update bounds =
-                        org.springframework.data.cassandra.core.query.Update.empty();
+//                        org.springframework.data.cassandra.core.query.Update.empty();
                 //Map<String, Object> data = mj. getParameterMapWithDeletedAt(cassDsn, bde);
                 //for(Map.Entry<String, Object> en : data.entrySet()){
                 //    bounds = bound\s.set( en.getKey(), en.getValue());

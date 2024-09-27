@@ -81,6 +81,18 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
     private static DbBeanInstance singletonLazy;
 
+    public void setMainDsn(MajDataSourceName mainDsn) {
+        this.mainDsn = mainDsn;
+    }
+
+    public void setCassDsn(MajDataSourceName cassDsn) {
+        this.cassDsn = cassDsn;
+    }
+
+    public void setJdbcDsn(MajDataSourceName jdbcDsn) {
+        this.jdbcDsn = jdbcDsn;
+    }
+
     private MajDataSourceName mainDsn = null;
     private MajDataSourceName cassDsn = null;
     private MajDataSourceName jdbcDsn = null;

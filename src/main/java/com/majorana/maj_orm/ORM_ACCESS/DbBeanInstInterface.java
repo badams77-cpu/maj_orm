@@ -1,6 +1,7 @@
 
 package com.majorana.maj_orm.ORM_ACCESS;
 
+import com.majorana.maj_orm.DBs.MajDataSourceName;
 import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
 import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
 import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
@@ -42,7 +43,10 @@ public interface DbBeanInstInterface {
 
     public MajoranaAnnotationRepository getRepo(Class beanClass);
 
+  public MajDataSourceName getMainDsn();
+  public MajDataSourceName getCassDsn();
 
+  public MajDataSourceName getJdbcDsn();
 
     public Map<String, Object> getParamMap(String named[], Object params[]);
 
