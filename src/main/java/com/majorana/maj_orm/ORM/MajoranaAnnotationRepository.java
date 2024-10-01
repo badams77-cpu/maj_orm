@@ -5,7 +5,7 @@ import com.majorana.maj_orm.DBs.MajDataSourceName;
 //import com.majorana.ORM.domain.entity.BaseSmokEntity;
 import com.majorana.maj_orm.Utils.SQLHelper;
 import com.majorana.maj_orm.persist.newannot.*;
-import com.majorana.maj_orm.persist.newannot.*;
+import com.apache2.lang.ClassUtils;
 import jakarta.persistence.Column;
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -264,7 +264,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
     }
 
     public MajoranaRepositoryField getIdField(){
-        return repoFields.stream().filter( rf->rf.isId()   && (rf.getValueType().isAssignableFrom(Integer.class))).findFirst().orElse(null);
+        return repoFields.stream().filter( rf->rf.isId()   && ClassUtils.isAssignable(rf.getValueType(),Integer.class,true)).findFirst().orElse(null);
     }
 
     public static boolean isInStringArray( String potentialTargets[], String test){
