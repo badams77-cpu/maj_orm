@@ -132,7 +132,7 @@ def RegularFileProperty dfMa = project.getObjects().fileProperty().
 
 //project.file("build/classes/MajNoCass/Main.class");
 
-version='1.3.9'
+version='1.4.0'
 
 class BootMaClass extends  org.springframework.boot.gradle.plugin.ResolveMainClassName implements Task {
 
@@ -430,7 +430,7 @@ repositories {
 
 //group = 'com.feedMajDbORM.tweeter'
 group = 'MajNoCass'
-version = '1.3.9'
+version = '1.4.0'
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
