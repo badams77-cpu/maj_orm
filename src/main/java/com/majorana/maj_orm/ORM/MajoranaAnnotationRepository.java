@@ -365,6 +365,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                         isId = true;
                         hasId = true;
                     }
+
                     if (ann.annotationType().equals(Updateable.class)) {
                         updateable = true;
                     }

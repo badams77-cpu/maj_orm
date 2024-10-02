@@ -14,6 +14,7 @@ public abstract class BaseMajoranaEntity {
 
 //    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0, name = "id")
     @Id()
+    @AltID
     @Column(name="id")
     public int id;
 
@@ -21,6 +22,7 @@ public abstract class BaseMajoranaEntity {
     @Column(name="uuid")
     @Nullable
     @Id()
+    @AltID
     public UUID uuid;
     @Updateable
 //    @org.springframework.data.cassandra.core.mapping.Column("deleted")
