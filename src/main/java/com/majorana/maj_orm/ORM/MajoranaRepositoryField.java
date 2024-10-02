@@ -171,6 +171,8 @@ public class MajoranaRepositoryField {
                 ", columnAnnotation=" + columnAnnotation +
                 ", valueType=" + valueType +
                 ", isTransient=" + isTransient +
+                ", isId=" + isId +
+                ", isAltId=" + isAltId +
                 ", populatedCreated=" + populatedCreated +
                 ", populatedUpdated=" + populatedUpdated +
                 ", updateable=" + updateable +

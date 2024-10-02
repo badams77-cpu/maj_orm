@@ -264,7 +264,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
     }
 
     public MajoranaRepositoryField getIdField(){
-        MajoranaRepositoryField mrd = repoFields.stream().filter( rf->rf.isId()   && rf.getValueType().getName().equals("int")
+        MajoranaRepositoryField mrd = repoFields.stream().filter( rf->(rf.isId()  || rf.isAltId() )&& rf.getValueType().getName().equals("int")
 
         ).findFirst().orElse(null);
         return mrd;
@@ -276,14 +276,14 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
 
     public String getKeyUuid(){
         return repoFields.stream().filter(
-                rf -> rf.isId() && rf.getValueType()==java.util.UUID.class
+                rf -> (rf.isId() || rf.isAltId()) && rf.getValueType()==java.util.UUID.class
         ).map( rf->rf.getDbColumn())
 
                 .findFirst().orElse("");
     }
 
     public String getKeyId(){
-        return repoFields.stream().filter( rf->rf.isId()   && rf.getValueType().getName().equals("int")
+        return repoFields.stream().filter( rf->(rf.isId() || rf.isAltId())   && rf.getValueType().getName().equals("int")
                 ).map( rf->rf.getDbColumn())
 
                 .findFirst().orElse("");
