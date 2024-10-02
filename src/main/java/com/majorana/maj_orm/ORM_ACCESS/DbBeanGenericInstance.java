@@ -492,7 +492,9 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
 
         MajoranaAnnotationRepository mj = getRepo();
 
-        String idCol = mj.getIdField().getDbColumn();
+        MajoranaRepositoryField idField = mj.getIdField();
+
+        String idCol = idField.getDbColumn();
         String uuidCol = mj.getKeyUuid();
         
         if (!mid.hasAnyId()){
@@ -542,10 +544,7 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
                 Map<String, Object> upMap = mj.getParameterMapWithDeletedAt(jdbcDsn, bde);
                 int ch = namedTemplate.update(sql, new MapSqlParameterSource(upMap));
                 if (ch!=0){
-                    Number n = kh.getKey();
-                    if (n!=null){
-                        return new MultiId(n.intValue());
-                    }
+                        return mid;
                 }
                 return new MultiId();
             } catch (Exception e){
