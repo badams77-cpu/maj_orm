@@ -264,7 +264,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
     }
 
     public MajoranaRepositoryField getIdField(){
-        return repoFields.stream().filter( rf->rf.isId()   && ClassUtils.isAssignable(rf.getValueType(),Integer.class,true)).findFirst().orElse(null);
+        return repoFields.stream().filter( rf->rf.isId()   && rf.getValueType().getName().equals("int")).findFirst().orElse(null);
     }
 
     public static boolean isInStringArray( String potentialTargets[], String test){
