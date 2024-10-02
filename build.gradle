@@ -573,11 +573,11 @@ dependencies {
     implementation group: 'com.datastax.oss', name: 'java-driver-mapper-runtime', version: '4.17.0'
 
     api 'org.apache.httpcomponents:httpclient:4.5.7'
-    implementation 'org.apache.commons:commons-lang3:3.5'
+    implementation 'org.apache.commons:commons-lang3:3.8.1'
 
 //    implementation('nz6net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.3.0')
     implementation 'org.openjfx:javafx-base:18'
-//    implementation('org.springframework.boot:spring-boot-starter-validation')
+//    implementation('org.springframework.boot:spring-boot-starter-validation')lan
 //    implementation('net.sourceforge.nekohtml:nekohtml')
     //   implementation(group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0')
     implementation('com.google.code.gson:gson:2.9.1')
@@ -628,7 +628,6 @@ dependencies {
     implementation 'org.javers:javers-core:5.6.3'
 
     implementation group: 'org.threeten', name: 'threeten-extra', version: '1.7.1'
-
     implementation 'net.bytebuddy:byte-buddy:1.12.23'
 
     // https://mvnrepository.com/artifact/org.junit.platform/junit-pla

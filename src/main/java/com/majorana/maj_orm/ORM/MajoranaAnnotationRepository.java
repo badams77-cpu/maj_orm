@@ -5,7 +5,7 @@ import com.majorana.maj_orm.DBs.MajDataSourceName;
 //import com.majorana.ORM.domain.entity.BaseSmokEntity;
 import com.majorana.maj_orm.Utils.SQLHelper;
 import com.majorana.maj_orm.persist.newannot.*;
-import com.apache2.lang.ClassUtils;
+import org.apache.commons.lang3.ClassUtils;
 import jakarta.persistence.Column;
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.PreparedStatementCreator;
