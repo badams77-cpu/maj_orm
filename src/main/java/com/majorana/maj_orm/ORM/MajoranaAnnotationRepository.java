@@ -311,7 +311,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
             }
 
         }
-        LOGGER.trace("CLass "+clazz+ " found "+ ret.size()+" new field annotations: ("+ret.stream()
+        LOGGER.warn("CLass "+clazz+ " found "+ ret.size()+" new field annotations: ("+ret.stream()
                 .map(a->a.annotationType().getCanonicalName()).collect(Collectors.joining(", ")));
         return ret.toArray(new Annotation[0]);
     }
@@ -361,7 +361,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                 boolean hasId = false;
 
                 for (Annotation ann : annotations) {
-                    if (ann.annotationType().equals(jakarta.persistence.Id.class) && !hasId) {
+                    if (ann.annotationType().equals(jakarta.persistence.Id.class)) {
                         isId = true;
                         hasId = true;
                     }
