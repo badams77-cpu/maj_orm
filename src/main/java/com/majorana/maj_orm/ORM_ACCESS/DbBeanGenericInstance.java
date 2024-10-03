@@ -14,6 +14,7 @@ import com.majorana.maj_orm.DBs.MajDataSourceName;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.KeyHolder;
@@ -769,6 +770,30 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
                 Map<String, Object> paraMap = getParamMap(paramNames, params);
                 MapSqlParameterSource src = new MapSqlParameterSource(paraMap);
                 return namedTemplate.query(sql, src, mj.getMapper());
+            } catch (Exception e){
+                LOGGER.warn("Error Executing sql in jdbc template "+sql,e);
+                throw e;
+            }
+        }
+    }
+
+    public List<?> getBeansNPUsingMapper(String sql, RowMapper<?> mapper, String[] paramNames, Object[] params) {
+        MajoranaAnnotationRepository mj = getRepo();
+        if (isCass){
+            try {
+                //             PreparedStatement pres = cs.prepare(sql);
+                //             BoundStatement bounds = pres.bind(params);
+                //              return cassandraTemplate.select(bounds, clazz );
+            } catch (Exception e){
+                LOGGER.warn("Error Executing cql in cassandra "+sql,e);
+                throw e;
+            }
+            return null;
+        } else {
+            try {
+                Map<String, Object> paraMap = getParamMap(paramNames, params);
+                MapSqlParameterSource src = new MapSqlParameterSource(paraMap);
+                return namedTemplate.query(sql, src, mapper);
             } catch (Exception e){
                 LOGGER.warn("Error Executing sql in jdbc template "+sql,e);
                 throw e;

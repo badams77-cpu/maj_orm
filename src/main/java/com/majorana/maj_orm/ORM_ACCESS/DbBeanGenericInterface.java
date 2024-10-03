@@ -4,6 +4,7 @@ package com.majorana.maj_orm.ORM_ACCESS;
 import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
 import com.majorana.maj_orm.ORM.MajoranaRepositoryField;
 import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
+import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -21,6 +22,10 @@ public interface DbBeanGenericInterface<T extends BaseMajoranaEntity> {
 
 
     public List<T> getBeansNP( String sql, String[] paramNames, Object[] params);
+
+
+    public List<?> getBeansNPUsingMapper(String sql, RowMapper<?> mapper, String[] paramNames, Object[] params);
+
 
     public List<T> getBeansNPWithSelectClause( String sql, String[] paramNames, Object[] params);
 
