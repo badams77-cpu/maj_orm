@@ -801,6 +801,30 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
         }
     }
 
+    public List<Integer> getBeansNPUsingIntegerMapper(String sql, String[] paramNames, Object[] params) {
+        MajoranaAnnotationRepository mj = getRepo();
+        if (isCass){
+            try {
+                //             PreparedStatement pres = cs.prepare(sql);
+                //             BoundStatement bounds = pres.bind(params);
+                //              return cassandraTemplate.select(bounds, clazz );
+            } catch (Exception e){
+                LOGGER.warn("Error Executing cql in cassandra "+sql,e);
+                throw e;
+            }
+            return null;
+        } else {
+            try {
+                Map<String, Object> paraMap = getParamMap(paramNames, params);
+                MapSqlParameterSource src = new MapSqlParameterSource(paraMap);
+                return namedTemplate.query(sql, src, mj.getIntegerMapper());
+            } catch (Exception e){
+                LOGGER.warn("Error Executing sql in jdbc template "+sql,e);
+                throw e;
+            }
+        }
+    }
+
     public List<T> getBeansNPWithSelectClause(  String sql1, String[] paramNames, Object[] params) {
         MajoranaAnnotationRepository mj = getRepo();
         String sql = mj.getReadStringNPSelectClause( table, sql1, paramNames, params);
