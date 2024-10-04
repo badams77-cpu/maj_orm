@@ -801,7 +801,7 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
         }
     }
 
-    public List<Integer> getBeansNPUsingIntegerMapper(String sql, String[] paramNames, Object[] params) {
+    public List<Integer> getListNPUsingIntegerMapper(String sql, String[] paramNames, Object[] params) {
         MajoranaAnnotationRepository mj = getRepo();
         if (isCass){
             try {

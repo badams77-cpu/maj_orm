@@ -27,6 +27,8 @@ public interface DbBeanGenericInterface<T extends BaseMajoranaEntity> {
     public List<?> getBeansNPUsingMapper(String sql, RowMapper<?> mapper, String[] paramNames, Object[] params);
 
 
+    public List<Integer> getListNPUsingIntegerMapper(String sql, String[] paramNames, Object[] params) ;
+
     public List<T> getBeansNPWithSelectClause( String sql, String[] paramNames, Object[] params);
 
     public List<T> getBeans( String sql, Object[] params) throws SQLException;
