@@ -225,7 +225,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
 
     public String getSqlFieldStringWithPrefix(String s){
         StringBuffer buffy =  new StringBuffer();
-        buffy.append(repoFields.stream().filter(x->!x.isTransient()).map(x->s+","+x.getDbColumn()).collect(Collectors.joining(", ") ) );
+        buffy.append(repoFields.stream().filter(x->!x.isTransient()).map(x->s+"."+x.getDbColumn()).collect(Collectors.joining(", ") ) );
         return buffy.toString();
     }
 
