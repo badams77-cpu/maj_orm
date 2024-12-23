@@ -121,9 +121,9 @@ public class DbBean implements DbBeanInterface{
         return chain.get(0);
     }
 
-    public PreparedStatement  getCassPreparedStatement(String sql){
-        return mainBean.getCassPreparedStatement(sql);
-    }
+    //public PreparedStatement  getCassPreparedStatement(String sql){
+    //    return mainBean.getCassPreparedStatement(sql);
+    //}
 
   public void preloadEntities(){
        mainBean.preloadEntities();
@@ -157,7 +157,7 @@ public class DbBean implements DbBeanInterface{
           if (mainBean==null) {
               mainBean = new DbBeanInstance();
           }
-          if (mainBean.getCqlTemplate()==null || mainBean.getJdbcTemplate()==null) {
+         if ( mainBean.getJdbcTemplate()==null) {
               return mainBean.connect();
           }
           return false;

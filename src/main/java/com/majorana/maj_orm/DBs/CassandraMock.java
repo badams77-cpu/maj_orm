@@ -5,7 +5,7 @@ import com.datastax.oss.driver.api.core.context.DriverContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.cassandra.core.convert.CassandraConverter;
+//import org.springframework.data.cassandra.core.convert.CassandraConverter;
 import org.springframework.data.convert.CustomConversions;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 
@@ -38,6 +38,7 @@ public class CassandraMock {
         return sk;
     }
 
+  /*
     @Bean
     public CassandraConverter cassandraConverter() {
 
@@ -51,7 +52,7 @@ public class CassandraMock {
         CassandraConverter  cc = mock(CassandraConverter.class);
                 org.mockito.Mockito.when(cc.getCustomConversions()).thenReturn(conv);
 
-   /*         @NonNull
+            @NonNull
             @Override
             public <JavaTypeT> TypeCodec<JavaTypeT> codecFor(@NonNull DataType cqlType, @NonNull GenericType<JavaTypeT> javaType) {
                 return null;
@@ -79,11 +80,11 @@ public class CassandraMock {
             @Override
             public <JavaTypeT> TypeCodec<JavaTypeT> codecFor(@NonNull JavaTypeT value) {
                 return null;
-            }*/
+            }
 
         return cc;
     }
-
+*/
 
 
 }

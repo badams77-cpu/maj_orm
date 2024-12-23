@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.data.cassandra.core.CassandraTemplate;
+//import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -47,12 +47,12 @@ public class MajDataSourceHealthIndicator extends AbstractHealthIndicator {
         DatabaseVariant variant = dbEnvSetup.getCreds(datasourceName).getVariant();
         HikariDataSource src = dbEnvSetup.getMajDataSource(datasourceName).getHikariDataSource();
 
-        Optional<CassandraTemplate> cassTempOpt = dbFactory.getCassandraTemplate(datasourceName);
+   //     Optional<CassandraTemplate> cassTempOpt = dbFactory.getCassandraTemplate(datasourceName);
         Optional<JdbcTemplate> jdbcTemplate = dbFactory.getJdbcTemplate(datasourceName);
         
-        boolean status = variant==DatabaseVariant.CASSANDRA ?
-                cassTempOpt.map( template -> template.select(sql, TimeResult.class).stream().collect(Collectors.toList())).orElse(new LinkedList<>()).contains(Boolean.TRUE)
-                : jdbcTemplate.map( template -> template.query(sql, new HealthMapper()).stream().collect(Collectors.toList())).orElse(new LinkedList<>()).contains(Boolean.TRUE);
+        boolean status = variant==DatabaseVariant.CASSANDRA ? false : false;
+  //              cassTempOpt.map( template -> template.select(sql, TimeResult.class).stream().collect(Collectors.toList())).orElse(new LinkedList<>()).contains(Boolean.TRUE)
+  //              : jdbcTemplate.map( template -> template.query(sql, new HealthMapper()).stream().collect(Collectors.toList())).orElse(new LinkedList<>()).contains(Boolean.TRUE);
         if (!status){
             down+=datasourceName.getDataSourceName()+" Down";
         }

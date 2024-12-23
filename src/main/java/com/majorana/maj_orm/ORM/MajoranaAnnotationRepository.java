@@ -5,7 +5,7 @@ import com.majorana.maj_orm.DBs.MajDataSourceName;
 //import com.majorana.ORM.domain.entity.BaseSmokEntity;
 import com.majorana.maj_orm.Utils.SQLHelper;
 import com.majorana.maj_orm.persist.newannot.*;
-import com.majorana.maj_orm.persist.newannot.*;
+import org.apache.commons.lang3.ClassUtils;
 import jakarta.persistence.Column;
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -264,7 +264,10 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
     }
 
     public MajoranaRepositoryField getIdField(){
-        return repoFields.stream().filter( p->p.isId()).findFirst().orElse(null);
+        MajoranaRepositoryField mrd = repoFields.stream().filter( rf->(rf.isId()  || rf.isAltId() )&& rf.getValueType().getName().equals("int")
+
+        ).findFirst().orElse(null);
+        return mrd;
     }
 
     public static boolean isInStringArray( String potentialTargets[], String test){
@@ -273,15 +276,14 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
 
     public String getKeyUuid(){
         return repoFields.stream().filter(
-                rf -> rf.isId() && rf.getValueType()==java.util.UUID.class
+                rf -> (rf.isId() || rf.isAltId()) && rf.getValueType()==java.util.UUID.class
         ).map( rf->rf.getDbColumn())
 
                 .findFirst().orElse("");
     }
 
     public String getKeyId(){
-        return repoFields.stream().filter(
-                        rf -> rf.isId() && rf.getValueType()==Integer.class
+        return repoFields.stream().filter( rf->(rf.isId() || rf.isAltId())   && rf.getValueType().getName().equals("int")
                 ).map( rf->rf.getDbColumn())
 
                 .findFirst().orElse("");
@@ -309,7 +311,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
             }
 
         }
-        LOGGER.trace("CLass "+clazz+ " found "+ ret.size()+" new field annotations: ("+ret.stream()
+        LOGGER.warn("CLass "+clazz+ " found "+ ret.size()+" new field annotations: ("+ret.stream()
                 .map(a->a.annotationType().getCanonicalName()).collect(Collectors.joining(", ")));
         return ret.toArray(new Annotation[0]);
     }
@@ -359,11 +361,19 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                 boolean hasId = false;
                 int varcharSize = 0;
 
-
                 for (Annotation ann : annotations) {
-                    if (ann.annotationType().equals(jakarta.persistence.Id.class) && !hasId) {
+                    if (ann.annotationType().equals(jakarta.persistence.Id.class)) {
                         isId = true;
                         hasId = true;
+                    }
+
+                    if (ann.annotationType().equals(javax.validation.constraints.Size.class)){
+                        javax.validation.constraints.Size siz = (javax.validation.constraints.Size) ann;
+                        varcharSize = siz.max();
+                    }
+                    if (ann.annotationType().equals(jakarta.validation.constraints.Size.class)){
+                        jakarta.validation.constraints.Size siz = (jakarta.validation.constraints.Size) ann;
+                        varcharSize = siz.max();
                     }
 
                     if (ann.annotationType().equals(Updateable.class)) {

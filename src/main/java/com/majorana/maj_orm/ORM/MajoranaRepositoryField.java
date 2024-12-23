@@ -42,6 +42,14 @@ public class MajoranaRepositoryField {
 
     }
 
+    public int getVarcharSize() {
+        return varcharSize;
+    }
+
+    public void setVarcharSize(int varcharSize) {
+        this.varcharSize = varcharSize;
+    }
+
     public boolean isAltId() {
         return isAltId;
     }
@@ -180,6 +188,8 @@ public class MajoranaRepositoryField {
                 ", columnAnnotation=" + columnAnnotation +
                 ", valueType=" + valueType +
                 ", isTransient=" + isTransient +
+                ", isId=" + isId +
+                ", isAltId=" + isAltId +
                 ", populatedCreated=" + populatedCreated +
                 ", populatedUpdated=" + populatedUpdated +
                 ", updateable=" + updateable +

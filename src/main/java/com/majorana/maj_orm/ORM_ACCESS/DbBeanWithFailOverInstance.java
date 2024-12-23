@@ -5,14 +5,9 @@ import com.majorana.maj_orm.ORM.MajoranaAnnotationRepository;
 import com.majorana.maj_orm.ORM.MajoranaDBConnectionFactory;
 import com.majorana.maj_orm.Utils.MethodPrefixingLoggerFactory;
 import com.majorana.maj_orm.ORM.BaseMajoranaEntity;
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.cql.BoundStatement;
-import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.majorana.maj_orm.DBs.*;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
-import org.springframework.data.cassandra.core.CassandraTemplate;
-import org.springframework.data.cassandra.core.cql.CqlTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -43,14 +38,14 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
 
     private HikariDataSource ds;
     // Cassandra Session
-    private CqlSession cs;
+ //   private CqlSession cs;
     private JdbcTemplate jdbcTemplate;
 
     private NamedParameterJdbcTemplate namedTemplate;
 
-    private CassandraTemplate cassandraTemplate;
+  //  private CassandraTemplate cassandraTemplate;
 
-    private CqlTemplate cqlTemplate;
+    //private CqlTemplate cqlTemplate;
 
     private DBEnvSetup envSetup ;
 
@@ -62,7 +57,7 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
 
     private Map<Class, MajoranaAnnotationRepository> classDBmap = new HashMap<>();
 
-    private CassandraTemplate  mockCass = null;
+    //private CassandraTemplate  mockCass = null;
 
     private boolean isCass;
 
@@ -85,15 +80,15 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
             entityFinder = new EntityFinder();
             this.envSetup = dbEnvSetup;
             factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(true));
-            if (factory.getCassandraTemplate(name)==null){
-                cassandraTemplate = mock(CassandraTemplate.class);
-                CqlTemplate cqlTemplate = mock(CqlTemplate.class);
-                cassandraIsMain =  new CassandraState(false);
-            } else {
-                cassandraTemplate = factory.getCassandraTemplate(name).orElse(null);
-                CqlTemplate cqlTemplate = (CqlTemplate) cassandraTemplate.getCqlOperations();
-                cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
-            }
+   //         if (factory.getCassandraTemplate(name)==null){
+   //             cassandraTemplate = mock(CassandraTemplate.class);
+   //             CqlTemplate cqlTemplate = mock(CqlTemplate.class);
+   //             cassandraIsMain =  new CassandraState(false);
+   //         } else {
+   //             cassandraTemplate = factory.getCassandraTemplate(name).orElse(null);
+   //             CqlTemplate cqlTemplate = (CqlTemplate) cassandraTemplate.getCqlOperations();
+    //            cassandraIsMain = new CassandraState(factory.getMainVariant() == DatabaseVariant.CASSANDRA);
+    //        }
             jdbcTemplate = factory. getJdbcTemplate(name).orElse(null);
             namedTemplate  = factory.getNamedParameterJdbcTemplate(name).orElse(null);
 
@@ -123,12 +118,12 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
             }
             //  Class.forName(dbDriver);
             MajDataSourceName smn = envSetup.getMainDBName();
-            MajDataSourceName casn = envSetup.getMainCassDBName();
+      //      MajDataSourceName casn = envSetup.getMainCassDBName();
             MajDataSourceName jdsn = envSetup.getMainSqlDBName();
 
-            factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(casn!=null));
+            factory = new MajoranaDBConnectionFactory(envSetup, new CassandraState(false));
 
-            cassDsn = casn;
+  //          cassDsn = casn;
             jdbcDsn = jdsn;
             mainDsn = smn;
 
@@ -137,21 +132,21 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
             boolean mCass = creds.getVariant() == DatabaseVariant.CASSANDRA;
             cassandraIsMain = new CassandraState(mCass);
             HikariDataSource ds = envSetup.getHikDatasource(envSetup.getMainSqlDBName());
-            CqlSession cs = envSetup.getCqlSession(envSetup.getMainCassDBName());
+   //         CqlSession cs = envSetup.getCqlSession(envSetup.getMainCassDBName());
 
-            cassandraDbIsPresent = new CassandraState(cs != null);
+            cassandraDbIsPresent = new CassandraState(false);
 
             boolean isCass = creds.getVariant() == DatabaseVariant.CASSANDRA;
 
             dbCon = !isCass && ds != null ? ds.getConnection() : null;
             if (isCass) {
-                if (cassandraDbIsPresent.isEnabbled()) {
-                    cassandraTemplate = factory.getCassandraTemplate(casn).orElse(mockCass);
-                }
+        //        if (cassandraDbIsPresent.isEnabbled()) {
+         //           cassandraTemplate = factory.getCassandraTemplate(casn).orElse(mockCass);
+         //       }
             }
             jdbcTemplate = factory.getJdbcTemplate(jdsn).orElse(null);
             namedTemplate = factory.getNamedParameterJdbcTemplate(jdsn).orElse(null);
-            return ds != null || cs != null;
+            return ds != null;
         } catch ( SQLException e){
             LOGGER.error("Error connecting to db "+e);
             return false;
@@ -182,9 +177,10 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
 
         if (isCass) {
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.selectOne(bounds, beanClass);
+//                PreparedStatement pres = cs.prepare(sql);
+//                BoundStatement bounds = pres.bind(params);
+//                return cassandraTemplate.selectOne(bounds, beanClass);
+                return null;
             } catch (Exception e) {
                 if (next != null) {
                     return next.getBeanNP(beanClass, table, sql, paramNames, params);
@@ -218,9 +214,10 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
 
         if (isCass){
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.selectOne(bounds, beanClass );
+//                PreparedStatement pres = cs.prepare(sql);
+//                BoundStatement bounds = pres.bind(params);
+//                return cassandraTemplate.selectOne(bounds, beanClass );
+                return null;
             } catch (Exception e){
                 if (next!=null){ return next.getBeansNPWithSelectClause(beanClass, table, sql, paramNames, params);
             }
@@ -255,9 +252,10 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
 
         if (isCass){
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.selectOne(bounds, beanClass );
+//                PreparedStatement pres = cs.prepare(sql);
+//                BoundStatement bounds = pres.bind(params);
+//                return cassandraTemplate.selectOne(bounds, beanClass );
+                return null;
             } catch (Exception e){
                 if (next!=null){ return next.getBean(beanClass, table, sql, params); }
                 LOGGER.warn("Error Executing cql in cassandra "+sql,e);
@@ -285,9 +283,10 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
 
         if (isCass){
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.select(bounds, beanClass );
+       //         PreparedStatement pres = cs.prepare(sql);
+       //         BoundStatement bounds = pres.bind(params);
+        //        return cassandraTemplate.select(bounds, beanClass );
+                return null;
             } catch (Exception e){
                 if (next !=null){ return next.getBeans( beanClass, table, sql,  params); }
                 LOGGER.warn("Error Executing cql in cassandra "+sql,e);
@@ -336,9 +335,10 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
 
         if (isCass){
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.select(bounds, beanClass );
+//                PreparedStatement pres = cs.prepare(sql);
+//                BoundStatement bounds = pres.bind(params);
+//                return cassandraTemplate.select(bounds, beanClass );
+                return null;
             } catch (Exception e){
                 if (next != null){ return next.getBeansNP( beanClass, table, sql,paramNames, params); }
                 LOGGER.warn("Error Executing cql in cassandra "+sql,e);
@@ -364,9 +364,10 @@ public class DbBeanWithFailOverInstance implements DbBeanWithFailOverInterface {
 
         if (isCass){
             try {
-                PreparedStatement pres = cs.prepare(sql);
-                BoundStatement bounds = pres.bind(params);
-                return cassandraTemplate.select(bounds, beanClass );
+//                PreparedStatement pres = cs.prepare(sql);
+//                BoundStatement bounds = pres.bind(params);
+ //               return cassandraTemplate.select(bounds, beanClass );
+                return null;
             } catch (Exception e){
                 if (next != null) { return next.getBeansNP( beanClass, table, sql, paramNames,  params); }
                 LOGGER.warn("Error Executing cql in cassandra "+sql,e);

@@ -76,8 +76,12 @@ public class MajDataSource {
                         cred.isAllowPublicKeyRetrieval()
 
                 );
-
-//                ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+                try {
+               Class.forName("com.mysql.cj.jdbc.Driver");
+                    } catch (Exception f) {
+                        LOGGER.warn("com.mysql.cj.jdbc.Driver: class not found",f);
+                }
+               conf.setDriverClassName("com.mysql.cj.jdbc.Driver");
                 break;
             case SQL_SERVER:
                 url = String.format(
