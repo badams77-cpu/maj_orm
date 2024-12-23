@@ -79,6 +79,7 @@ public class DbBean implements DbBeanInterface{
       mainBean = DbBeanInstance.getSingletonLazy(new CassandraState(false), new HashMap<>());
   }
 
+
     public DataSource getDatasource(){
         return mainBean.getDs();
     }
@@ -336,6 +337,12 @@ public class DbBean implements DbBeanInterface{
     public MultiId updateBean( MultiId mid,  BaseMajoranaEntity bde) throws SQLException {
 
        return mainBean.updateBean(mid, bde);
+
+    }
+
+    public int updateBeanNP(BaseMajoranaEntity bde, String sqlWhereParam[], Object sqlId[], String[] paramNames, Object[] params ) throws SQLException {
+
+        return mainBean.updateBeanNP(bde, sqlWhereParam, sqlId, paramNames, params);
 
     }
 

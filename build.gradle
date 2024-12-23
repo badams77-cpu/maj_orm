@@ -132,7 +132,7 @@ def RegularFileProperty dfMa = project.getObjects().fileProperty().
 
 //project.file("build/classes/MajDbORM/Main.class");
 
-version='1.2.3'
+version='1.2.4'
 
 
 class BootMaClass extends  org.springframework.boot.gradle.plugin.ResolveMainClassName implements Task {
@@ -431,7 +431,7 @@ repositories {
 
 //group = 'com.feedMajDbORM.tweeter'
 group = 'MajDbORM'
-version = '1.2.2'
+version = '1.3.1'
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
@@ -504,7 +504,7 @@ dependencies {
 
     testImplementation files( new File( rootProject.projectDir,  "MajDbORM/libs").getAbsolutePath()+ 'junit-platform-launcher-1.9.2.jar')
 
-
+ //   implmentation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'commons-dbutils:commons-dbutils:1.8.1'
 
     implementation "com.twitter:twitter-api-java-sdk:2.0.3"
@@ -514,14 +514,15 @@ dependencies {
     // https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api
     implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
 
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
 
+    implementation 'javax.validation:validation-api:2.0.1.Final'
     // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
-
 //    implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.3.3'
 
-//    implementation('org.springframework.data:spring-data-cassandra:4.1.3')
-    implementation('org.springframework.boot:spring-boot-starter-data-cassandra:3.3.3')
+    implementation('org.springframework.data:spring-data-cassandra:4.1.3')
+////    implementation('org.springframework.boot:spring-boot-starter-data-cassandra:3.3.3')
 
 //    implementation group: 'org.apache.cassandra', name: 'java-driver-core', version: '4.18.1'
 //    implementation group: 'org.apache.cassandra', name: 'java-driver-query-builder', version: '4.18.1'
@@ -635,7 +636,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.7.18'
 
     // https://mvnrepository.com/artifact/org.springframework.data/spring-data-cassandra
-    implementation 'org.springframework.data:spring-data-cassandra:3.4.18'
+//    implementation 'org.springframework.data:spring-data-cassandra:3.4.18'
 
 
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.3'
@@ -643,7 +644,7 @@ dependencies {
     implementation group: 'org.apache.cassandra', name: 'java-driver-query-builder', version:  '4.18.1'
     implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-processor', version: '4.18.1'
     implementation group: 'org.apache.cassandra', name: 'java-driver-mapper-runtime', version: '4.18.1'
-// http
+// httpG
 //    implementation group: 'org.springframework.data', name: 'spring-data-cassas://mvnrepository.com/artifact/com.github.johnrengelman.shadow/com.github.johnrengelman.shadow.gradle.plugin
     implementation 'com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:7.1.2'
 

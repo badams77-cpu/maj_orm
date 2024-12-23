@@ -918,6 +918,81 @@ public class DbBeanInstance implements DbBeanInstInterface {
 
         }
 
+
+    public int updateBeanNP(BaseMajoranaEntity bde, String sqlWhereParam[], Object sqlId[],  String[] paramNames, Object[] params) throws SQLException {
+
+        Class beanClass = bde.getClass();
+
+        MajoranaAnnotationRepository mj = getRepo(beanClass);
+
+        List<MajoranaRepositoryField> mrf = mj.getRepoFields();
+
+
+        String sqlWhere =  Arrays.stream(sqlWhereParam).filter( pn->
+                        mj.getRepoFields().stream().anyMatch( f-> ((MajoranaRepositoryField) f).getDbColumn().equals(pn)))
+                .map( f-> f+"=:"+f).collect(Collectors.joining(" and "));
+
+        String sql = "UPDATE " + bde.getTableName() +" SET "+
+                Arrays.stream(paramNames).filter( pn-> mj.getRepoFields().stream().anyMatch( f-> ((MajoranaRepositoryField) f)
+                        .getDbColumn().equals(pn)))
+                        .map( f->f+"=:"+f) .collect(Collectors.joining(", ")) + " WHERE "+sqlWhere;
+        //               + " WHERE "+where;
+//        String sql = mj.getR
+
+        KeyHolder kh = new org.springframework.jdbc.support.GeneratedKeyHolder();
+
+        Map<String, Object> paramMap = getParamMap(paramNames, params);
+
+        paramMap.putAll(getParamMap(sqlWhereParam, sqlId));
+
+        if (isCass) {
+            try {
+                PreparedStatement pres = cs.prepare(sql);
+                //org.springframework.data.cassandra.core.query.Update bounds =
+                org.springframework.data.cassandra.core.query.Update.empty();
+                //Map<String, Object> data = mj. getParameterMapWithDeletedAt(cassDsn, bde);
+                //for(Map.Entry<String, Object> en : data.entrySet()){
+                //    bounds = bounds.set( en.getKey(), en.getValue());
+                //}
+                //        org.springframework.data.cassandra.core.query.Update.addAll( mj.getSqlParameterMapWithDeletedAt(cassDsn,bde))
+
+//                PreparedStatement preparedStatement = cql.prepare("insert into plans (user_id, plan) values (?, ? )");
+                BoundStatement upStatement = pres.bind(paramMap);
+                //CqlTemplate ct = cs.
+                com.datastax.oss.driver.api.core.cql.ResultSet rs = cs.execute
+                        (upStatement);
+                Row row = rs.one();
+                if (row == null) {
+                    return 0;
+                }
+                return 1;
+
+                //pres.bind( mj. getSqlParameterSourceWithDeletedAt(bde)); //params);
+                // return cassandraTemplate.update(bounds, beanClass );
+            } catch (Exception e) {
+                LOGGER.warn("Error Executing cql in cassandra " + sql, e);
+                throw e;
+            }
+        } else {
+            try {
+                int ch = namedTemplate.update(sql, new MapSqlParameterSource(paramMap), kh);
+                if (ch != 0) {
+                    Number n = kh.getKey();
+                    if (n != null) {
+                        return n.intValue();
+                    }
+                }
+                return  0;
+            } catch (Exception e) {
+                LOGGER.warn("Error Update sql in jdbc template " + sql, e);
+                throw e;
+            }
+        }
+
+    }
+
+
+
         private UUID getUUID (String s){
             return UUID.fromString(s);
         }

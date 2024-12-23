@@ -14,6 +14,7 @@ public class MajoranaRepositoryField {
     private String dbColumn;
     private Column columnAnnotation;
     private Class valueType;
+    private int varcharSize;
 
     private boolean isTransient;
 
@@ -28,6 +29,14 @@ public class MajoranaRepositoryField {
     private boolean updateable;
 
     private boolean nullable;
+
+    public int getVarcharSize() {
+        return varcharSize;
+    }
+
+    public void setVarcharSize(int varcharSize) {
+        this.varcharSize = varcharSize;
+    }
 
     public MajoranaRepositoryField(){
 

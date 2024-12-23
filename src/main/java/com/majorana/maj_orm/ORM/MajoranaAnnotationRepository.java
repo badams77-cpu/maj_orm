@@ -225,7 +225,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
 
     public String getSqlFieldStringWithPrefix(String s){
         StringBuffer buffy =  new StringBuffer();
-        buffy.append(repoFields.stream().filter(x->!x.isTransient()).map(x->s+","+x.getDbColumn()).collect(Collectors.joining(", ") ) );
+        buffy.append(repoFields.stream().filter(x->!x.isTransient()).map(x->s+"."+x.getDbColumn()).collect(Collectors.joining(", ") ) );
         return buffy.toString();
     }
 
@@ -357,12 +357,15 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                 boolean isAltId = false;
                 boolean isId = false;
                 boolean hasId = false;
+                int varcharSize = 0;
+
 
                 for (Annotation ann : annotations) {
                     if (ann.annotationType().equals(jakarta.persistence.Id.class) && !hasId) {
                         isId = true;
                         hasId = true;
                     }
+
                     if (ann.annotationType().equals(Updateable.class)) {
                         updateable = true;
                     }
@@ -378,6 +381,15 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                     if (ann.annotationType().equals(Nullable.class)) {
                         nullable = true;
                     }
+                    if (ann.annotationType().equals(javax.validation.constraints.Size.class)){
+                        javax.validation.constraints.Size siz = (javax.validation.constraints.Size) ann;
+                        varcharSize = siz.max();
+                    }
+                    if (ann.annotationType().equals(jakarta.validation.constraints.Size.class)){
+                        jakarta.validation.constraints.Size siz = (jakarta.validation.constraints.Size) ann;
+                        varcharSize = siz.max();
+                    }
+
 
                     if (isInStringArray(columnClassNames, ann.annotationType().getCanonicalName())) {
                         toAdd = true;
@@ -396,6 +408,7 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
                 majoranaField.setNullable(nullable);
                 majoranaField.setId(isId);
                 majoranaField.setAltId(isAltId);
+                majoranaField.setVarcharSize(varcharSize);
                 //   Class curMethodClass = clazz;
                 //   while(clazz!=null && clazz!=Object.class){
                 //        methods = getClassMethods(curMethodClass);
@@ -531,6 +544,63 @@ public class MajoranaAnnotationRepository<T extends BaseMajoranaEntity> {
         long day1 = ChronoUnit.DAYS.between(date1, date2);
         return (int) day1;
     }
+
+    public static String getSqlType(MajoranaRepositoryField field){
+        try {
+            if (field.getValueType()==Blob.class){
+                return "blob";
+            }
+            if (field.getValueType()==UUID.class) {
+                UUID ns =  UUID.randomUUID();
+                return "varchar(80)";
+            } else if (field.getValueType()==LocalDate.class) {
+                return "date";
+            } else if (field.getValueType()== LocalTime.class) {
+                return "time";
+            } else if (field.getValueType()== LocalDateTime.class) {
+                return "datetime";
+            } else if (field.getValueType().equals(java.util.Date.class)){
+                return "timestamp";
+            } else if (field.getValueType().isEnum()) {
+                List<Object> enumList =  Arrays.asList(field.getValueType().getEnumConstants());
+                return "enum "+enumList.stream().map(s->s.toString()).collect(Collectors.joining(", "));
+
+            } else if (field.getValueType().isPrimitive()){
+
+                switch( field.getValueType().getName()) {
+                    case "int":
+                        return "int";
+                    case "long":
+                        return "long";
+                    case "float":
+                        return "double";
+                    case "double":
+                        return "double";
+                    case "boolean":
+                        return "int";
+                }
+            } else {
+                switch (field.getValueType().getName()) {
+                    case "java.util.Date":
+                        return "timestamp";
+                    case "java.lang.Integer":
+                        return "int";
+                    case "java.lang.Long":
+                        return "long";
+                    case "java.lang.Float":
+                        return "double";
+                    case "java.lang.Double":
+                        return "double";
+                    case "java.lang.Boolean":
+                        return "int";
+                    case "java.lang.String":
+                        return "text";
+                }
+            }
+        } catch (Exception e){}
+        return "";
+    }
+
 
     public static void setRandom(List<MajoranaRepositoryField> lmf, Object ob, Random r){
         int cnt=0;

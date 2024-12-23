@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.cql.CqlTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.KeyHolder;
@@ -153,6 +154,44 @@ public class DbBeanGenericInstance<T extends BaseMajoranaEntity> implements DbBe
 
       }
   }
+
+  @Override
+    public List<?> getBeansNPUsingMapper(String sql, RowMapper<?> mapper, String[] paramNames, Object[] params) {
+         MajoranaAnnotationRepository mj = getRepo();
+         if (isCass){
+                 LOGGER.warn("Error Executing cql in cassandra mapper method not available to cassandra");
+                 throw new RuntimeException("cassandra mapper method not available ");
+         } else {
+             try {
+                 Map<String, Object> paraMap = getParamMap(paramNames, params);
+                 MapSqlParameterSource src = new MapSqlParameterSource(paraMap);
+                 return namedTemplate.query(sql, src, mapper);
+             } catch (Exception e){
+                 LOGGER.warn("Error Executing sql in jdbc template "+sql,e);
+                 throw e;
+             }
+         }
+     }
+
+    @Override
+     public List<Integer> getListNPUsingIntegerMapper(String sql, String[] paramNames, Object[] params) {
+         MajoranaAnnotationRepository mj = getRepo();
+         if (isCass){
+             LOGGER.warn("Error Executing cql in cassandra mapper method not available to cassandra");
+             throw new RuntimeException("cassandra mapper method not available ");
+         } else {
+            try {
+                 Map<String, Object> paraMap = getParamMap(paramNames, params);
+                 MapSqlParameterSource src = new MapSqlParameterSource(paraMap);
+                 return namedTemplate.query(sql, src, mj.getIntegerMapper());
+            } catch (Exception e){
+                 LOGGER.warn("Error Executing sql in jdbc template "+sql,e);
+                 throw e;
+             }
+         }
+     }
+
+
 
     @Override
     public MajoranaAnnotationRepository<T> getRepo() {
